@@ -8,8 +8,7 @@ import {
   FiMonitor,
   FiCamera,
   FiCoffee,
-  FiEdit2,
-  FiMapPin
+  FiEdit2
 } from 'react-icons/fi';
 import './DatingPage.css';
 
@@ -18,29 +17,26 @@ const DatingPage = () => {
   const [currentProfile, setCurrentProfile] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser] = useState(JSON.parse(localStorage.getItem('currentUser') || 'null'));
   const [userHasProfile, setUserHasProfile] = useState(false);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    setCurrentUser(user);
-
-    if (!user) {
+    if (!currentUser) {
       navigate('/');
       return;
     }
 
     const profiles = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
-    const userProfile = profiles.find(p => p.userId === user.id);
+    const userProfile = profiles.find(p => p.userId === currentUser.id);
     setUserHasProfile(!!userProfile);
 
-    const otherProfiles = profiles.filter(p => p.userId !== user.id);
+    const otherProfiles = profiles.filter(p => p.userId !== currentUser.id);
     setProfiles(otherProfiles);
     
     if (otherProfiles.length > 0) {
       setCurrentProfile(otherProfiles[0]);
     }
-  }, [navigate]);
+  }, [currentUser, navigate]);
 
   const handleNext = () => {
     if (currentIndex < profiles.length - 1) {
