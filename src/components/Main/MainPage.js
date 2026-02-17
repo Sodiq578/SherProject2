@@ -8,7 +8,8 @@ import {
   FiUser,
   FiUsers,
   FiEdit2,
-  FiMenu
+  FiMenu,
+  FiX
 } from 'react-icons/fi';
 import './MainPage.css';
 
@@ -32,6 +33,7 @@ const MainPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('datingProfiles'); // Profil ma'lumotlarini ham tozalash
     navigate('/');
   };
 
@@ -39,22 +41,65 @@ const MainPage = () => {
     navigate('/dating/profile-form');
   };
 
+  // Menu yopish uchun
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.header-right')) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className="main-container">
       <div className="main-header">
         <div className="header-left">
           <h1>Sherbek</h1>
         </div>
+        
         <div className="header-right">
-          <button className="menu-button" onClick={() => setShowMenu(!showMenu)}>
-            <FiMenu />
+          <button 
+            className="menu-button" 
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMenu(!showMenu);
+            }}
+          >
+            {showMenu ? <FiX /> : <FiMenu />}
           </button>
+          
+          {/* Burger menu */}
           {showMenu && (
-            <div className="menu-dropdown">
+            <div className="menu-dropdown" onClick={(e) => e.stopPropagation()}>
               <div className="user-info-menu">
-                <FiUser /> @{currentUser?.username}
+                <FiUser className="menu-icon" />
+                <div className="user-details">
+                  <span className="user-name">@{currentUser?.username}</span>
+                  <span className="user-email">{currentUser?.email}</span>
+                </div>
               </div>
-              <button onClick={handleLogout} className="logout-button">
+              
+              <div className="menu-divider"></div>
+              
+              <button 
+                onClick={() => {
+                  handleFillProfile();
+                  setShowMenu(false);
+                }} 
+                className="menu-item"
+              >
+                <FiEdit2 /> Profil sozlash
+              </button>
+              
+              <button 
+                onClick={() => {
+                  handleLogout();
+                  setShowMenu(false);
+                }} 
+                className="menu-item logout"
+              >
                 <FiLogOut /> Chiqish
               </button>
             </div>
