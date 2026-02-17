@@ -8,7 +8,9 @@ import {
   FiMonitor,
   FiCamera,
   FiCoffee,
-  FiEdit2
+  FiEdit2,
+  FiArrowLeft,
+  FiStar
 } from 'react-icons/fi';
 import './DatingPage.css';
 
@@ -17,6 +19,7 @@ const DatingPage = () => {
   const [currentProfile, setCurrentProfile] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [currentUser] = useState(JSON.parse(localStorage.getItem('currentUser') || 'null'));
   const [userHasProfile, setUserHasProfile] = useState(false);
 
@@ -26,57 +29,110 @@ const DatingPage = () => {
       return;
     }
 
-    const profiles = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
-    const userProfile = profiles.find(p => p.userId === currentUser.id);
-    setUserHasProfile(!!userProfile);
+    // Simulyatsiya uchun 1-2 soniya kechikish (realda backenddan olinadi)
+    setTimeout(() => {
+      const allProfiles = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
+      const userProfile = allProfiles.find(p => p.userId === currentUser.id);
+      setUserHasProfile(!!userProfile);
 
-    const otherProfiles = profiles.filter(p => p.userId !== currentUser.id);
-    setProfiles(otherProfiles);
-    
-    if (otherProfiles.length > 0) {
-      setCurrentProfile(otherProfiles[0]);
-    }
+      const otherProfiles = allProfiles.filter(p => p.userId !== currentUser.id);
+      setProfiles(otherProfiles);
+
+      if (otherProfiles.length > 0) {
+        setCurrentProfile(otherProfiles[0]);
+        setCurrentIndex(0);
+      }
+      setLoading(false);
+    }, 800);
   }, [currentUser, navigate]);
 
   const handleNext = () => {
-    if (currentIndex < profiles.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-      setCurrentProfile(profiles[currentIndex + 1]);
-    } else {
-      setCurrentProfile(null);
-    }
+    setCurrentIndex(prev => {
+      const nextIndex = prev + 1;
+      if (nextIndex >= profiles.length) {
+        setCurrentProfile(null);
+        return prev;
+      }
+      setCurrentProfile(profiles[nextIndex]);
+      return nextIndex;
+    });
   };
 
   const handleLike = () => {
-    alert('Like berildi!');
+    if (!currentProfile) return;
+
+    // Allaqachon like bosilganligini tekshirish
+    const liked = JSON.parse(localStorage.getItem('likedProfiles') || '[]');
+    if (liked.includes(currentProfile.userId)) {
+      alert("Siz bu profilga allaqachon like bosgansiz!");
+      handleNext();
+      return;
+    }
+
+    // Like saqlash
+    localStorage.setItem('likedProfiles', JSON.stringify([...liked, currentProfile.userId]));
+
+    // Oddiy match tekshiruvi (real loyihada backend orqali amalga oshiriladi)
+    const theirLikes = JSON.parse(localStorage.getItem('likedProfiles') || '[]');
+    const isMatch = theirLikes.includes(currentUser.id);
+
+    if (isMatch) {
+      alert(`Match! 🎉 Siz va ${currentProfile.name} bir-biringizga like bosdingiz!`);
+      // Bu yerda chiroyli match modal ochsa bo'ladi
+    } else {
+      alert(`Like yuborildi! ${currentProfile.name} ga xabar bordi ❤️`);
+    }
+
     handleNext();
   };
 
   const handleDislike = () => {
+    // Istasangiz disliked ro'yxatiga qo'shish mumkin (keyinchalik ko'rsatmaslik uchun)
+    handleNext();
+  };
+
+  const handleSuperLike = () => {
+    alert("Super Like yuborildi! ✨ Bu profil sizga juda yoqdi deb bildirildi.");
     handleNext();
   };
 
   const getInterestIcon = (interest) => {
-    switch(interest?.toLowerCase()) {
+    switch (interest?.toLowerCase()) {
       case 'musiqa': return <FiMusic />;
       case 'gaming': return <FiMonitor />;
-      case 'foto': return <FiCamera />;
-      case 'kafe': return <FiCoffee />;
-      default: return <FiHeart />;
+      case 'foto':   return <FiCamera />;
+      case 'kafe':   return <FiCoffee />;
+      default:       return <FiHeart />;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="dating-container loading">
+        <div className="loading-spinner" />
+        <p>Profillar yuklanmoqda...</p>
+      </div>
+    );
+  }
 
   if (!userHasProfile) {
     return (
       <div className="dating-container">
         <div className="dating-header">
+          <button onClick={() => navigate('/main')} className="back-button">
+            <FiArrowLeft />
+          </button>
           <h1><FiHeart /> Dating</h1>
+          <div className="header-placeholder" />
         </div>
         <div className="empty-state">
           <FiUser className="empty-icon" />
           <h3>Anketa to'ldirilmagan</h3>
-          <p>Avval anketangizni to'ldiring</p>
-          <button onClick={() => navigate('/dating/profile-form')} className="action-button">
+          <p>Avval o'zingiz haqingizda ma'lumot kiriting</p>
+          <button 
+            onClick={() => navigate('/dating/profile-form')} 
+            className="action-button primary"
+          >
             <FiEdit2 /> Anketa to'ldirish
           </button>
         </div>
@@ -93,8 +149,9 @@ const DatingPage = () => {
         <div className="empty-state">
           <FiUser className="empty-icon" />
           <h3>Hozircha boshqa foydalanuvchilar yo'q</h3>
-          <button onClick={() => navigate('/main')} className="action-button">
-            Bosh sahifa
+          <p>Keyinroq qayta urinib ko'ring yoki do'stlaringizni taklif qiling</p>
+          <button onClick={() => navigate('/main')} className="action-button primary">
+            Bosh sahifaga
           </button>
         </div>
       </div>
@@ -106,43 +163,46 @@ const DatingPage = () => {
       <div className="dating-header">
         <h1><FiHeart /> Dating</h1>
       </div>
-      
+
       <div className="dating-card">
         <div className="profile-image-wrapper">
-          <img 
-            src={currentProfile.photos?.[0] || 'https://via.placeholder.com/400x400'} 
+          <img
+            src={currentProfile.photos?.[0] || 'https://via.placeholder.com/400x500?text=' + currentProfile.name?.[0]}
             alt={currentProfile.name}
             className="profile-image"
           />
         </div>
-        
+
         <div className="profile-content">
           <h2>{currentProfile.name}, {currentProfile.age}</h2>
-          
+
           <div className="interests-list">
-            {currentProfile.interests?.map((interest, index) => (
-              <span key={index} className="interest-item">
+            {currentProfile.interests?.map((interest, idx) => (
+              <span key={idx} className="interest-item">
                 {getInterestIcon(interest)}
                 {interest}
               </span>
             ))}
           </div>
-          
+
           {currentProfile.bio && (
             <div className="bio-text">
               <p>{currentProfile.bio}</p>
             </div>
           )}
         </div>
-        
+
         <div className="action-row">
-          <button onClick={handleDislike} className="action-circle dislike">
+          <button onClick={handleDislike} className="action-circle dislike" title="Yoqtirmayman">
             <FiX />
           </button>
-          <button onClick={handleNext} className="action-circle next">
+          <button onClick={handleSuperLike} className="action-circle super" title="Super Like">
+            <FiStar />
+          </button>
+          <button onClick={handleNext} className="action-circle next" title="Keyingisi">
             ⏭️
           </button>
-          <button onClick={handleLike} className="action-circle like">
+          <button onClick={handleLike} className="action-circle like" title="Like">
             <FiHeart />
           </button>
         </div>

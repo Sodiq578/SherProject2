@@ -56,7 +56,7 @@ const MainPage = () => {
     <div className="main-container">
       <div className="main-header">
         <div className="header-left">
-          <h1>Sherbek</h1>
+          <h1 className='name-title'> {currentUser?.username}</h1>
         </div>
         
         <div className="header-right">

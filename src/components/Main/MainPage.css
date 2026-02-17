@@ -126,6 +126,12 @@
   font-weight: 600;
 }
 
+.name-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
 .user-email {
   color: #88c0ff;
   font-size: 13px;
