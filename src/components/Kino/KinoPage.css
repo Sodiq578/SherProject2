@@ -1,0 +1,236 @@
+.kino-container {
+  min-height: 100vh;
+  background: #000;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 100, 255, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(0, 150, 255, 0.12) 0%, transparent 50%);
+  padding: 12px;
+}
+
+.kino-header {
+  background: rgba(10, 20, 30, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 20px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.back-button, .filter-button {
+  background: rgba(0, 102, 255, 0.15);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  color: #88c0ff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kino-header h1 {
+  color: #fff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-menu {
+  position: absolute;
+  top: 70px;
+  right: 12px;
+  background: rgba(10, 20, 30, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 16px;
+  padding: 8px;
+  z-index: 100;
+  min-width: 150px;
+}
+
+.filter-option {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 14px 16px;
+  color: #88c0ff;
+  font-size: 15px;
+  text-align: left;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.filter-option.active {
+  background: #0066ff;
+  color: white;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.movie-card {
+  background: rgba(10, 20, 30, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 150, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.movie-card:active {
+  transform: scale(0.98);
+}
+
+.movie-poster {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.movie-info {
+  padding: 12px;
+}
+
+.movie-info h3 {
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-info p {
+  color: #88c0ff;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.movie-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-icon {
+  color: #ffd700;
+  font-size: 14px;
+}
+
+.movie-rating span {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Detail sahifa */
+.movie-detail {
+  padding: 0 4px;
+}
+
+.detail-back {
+  background: rgba(0, 102, 255, 0.15);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 30px;
+  padding: 12px 20px;
+  color: #88c0ff;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.detail-card {
+  background: rgba(10, 20, 30, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.detail-poster {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.detail-info h2 {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: #88c0ff;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.detail-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-value {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.detail-description {
+  color: #fff;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+@media (min-width: 400px) {
+  .movies-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .movie-poster {
+    height: 200px;
+  }
+}

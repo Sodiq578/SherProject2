@@ -1,24 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+
+// Auth
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+
+// Main
+import MainPage from './components/Main/MainPage';
+
+// Kino
+import KinoPage from './components/Kino/KinoPage';
+
+// Dating
+import DatingPage from './components/Dating/DatingPage';
+import ProfileForm from './components/Dating/ProfileForm';
+
+// Elonlar
+import ElonlarPage from './components/Elonlar/ElonlarPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/kino" element={<KinoPage />} />
+          <Route path="/dating" element={<DatingPage />} />
+          <Route path="/dating/profile-form" element={<ProfileForm />} />
+          <Route path="/elonlar" element={<ElonlarPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
