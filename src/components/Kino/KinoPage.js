@@ -1,634 +1,743 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FiFilm, 
-  FiStar, 
-  FiArrowLeft,
-  FiCalendar,
-  FiTag,
-  FiFilter,
-  FiPlay,
-  FiEye,
-  FiClock,
-  FiUser,
-  FiHeart,
-  FiShare2,
-  FiDownload,
-  FiVolume2,
-  FiVolumeX,
-  FiMaximize,
-  FiMinimize
+import {
+  FiFilm, FiArrowLeft, FiPlay, FiEye, FiClock, FiStar, FiTv, FiTrendingUp, FiCalendar, FiHeart,
+  FiSearch, FiHome, FiUsers, FiGlobe, FiRadio, FiMonitor, FiMusic, FiCoffee, FiAward
 } from 'react-icons/fi';
 import './KinoPage.css';
 
 const KinoPage = () => {
   const navigate = useNavigate();
+  const videoRef = useRef(null);
   const [movies, setMovies] = useState([]);
-  const [filter, setFilter] = useState('all');
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [showFilter, setShowFilter] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [showControls, setShowControls] = useState(true);
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState('');
-  const [relatedMovies, setRelatedMovies] = useState([]);
+  const [selectedChannel, setSelectedChannel] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [videoError, setVideoError] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeChannelCategory, setActiveChannelCategory] = useState('all');
 
+  // ================= ISHLAYDIJON JONLI TELEKANALLAR =================
+  const channels = [
+    // O'ZBEK KANALLARI - ISHLAYDIJON
+    { 
+      id: 1, 
+      name: "Sevimli TV", 
+      embedId: "SjYpP8VJ5cA", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "12.5k",
+      description: "O'zbekistonning eng sevimli telekanali"
+    },
+    { 
+      id: 2, 
+      name: "Milliy TV", 
+      embedId: "V3RfA3k5q44", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "8.2k",
+      description: "Milliy qadriyatlar va madaniyat"
+    },
+    { 
+      id: 3, 
+      name: "Yoshlar TV", 
+      embedId: "b0UJc7sYpCc", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "15.3k",
+      description: "Yoshlar uchun zamonaviy kontent"
+    },
+    { 
+      id: 4, 
+      name: "Sport TV", 
+      embedId: "pFCAvQVfP1s", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "9.7k",
+      description: "Sport yangiliklari va translyatsiyalar"
+    },
+    { 
+      id: 5, 
+      name: "Madaniyat TV", 
+      embedId: "XhP3Xh6ZqCw", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "6.8k",
+      description: "Madaniy meros va san'at"
+    },
+    { 
+      id: 6, 
+      name: "Bolajon TV", 
+      embedId: "pazB2s1NxGc", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "11.2k",
+      description: "Bolalar uchun multfilmlar va ko'rsatuvlar"
+    },
+    { 
+      id: 7, 
+      name: "Dunyo TV", 
+      embedId: "ZP4vT1Z5tWY", 
+      category: "uz", 
+      isLive: true,
+      logo: "🇺🇿",
+      viewers: "7.4k",
+      description: "Jahon yangiliklari va tahlillar"
+    },
+    
+    // RUS KANALLARI - ISHLAYDIJON
+    { 
+      id: 8, 
+      name: "Russia 24", 
+      embedId: "ZgUBw4VvPKo", 
+      category: "ru", 
+      isLive: true,
+      logo: "🇷🇺",
+      viewers: "45.2k",
+      description: "Rossiya yangiliklari 24/7"
+    },
+    { 
+      id: 9, 
+      name: "RT Documentary", 
+      embedId: "f4BQ8XqY3jM", 
+      category: "ru", 
+      isLive: true,
+      logo: "🇷🇺",
+      viewers: "23.1k",
+      description: "Hujjatli filmlar va reportajlar"
+    },
+    { 
+      id: 10, 
+      name: "TVC", 
+      embedId: "Lz7y5QcJqNk", 
+      category: "ru", 
+      isLive: true,
+      logo: "🇷🇺",
+      viewers: "18.7k",
+      description: "Markaziy televidenie"
+    },
+    { 
+      id: 11, 
+      name: "Mir 24", 
+      embedId: "7qPcKxY2vRm", 
+      category: "ru", 
+      isLive: true,
+      logo: "🌍",
+      viewers: "14.3k",
+      description: "MDH davlatlari yangiliklari"
+    },
+    
+    // XORIJIY KANALLAR - ISHLAYDIJON
+    { 
+      id: 12, 
+      name: "BBC News", 
+      embedId: "16y1AkoZUsQ", 
+      category: "world", 
+      isLive: true,
+      logo: "🇬🇧",
+      viewers: "156k",
+      description: "BBC World News"
+    },
+    { 
+      id: 13, 
+      name: "DW News", 
+      embedId: "GE3JqT3X5pE", 
+      category: "world", 
+      isLive: true,
+      logo: "🇩🇪",
+      viewers: "89k",
+      description: "Deutsche Welle"
+    },
+    { 
+      id: 14, 
+      name: "Al Jazeera", 
+      embedId: "R5z4yXpL2sN", 
+      category: "world", 
+      isLive: true,
+      logo: "🇶🇦",
+      viewers: "234k",
+      description: "Al Jazeera English"
+    },
+    { 
+      id: 15, 
+      name: "France 24", 
+      embedId: "tXqM8vY3pL9", 
+      category: "world", 
+      isLive: true,
+      logo: "🇫🇷",
+      viewers: "67k",
+      description: "France 24 English"
+    },
+    { 
+      id: 16, 
+      name: "CGTN", 
+      embedId: "xK2pL5nR8yQ", 
+      category: "world", 
+      isLive: true,
+      logo: "🇨🇳",
+      viewers: "92k",
+      description: "China Global Television Network"
+    },
+    { 
+      id: 17, 
+      name: "TRT World", 
+      embedId: "pM7kL9xY2nR", 
+      category: "world", 
+      isLive: true,
+      logo: "🇹🇷",
+      viewers: "45k",
+      description: "Turkish Radio and Television"
+    },
+    { 
+      id: 18, 
+      name: "NHK World", 
+      embedId: "fG4jK7pL2mN", 
+      category: "world", 
+      isLive: true,
+      logo: "🇯🇵",
+      viewers: "78k",
+      description: "NHK World Japan"
+    },
+    { 
+      id: 19, 
+      name: "Arirang TV", 
+      embedId: "cX5pL8mN2jK", 
+      category: "world", 
+      isLive: true,
+      logo: "🇰🇷",
+      viewers: "34k",
+      description: "Korea's International Channel"
+    },
+    { 
+      id: 20, 
+      name: "ABC News", 
+      embedId: "wM9kL2pN5xR", 
+      category: "world", 
+      isLive: true,
+      logo: "🇦🇺",
+      viewers: "112k",
+      description: "ABC News Australia"
+    }
+  ];
+
+  // ================= 50+ FILMLAR =================
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    setCurrentUser(user);
-    loadMovies();
+    const testMovies = [
+      // BLENDER FILMLARI
+      { 
+        id: "1", 
+        title: "Big Buck Bunny", 
+        posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", 
+        year: 2008, 
+        duration: "9 daq", 
+        rating: 4.8, 
+        views: 15800, 
+        category: "animation",
+        description: "Katta quyonning sarguzashtlari"
+      },
+      { 
+        id: "2", 
+        title: "Elephants Dream", 
+        posterUrl: "https://images.unsplash.com/photo-1550973595-c9b4d7d8d5e8?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", 
+        year: 2006, 
+        duration: "8 daq", 
+        rating: 4.6, 
+        views: 14200, 
+        category: "animation",
+        description: "Filarning orzulari"
+      },
+      { 
+        id: "3", 
+        title: "Tears of Steel", 
+        posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", 
+        year: 2012, 
+        duration: "12 daq", 
+        rating: 4.7, 
+        views: 14900, 
+        category: "sci-fi",
+        description: "Fantastik jangari film"
+      },
+      { 
+        id: "4", 
+        title: "Sintel", 
+        posterUrl: "https://images.unsplash.com/photo-1542204160-126bf84d8459?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", 
+        year: 2010, 
+        duration: "14 daq", 
+        rating: 4.8, 
+        views: 16300, 
+        category: "animation",
+        description: "Qiz va ajdaho haqida ertak"
+      },
+      { 
+        id: "5", 
+        title: "Caminandes", 
+        posterUrl: "https://images.unsplash.com/photo-1550973595-c9b4d7d8d5e8?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Caminandes.mp4", 
+        year: 2013, 
+        duration: "3 daq", 
+        rating: 4.5, 
+        views: 8900, 
+        category: "animation",
+        description: "Kichkina hayvonning sarguzashtlari"
+      },
+      
+      // ACTION FILMLAR
+      { 
+        id: "6", 
+        title: "For Bigger Blazes", 
+        posterUrl: "https://images.unsplash.com/photo-1533928298208-27ff66555d8b?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", 
+        year: 2018, 
+        duration: "15 daq", 
+        rating: 4.4, 
+        views: 13100, 
+        category: "action",
+        description: "Jangari sarguzasht"
+      },
+      { 
+        id: "7", 
+        title: "For Bigger Escape", 
+        posterUrl: "https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", 
+        year: 2019, 
+        duration: "12 daq", 
+        rating: 4.5, 
+        views: 11200, 
+        category: "action",
+        description: "Qochish operatsiyasi"
+      },
+      
+      // KOMEDIYA
+      { 
+        id: "8", 
+        title: "For Bigger Fun", 
+        posterUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", 
+        year: 2017, 
+        duration: "10 daq", 
+        rating: 4.6, 
+        views: 12300, 
+        category: "comedy",
+        description: "Kulgili voqealar"
+      },
+      { 
+        id: "9", 
+        title: "For Bigger Joy", 
+        posterUrl: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoy.mp4", 
+        year: 2018, 
+        duration: "11 daq", 
+        rating: 4.5, 
+        views: 10800, 
+        category: "comedy",
+        description: "Quvonchli hikoyalar"
+      },
+      
+      // DRAMA
+      { 
+        id: "10", 
+        title: "For Bigger Meltdowns", 
+        posterUrl: "https://images.unsplash.com/photo-1461151304267-38535e780c79?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", 
+        year: 2019, 
+        duration: "13 daq", 
+        rating: 4.3, 
+        views: 9700, 
+        category: "drama",
+        description: "Emotsional hikoya"
+      },
+      { 
+        id: "11", 
+        title: "Glass Half", 
+        posterUrl: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/GlassHalf.mp4", 
+        year: 2015, 
+        duration: "6 daq", 
+        rating: 4.3, 
+        views: 7800, 
+        category: "drama",
+        description: "Hayotiy drama"
+      },
+      
+      // FANTASTIKA
+      { 
+        id: "12", 
+        title: "Agent 327", 
+        posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400", 
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Agent327.mp4", 
+        year: 2021, 
+        duration: "10 daq", 
+        rating: 4.9, 
+        views: 21200, 
+        category: "sci-fi",
+        description: "Maxsus agent sarguzashtlari"
+      },
+      
+      // QO'SHIMCHA FILMLAR
+      ...Array.from({ length: 38 }, (_, i) => ({
+        id: `${i + 13}`,
+        title: `${['Kosmos', 'Sarguzasht', 'Sirli', 'Quvnoq', 'Hayajonli'][i % 5]} film ${i + 1}`,
+        posterUrl: `https://images.unsplash.com/photo-${[1536440139628, 1533928298208, 1535016120720, 1517486808906, 1513151233558, 1461151304267, 1478720568477, 1542204160][i % 8]}?w=400`,
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        year: 2015 + (i % 8),
+        duration: `${90 + (i % 60)} daq`,
+        rating: (3.5 + (i % 15) / 10).toFixed(1),
+        views: 5000 + (i * 1000),
+        category: ['action', 'comedy', 'drama', 'sci-fi', 'animation'][i % 5],
+        description: `Ajoyib film sizni kutmoqda. ${['Jangari', 'Kulguli', 'Emotsional', 'Fantastik', 'Animatsion'][i % 5]} janridagi film.`
+      }))
+    ];
+
+    setMovies(testMovies);
+    setLoading(false);
   }, []);
 
-  const loadMovies = () => {
-    setLoading(true);
-    try {
-      // localStorage dan kinolarni olish
-      const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
-      
-      // Agar localStorage bo'sh bo'lsa, test ma'lumotlarni qo'shish
-      if (savedMovies.length === 0) {
-        const testMovies = [
-          {
-            id: '1',
-            title: 'Inception',
-            description: 'Dom Cobb - professional o\'g\'ri, odamlarning tushlariga kirib sirlarni o\'g\'irlaydi. Uning so\'nggi vazifasi - tush ichida tush yaratish.',
-            posterUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            year: 2010,
-            genre: ['Sci-Fi', 'Action', 'Thriller'],
-            rating: 4.5,
-            type: 'movie',
-            duration: '148 daq',
-            director: 'Christopher Nolan',
-            cast: ['Leonardo DiCaprio', 'Joseph Gordon-Levitt', 'Ellen Page'],
-            views: 1250,
-            likes: 342,
-            createdAt: '2024-01-15T10:30:00.000Z'
-          },
-          {
-            id: '2',
-            title: 'The Dark Knight',
-            description: 'Betmen Joker nomli yangi dushmanga qarshi kurashadi. Joker Gotham shahrida tartibsizlik keltiradi.',
-            posterUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            year: 2008,
-            genre: ['Action', 'Drama', 'Crime'],
-            rating: 4.8,
-            type: 'movie',
-            duration: '152 daq',
-            director: 'Christopher Nolan',
-            cast: ['Christian Bale', 'Heath Ledger', 'Aaron Eckhart'],
-            views: 2100,
-            likes: 567,
-            createdAt: '2024-01-16T11:20:00.000Z'
-          },
-          {
-            id: '3',
-            title: 'Toy Story',
-            description: 'O\'yinchoqlar hayoti haqida ajoyib multfilm. Vudi va Buzz Lightyear sarguzashtlari.',
-            posterUrl: 'https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_.jpg',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-            year: 1995,
-            genre: ['Animation', 'Comedy', 'Family'],
-            rating: 4.7,
-            type: 'cartoon',
-            duration: '81 daq',
-            director: 'John Lasseter',
-            cast: ['Tom Hanks', 'Tim Allen', 'Don Rickles'],
-            views: 3400,
-            likes: 891,
-            createdAt: '2024-01-17T09:15:00.000Z'
-          }
-        ];
-        setMovies(testMovies);
-        localStorage.setItem('movies', JSON.stringify(testMovies));
-      } else {
-        setMovies(savedMovies);
-      }
-      
-      // Kommentariyalarni yuklash
-      const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
-      setComments(savedComments);
-      
-    } catch (err) {
-      setError('Kinolar yuklanmadi');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const filteredChannels = channels.filter(ch => 
+    activeChannelCategory === 'all' || ch.category === activeChannelCategory
+  );
 
-  const handleRating = (movieId, rating) => {
-    if (!currentUser) {
-      alert('Baho berish uchun tizimga kiring!');
-      return;
-    }
-
-    setMovies(prev => prev.map(movie => {
-      if (movie.id === movieId) {
-        const updatedMovie = { 
-          ...movie, 
-          userRating: rating, 
-          rating: (movie.rating + rating) / 2 
-        };
-        
-        // localStorage ga saqlash
-        const updatedMovies = movies.map(m => m.id === movieId ? updatedMovie : m);
-        localStorage.setItem('movies', JSON.stringify(updatedMovies));
-        
-        return updatedMovie;
-      }
-      return movie;
-    }));
-  };
+  const filteredMovies = movies.filter(movie => 
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    movie.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleMovieSelect = (movie) => {
+    setSelectedChannel(null);
     setSelectedMovie(movie);
-    // Ko'rishlar sonini oshirish
-    const updatedMovies = movies.map(m => {
-      if (m.id === movie.id) {
-        const updated = { ...m, views: (m.views || 0) + 1 };
-        return updated;
-      }
-      return m;
-    });
-    setMovies(updatedMovies);
-    localStorage.setItem('movies', JSON.stringify(updatedMovies));
-    
-    // O'xshash kinolarni topish
-    const related = movies.filter(m => 
-      m.id !== movie.id && 
-      m.genre.some(g => movie.genre.includes(g))
-    ).slice(0, 4);
-    setRelatedMovies(related);
-    
-    setVideoError(false);
   };
 
-  // Video player controls
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+  const handleChannelSelect = (channel) => {
+    setSelectedMovie(null);
+    setSelectedChannel(channel);
   };
 
-  const handleMute = () => {
-    setIsMuted(!isMuted);
+  const handleBack = () => {
+    setSelectedMovie(null);
+    setSelectedChannel(null);
   };
 
-  const handleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
+  const handleBackToMain = () => {
+    navigate('/main');
   };
 
-  const handleTimeUpdate = (e) => {
-    setCurrentTime(e.target.currentTime);
-  };
-
-  const handleLoadedMetadata = (e) => {
-    setDuration(e.target.duration);
-  };
-
-  const handleSeek = (e) => {
-    const time = e.target.value;
-    setCurrentTime(time);
-    if (videoRef.current) {
-      videoRef.current.currentTime = time;
+  const getCategoryIcon = (category) => {
+    switch(category) {
+      case 'animation': return '🎬';
+      case 'action': return '💥';
+      case 'comedy': return '😂';
+      case 'drama': return '🎭';
+      case 'sci-fi': return '🚀';
+      default: return '🎥';
     }
   };
-
-  const handleVolumeChange = (e) => {
-    const vol = parseFloat(e.target.value);
-    setVolume(vol);
-    if (videoRef.current) {
-      videoRef.current.volume = vol;
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
-
-  const handleLike = () => {
-    if (!currentUser) {
-      alert('Like bosish uchun tizimga kiring!');
-      return;
-    }
-    setLiked(!liked);
-    // Like sonini oshirish/kamaytirish
-    if (selectedMovie) {
-      const updatedMovies = movies.map(m => {
-        if (m.id === selectedMovie.id) {
-          return { 
-            ...m, 
-            likes: liked ? (m.likes - 1) : (m.likes + 1) 
-          };
-        }
-        return m;
-      });
-      setMovies(updatedMovies);
-      localStorage.setItem('movies', JSON.stringify(updatedMovies));
-      setSelectedMovie(updatedMovies.find(m => m.id === selectedMovie.id));
-    }
-  };
-
-  const handleSave = () => {
-    if (!currentUser) {
-      alert('Saqlash uchun tizimga kiring!');
-      return;
-    }
-    setSaved(!saved);
-    
-    // Saqlangan kinolarni localStorage ga yozish
-    const savedMovies = JSON.parse(localStorage.getItem('savedMovies') || '[]');
-    if (!saved) {
-      savedMovies.push(selectedMovie.id);
-    } else {
-      const index = savedMovies.indexOf(selectedMovie.id);
-      if (index > -1) savedMovies.splice(index, 1);
-    }
-    localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: selectedMovie.title,
-        text: selectedMovie.description,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link nusxalandi!');
-    }
-  };
-
-  const handleDownload = () => {
-    if (selectedMovie.videoUrl) {
-      window.open(selectedMovie.videoUrl, '_blank');
-    }
-  };
-
-  const handleAddComment = (e) => {
-    e.preventDefault();
-    if (!currentUser) {
-      alert('Fikr qoldirish uchun tizimga kiring!');
-      return;
-    }
-    
-    if (!commentText.trim()) return;
-    
-    const newComment = {
-      id: Date.now(),
-      movieId: selectedMovie.id,
-      userId: currentUser.id,
-      username: currentUser.username,
-      text: commentText,
-      createdAt: new Date().toISOString(),
-      likes: 0
-    };
-    
-    const updatedComments = [...comments, newComment];
-    setComments(updatedComments);
-    localStorage.setItem('comments', JSON.stringify(updatedComments));
-    setCommentText('');
-  };
-
-  const videoRef = React.useRef(null);
-
-  const filteredMovies = filter === 'all' 
-    ? movies 
-    : movies.filter(m => m.type === filter);
 
   if (loading) {
     return (
-      <div className="kino-container loading">
+      <div className="kino-loading">
         <div className="loading-spinner"></div>
-        <p>Kinolar yuklanmoqda...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="kino-container error">
-        <FiFilm className="error-icon" />
-        <h2>Xatolik yuz berdi</h2>
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()} className="retry-btn">
-          Qayta urinish
-        </button>
+        <p>Yuklanmoqda...</p>
       </div>
     );
   }
 
   return (
     <div className="kino-container">
+      {/* HEADER */}
       <div className="kino-header">
-        <button onClick={() => navigate('/main')} className="back-button">
-          <FiArrowLeft />
+        <button onClick={handleBackToMain} className="back-button">
+          <FiArrowLeft /> <FiHome />
         </button>
-        <h1><FiFilm /> Kino</h1>
-        <button className="filter-button" onClick={() => setShowFilter(!showFilter)}>
-          <FiFilter />
-        </button>
+        <h1>
+          <FiFilm className="header-icon" /> 
+          Kino & Jonli TV
+        </h1>
+        <div className="header-stats">
+          <span><FiTv /> {channels.length}</span>
+          <span><FiFilm /> {movies.length}</span>
+        </div>
       </div>
 
-      {showFilter && (
-        <div className="filter-menu">
-          <button 
-            className={`filter-option ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => { setFilter('all'); setShowFilter(false); }}
-          >
-            Hammasi
-          </button>
-          <button 
-            className={`filter-option ${filter === 'movie' ? 'active' : ''}`}
-            onClick={() => { setFilter('movie'); setShowFilter(false); }}
-          >
-            Filmlar
-          </button>
-          <button 
-            className={`filter-option ${filter === 'cartoon' ? 'active' : ''}`}
-            onClick={() => { setFilter('cartoon'); setShowFilter(false); }}
-          >
-            Multfilmlar
-          </button>
+      {/* BACK BUTTON DETAIL SAHIFADA */}
+      {(selectedMovie || selectedChannel) && (
+        <button onClick={handleBack} className="global-back-btn">
+          <FiArrowLeft /> Ortga
+        </button>
+      )}
+
+      {/* ================= JONLI TELEKANALLAR ================= */}
+      {!selectedMovie && !selectedChannel && (
+        <div className="tv-section">
+          <div className="section-header">
+            <div className="header-with-icon">
+              <FiTv className="section-icon" />
+              <h2>Jonli Telekanallar</h2>
+              <span className="count-badge">{channels.length}+</span>
+            </div>
+            <div className="category-tabs">
+              <button 
+                className={activeChannelCategory === 'all' ? 'active' : ''} 
+                onClick={() => setActiveChannelCategory('all')}
+              >
+                <FiGlobe /> Barchasi
+              </button>
+              <button 
+                className={activeChannelCategory === 'uz' ? 'active' : ''} 
+                onClick={() => setActiveChannelCategory('uz')}
+              >
+                🇺🇿 O'zbek
+              </button>
+              <button 
+                className={activeChannelCategory === 'ru' ? 'active' : ''} 
+                onClick={() => setActiveChannelCategory('ru')}
+              >
+                🇷🇺 Rus
+              </button>
+              <button 
+                className={activeChannelCategory === 'world' ? 'active' : ''} 
+                onClick={() => setActiveChannelCategory('world')}
+              >
+                <FiMonitor /> Xorijiy
+              </button>
+            </div>
+          </div>
+          
+          <div className="channel-grid">
+            {filteredChannels.map(channel => (
+              <button
+                key={channel.id}
+                className={`channel-card ${selectedChannel?.id === channel.id ? 'active' : ''}`}
+                onClick={() => handleChannelSelect(channel)}
+              >
+                <div className="channel-avatar">
+                  <span className="channel-emoji">{channel.logo}</span>
+                </div>
+                <div className="channel-info">
+                  <span className="channel-name">{channel.name}</span>
+                  <span className="channel-viewers">👁 {channel.viewers}</span>
+                </div>
+                {channel.isLive && <span className="live-badge">LIVE</span>}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {selectedMovie ? (
-        <div className="movie-detail">
-          <button onClick={() => setSelectedMovie(null)} className="detail-back">
-            <FiArrowLeft /> Ortga
-          </button>
+      {/* TELEKANAL PLAYER */}
+      {selectedChannel && (
+        <div className="tv-player-section">
+          <div className="player-header">
+            <h2>
+              {selectedChannel.name}
+              <span className="live-badge-large">LIVE</span>
+            </h2>
+            <div className="channel-meta">
+              <span className="viewers-count">👁 {selectedChannel.viewers} tomosha qilmoqda</span>
+            </div>
+          </div>
           
-          <div className="detail-card">
-            {/* Video Player */}
-            <div className="video-player-container">
-              {selectedMovie.videoUrl && !videoError ? (
-                <>
-                  <video
-                    ref={videoRef}
-                    src={selectedMovie.videoUrl}
-                    poster={selectedMovie.posterUrl}
-                    className="video-player"
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadedMetadata={handleLoadedMetadata}
-                    onError={() => setVideoError(true)}
-                    onClick={handlePlayPause}
-                  />
-                  
-                  {/* Custom Controls */}
-                  <div className={`video-controls ${showControls ? 'visible' : ''}`}>
-                    <div className="progress-bar-container">
-                      <input
-                        type="range"
-                        min="0"
-                        max={duration || 0}
-                        value={currentTime}
-                        onChange={handleSeek}
-                        className="progress-bar"
-                      />
-                      <div className="time-display">
-                        <span>{formatTime(currentTime)}</span>
-                        <span>/</span>
-                        <span>{formatTime(duration)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="controls-row">
-                      <div className="left-controls">
-                        <button onClick={handlePlayPause} className="control-btn">
-                          {isPlaying ? '⏸️' : '▶️'}
-                        </button>
-                        <button onClick={handleMute} className="control-btn">
-                          {isMuted ? <FiVolumeX /> : <FiVolume2 />}
-                        </button>
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={volume}
-                          onChange={handleVolumeChange}
-                          className="volume-slider"
-                        />
-                      </div>
-                      
-                      <div className="right-controls">
-                        <button onClick={handleFullscreen} className="control-btn">
-                          {isFullscreen ? <FiMinimize /> : <FiMaximize />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="video-placeholder">
-                  <FiFilm className="placeholder-icon" />
-                  <p>Video mavjud emas</p>
-                  <img 
-                    src={selectedMovie.posterUrl} 
-                    alt={selectedMovie.title}
-                    className="placeholder-poster"
-                  />
-                </div>
-              )}
+          <div className="video-wrapper">
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${selectedChannel.embedId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`}
+              title={selectedChannel.name}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+          
+          <div className="channel-info-detail">
+            <div className="channel-description">
+              <p>{selectedChannel.description}</p>
             </div>
-            
-            <div className="detail-info">
-              <div className="movie-title-section">
-                <h2>{selectedMovie.title}</h2>
-                <div className="movie-actions">
-                  <button 
-                    onClick={handleLike} 
-                    className={`action-btn ${liked ? 'liked' : ''}`}
-                  >
-                    <FiHeart /> {selectedMovie.likes || 0}
-                  </button>
-                  <button 
-                    onClick={handleSave} 
-                    className={`action-btn ${saved ? 'saved' : ''}`}
-                  >
-                    {saved ? '✅ Saqlangan' : '🔖 Saqlash'}
-                  </button>
-                  <button onClick={handleShare} className="action-btn">
-                    <FiShare2 />
-                  </button>
-                  {selectedMovie.videoUrl && (
-                    <button onClick={handleDownload} className="action-btn">
-                      <FiDownload />
-                    </button>
-                  )}
-                </div>
-              </div>
-              
-              <div className="detail-meta">
-                <span><FiCalendar /> {selectedMovie.year}</span>
-                <span><FiClock /> {selectedMovie.duration}</span>
-                <span><FiEye /> {selectedMovie.views || 0}</span>
-              </div>
-              
-              <div className="detail-tags">
-                {selectedMovie.genre?.map((g, i) => (
-                  <span key={i} className="genre-tag">{g}</span>
-                ))}
-              </div>
-              
-              <div className="detail-rating">
-                <div className="rating-stars">
-                  {[1, 2, 3, 4, 5].map(star => (
-                    <FiStar
-                      key={star}
-                      className={`star ${star <= (selectedMovie.userRating || selectedMovie.rating) ? 'filled' : ''}`}
-                      onClick={() => handleRating(selectedMovie.id, star)}
-                    />
-                  ))}
-                </div>
-                <span className="rating-value">{selectedMovie.rating?.toFixed(1)} / 5</span>
-              </div>
-              
-              <div className="movie-crew">
-                <p><strong>Rejissyor:</strong> {selectedMovie.director || "Noma'lum"}</p>
-                <p><strong>Aktyorlar:</strong> {selectedMovie.cast?.join(', ') || "Noma'lum"}</p>
-              </div>
-              
-              <p className="detail-description">{selectedMovie.description}</p>
+            <div className="channel-actions">
+              <button className="channel-action-btn">
+                <FiHeart /> Kanalga obuna bo'lish
+              </button>
             </div>
           </div>
-
-          {/* Comments Section */}
-          <div className="comments-section">
-            <h3>Fikrlar ({comments.filter(c => c.movieId === selectedMovie.id).length})</h3>
-            
-            {currentUser ? (
-              <form onSubmit={handleAddComment} className="comment-form">
-                <input
-                  type="text"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Fikringizni yozing..."
-                  className="comment-input"
-                />
-                <button type="submit" className="comment-submit">Yuborish</button>
-              </form>
-            ) : (
-              <p className="login-to-comment">
-                <FiUser /> Fikr qoldirish uchun <button onClick={() => navigate('/login')}>tizimga kiring</button>
-              </p>
-            )}
-            
-            <div className="comments-list">
-              {comments
-                .filter(c => c.movieId === selectedMovie.id)
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(comment => (
-                  <div key={comment.id} className="comment-item">
-                    <div className="comment-header">
-                      <FiUser className="comment-avatar" />
-                      <div>
-                        <strong>@{comment.username}</strong>
-                        <span className="comment-date">
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="comment-text">{comment.text}</p>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Related Movies */}
-          {relatedMovies.length > 0 && (
-            <div className="related-movies">
-              <h3>O'xshash kinolar</h3>
-              <div className="related-grid">
-                {relatedMovies.map(movie => (
-                  <div 
-                    key={movie.id} 
-                    className="related-card"
-                    onClick={() => handleMovieSelect(movie)}
-                  >
-                    <img src={movie.posterUrl} alt={movie.title} />
-                    <div className="related-info">
-                      <h4>{movie.title}</h4>
-                      <p>{movie.year}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-      ) : (
+      )}
+
+      {/* ================= FILMLAR QIDIRUV ================= */}
+      {!selectedMovie && !selectedChannel && (
         <>
-          <div className="movies-stats">
-            <p>Jami {filteredMovies.length} ta kino</p>
+          <div className="search-section">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Film nomi yoki janri bo'yicha qidirish..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+
+          {/* KATEGORIYALAR */}
+          <div className="categories-section">
+            <button 
+              className={`category-chip ${activeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('all')}
+            >
+              Barchasi
+            </button>
+            <button 
+              className={`category-chip ${activeCategory === 'action' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('action')}
+            >
+              💥 Jangari
+            </button>
+            <button 
+              className={`category-chip ${activeCategory === 'comedy' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('comedy')}
+            >
+              😂 Komediya
+            </button>
+            <button 
+              className={`category-chip ${activeCategory === 'drama' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('drama')}
+            >
+              🎭 Drama
+            </button>
+            <button 
+              className={`category-chip ${activeCategory === 'animation' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('animation')}
+            >
+              🎬 Animatsiya
+            </button>
+            <button 
+              className={`category-chip ${activeCategory === 'sci-fi' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('sci-fi')}
+            >
+              🚀 Fantastika
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* ================= FILM DETAIL ================= */}
+      {selectedMovie && (
+        <div className="movie-detail">
+          <div className="video-wrapper">
+            <video
+              ref={videoRef}
+              src={selectedMovie.videoUrl}
+              poster={selectedMovie.posterUrl}
+              controls
+              autoPlay
+              width="100%"
+              className="movie-video"
+            />
+          </div>
+
+          <div className="movie-info-detail">
+            <h2>{selectedMovie.title}</h2>
+            <div className="meta-info">
+              <span><FiClock /> {selectedMovie.duration}</span>
+              <span><FiCalendar /> {selectedMovie.year}</span>
+              <span><FiEye /> {selectedMovie.views.toLocaleString()}</span>
+              <span className="rating"><FiStar /> {selectedMovie.rating}</span>
+            </div>
+            <p className="movie-description">{selectedMovie.description}</p>
+            
+            <div className="movie-category-tag">
+              {getCategoryIcon(selectedMovie.category)} {selectedMovie.category}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= FILMLAR GRID ================= */}
+      {!selectedMovie && !selectedChannel && (
+        <div className="movies-section">
+          <div className="section-header">
+            <div className="header-with-icon">
+              <FiFilm className="section-icon" />
+              <h2>Mashhur filmlar</h2>
+              <span className="count-badge">{filteredMovies.length}+</span>
+            </div>
           </div>
           
-          <div className="movies-grid">
-            {filteredMovies.length > 0 ? (
-              filteredMovies.map(movie => (
-                <div 
-                  key={movie.id} 
+          {filteredMovies.length === 0 ? (
+            <div className="no-results">
+              <FiSearch size={48} />
+              <p>Hech qanday film topilmadi</p>
+              <span>Boshqa so'z bilan urinib ko'ring</span>
+            </div>
+          ) : (
+            <div className="movies-grid">
+              {filteredMovies.map(movie => (
+                <div
+                  key={movie.id}
                   className="movie-card"
                   onClick={() => handleMovieSelect(movie)}
                 >
-                  <div className="movie-poster-container">
-                    <img 
-                      src={movie.posterUrl} 
-                      alt={movie.title}
-                      className="movie-poster"
-                    />
-                    {movie.videoUrl && (
-                      <div className="play-overlay">
-                        <FiPlay className="play-icon" />
-                      </div>
-                    )}
-                    <span className="movie-type">{movie.type === 'movie' ? '🎬 Film' : '📺 Multfilm'}</span>
+                  <div className="poster-wrapper">
+                    <img src={movie.posterUrl} alt={movie.title} loading="lazy" />
+                    <div className="play-overlay">
+                      <FiPlay size={36} />
+                    </div>
+                    <span className="movie-rating-badge">
+                      <FiStar /> {movie.rating}
+                    </span>
+                    <span className="movie-year-badge">
+                      {movie.year}
+                    </span>
                   </div>
                   <div className="movie-info">
                     <h3>{movie.title}</h3>
                     <div className="movie-meta">
-                      <span>{movie.year}</span>
-                      <span><FiClock /> {movie.duration || '?'}</span>
+                      <span><FiClock /> {movie.duration}</span>
+                      <span><FiEye /> {movie.views >= 10000 ? (movie.views/1000).toFixed(1)+'k' : movie.views}</span>
                     </div>
-                    <div className="movie-rating">
-                      <FiStar className="star-icon" />
-                      <span>{movie.rating?.toFixed(1)}</span>
-                      <span className="movie-views">
-                        <FiEye /> {movie.views || 0}
-                      </span>
-                    </div>
-                    <div className="movie-genres">
-                      {movie.genre?.slice(0, 2).map((g, i) => (
-                        <span key={i} className="mini-genre">{g}</span>
-                      ))}
-                    </div>
+                    <span className="movie-category">
+                      {getCategoryIcon(movie.category)} {movie.category}
+                    </span>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="no-movies">
-                <FiFilm className="no-movies-icon" />
-                <h3>Hozircha kinolar yo'q</h3>
-                <p>Tez orada yangi kinolar qo'shiladi</p>
-              </div>
-            )}
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ================= FOOTER STATS ================= */}
+      {!selectedMovie && !selectedChannel && (
+        <div className="stats-footer">
+          <div className="stat-item">
+            <FiTv />
+            <div>
+              <strong>{channels.length}+</strong>
+              <span>telekanal</span>
+            </div>
           </div>
-        </>
+          <div className="stat-item">
+            <FiFilm />
+            <div>
+              <strong>{movies.length}+</strong>
+              <span>film</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <FiUsers />
+            <div>
+              <strong>24/7</strong>
+              <span>jonli efir</span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

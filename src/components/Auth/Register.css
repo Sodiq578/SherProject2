@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.register-container {
+.register-page-wrapper {
   min-height: 100vh;
   background: #000;
   background-image: 
@@ -16,7 +16,7 @@
   padding: 16px;
 }
 
-.register-card {
+.register-form-container {
   width: 100%;
   max-width: 420px;
   background: rgba(10, 20, 30, 0.95);
@@ -28,7 +28,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 100, 255, 0.3);
 }
 
-.register-title {
+.register-form-title {
   color: #fff;
   font-size: 32px;
   font-weight: 700;
@@ -37,19 +37,19 @@
   text-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
 }
 
-.register-form {
+.register-form-fields {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.input-group {
+.register-field-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.input-group label {
+.register-field-label {
   color: #88c0ff;
   font-size: 14px;
   font-weight: 500;
@@ -58,12 +58,12 @@
   gap: 6px;
 }
 
-.input-icon {
+.register-field-icon {
   color: #0066ff;
   font-size: 16px;
 }
 
-.input-group input {
+.register-text-input {
   width: 100%;
   background: rgba(0, 30, 60, 0.8);
   border: 1px solid rgba(0, 150, 255, 0.4);
@@ -75,18 +75,18 @@
   -webkit-appearance: none;
 }
 
-.input-group input:focus {
+.register-text-input:focus {
   outline: none;
   border-color: #0066ff;
   background: rgba(0, 40, 80, 0.9);
   box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2);
 }
 
-.input-group input::placeholder {
+.register-text-input::placeholder {
   color: rgba(136, 192, 255, 0.4);
 }
 
-.register-button {
+.register-submit-btn {
   background: linear-gradient(135deg, #0066ff, #003399);
   border: none;
   border-radius: 16px;
@@ -105,19 +105,19 @@
   width: 100%;
 }
 
-.register-button:active {
+.register-submit-btn:active {
   transform: scale(0.98);
   background: linear-gradient(135deg, #0055dd, #002288);
 }
 
-.register-link {
+.register-redirect-text {
   text-align: center;
   margin-top: 24px;
   color: #88c0ff;
   font-size: 15px;
 }
 
-.register-link a {
+.register-redirect-link {
   color: #0066ff;
   text-decoration: none;
   font-weight: 700;
@@ -126,21 +126,21 @@
 }
 
 @media (max-width: 480px) {
-  .register-card {
+  .register-form-container {
     padding: 28px 20px;
     border-radius: 28px;
   }
   
-  .register-title {
+  .register-form-title {
     font-size: 28px;
     margin-bottom: 28px;
   }
   
-  .input-group input {
+  .register-text-input {
     padding: 15px;
   }
   
-  .register-button {
+  .register-submit-btn {
     padding: 16px;
   }
 }

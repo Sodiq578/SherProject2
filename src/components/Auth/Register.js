@@ -55,13 +55,13 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2 className="register-title">Ro'yxatdan o'tish</h2>
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="input-group">
-            <label>
-              <FiMail className="input-icon" />
+    <div className="register-page-wrapper">
+      <div className="register-form-container">
+        <h2 className="register-form-title">Ro'yxatdan o'tish</h2>
+        <form onSubmit={handleSubmit} className="register-form-fields">
+          <div className="register-field-group">
+            <label className="register-field-label">
+              <FiMail className="register-field-icon" />
               Email
             </label>
             <input
@@ -71,12 +71,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Emailingizni kiriting"
+              className="register-text-input"
             />
           </div>
           
-          <div className="input-group">
-            <label>
-              <FiUser className="input-icon" />
+          <div className="register-field-group">
+            <label className="register-field-label">
+              <FiUser className="register-field-icon" />
               Username
             </label>
             <input
@@ -86,12 +87,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Username kiriting"
+              className="register-text-input"
             />
           </div>
           
-          <div className="input-group">
-            <label>
-              <FiLock className="input-icon" />
+          <div className="register-field-group">
+            <label className="register-field-label">
+              <FiLock className="register-field-icon" />
               Parol
             </label>
             <input
@@ -101,12 +103,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Parolni kiriting"
+              className="register-text-input"
             />
           </div>
           
-          <div className="input-group">
-            <label>
-              <FiLock className="input-icon" />
+          <div className="register-field-group">
+            <label className="register-field-label">
+              <FiLock className="register-field-icon" />
               Parolni takrorlang
             </label>
             <input
@@ -116,16 +119,17 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Parolni qayta kiriting"
+              className="register-text-input"
             />
           </div>
           
-          <button type="submit" className="register-button">
+          <button type="submit" className="register-submit-btn">
             <FiUserPlus /> Ro'yxatdan o'tish
           </button>
         </form>
         
-        <p className="register-link">
-          Hisobingiz bormi? <Link to="/login">Kirish</Link>
+        <p className="register-redirect-text">
+          Hisobingiz bormi? <Link to="/login" className="register-redirect-link">Kirish</Link>
         </p>
       </div>
     </div>

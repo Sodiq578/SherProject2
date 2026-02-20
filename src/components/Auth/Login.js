@@ -34,13 +34,13 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2 className="login-title">Kirish</h2>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="input-group">
-            <label>
-              <FiMail className="input-icon" />
+    <div className="login-page-wrapper">
+      <div className="login-form-container">
+        <h2 className="login-form-title">Kirish</h2>
+        <form onSubmit={handleSubmit} className="login-form-fields">
+          <div className="login-field-group">
+            <label className="login-field-label">
+              <FiMail className="login-field-icon" />
               Email
             </label>
             <input
@@ -50,12 +50,13 @@ const Login = () => {
               onChange={handleChange}
               required
               placeholder="Emailingizni kiriting"
+              className="login-text-input"
             />
           </div>
           
-          <div className="input-group">
-            <label>
-              <FiLock className="input-icon" />
+          <div className="login-field-group">
+            <label className="login-field-label">
+              <FiLock className="login-field-icon" />
               Parol
             </label>
             <input
@@ -65,16 +66,17 @@ const Login = () => {
               onChange={handleChange}
               required
               placeholder="Parolingizni kiriting"
+              className="login-text-input"
             />
           </div>
           
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-submit-btn">
             <FiLogIn /> Kirish
           </button>
         </form>
         
-        <p className="login-link">
-          Hisobingiz yo'qmi? <Link to="/register">Ro'yxatdan o'tish</Link>
+        <p className="login-redirect-text">
+          Hisobingiz yo'qmi? <Link to="/register" className="login-redirect-link">Ro'yxatdan o'tish</Link>
         </p>
       </div>
     </div>

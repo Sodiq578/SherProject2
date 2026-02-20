@@ -9,7 +9,7 @@ body {
   background: #000;
 }
 
-.login-container {
+.login-page-wrapper {
   min-height: 100vh;
   background: #000;
   background-image: 
@@ -22,7 +22,7 @@ body {
   position: relative;
 }
 
-.login-card {
+.login-form-container {
   width: 100%;
   max-width: 400px;
   background: rgba(10, 20, 30, 0.95);
@@ -34,7 +34,7 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 100, 255, 0.3);
 }
 
-.login-title {
+.login-form-title {
   color: #fff;
   font-size: 32px;
   font-weight: 700;
@@ -43,19 +43,19 @@ body {
   text-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
 }
 
-.login-form {
+.login-form-fields {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.input-group {
+.login-field-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.input-group label {
+.login-field-label {
   color: #88c0ff;
   font-size: 14px;
   font-weight: 500;
@@ -64,12 +64,12 @@ body {
   gap: 6px;
 }
 
-.input-icon {
+.login-field-icon {
   color: #0066ff;
   font-size: 16px;
 }
 
-.input-group input {
+.login-text-input {
   width: 100%;
   background: rgba(0, 30, 60, 0.8);
   border: 1px solid rgba(0, 150, 255, 0.4);
@@ -81,19 +81,19 @@ body {
   -webkit-appearance: none;
 }
 
-.input-group input:focus {
+.login-text-input:focus {
   outline: none;
   border-color: #0066ff;
   background: rgba(0, 40, 80, 0.9);
   box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2);
 }
 
-.input-group input::placeholder {
+.login-text-input::placeholder {
   color: rgba(136, 192, 255, 0.4);
   font-size: 15px;
 }
 
-.login-button {
+.login-submit-btn {
   background: linear-gradient(135deg, #0066ff, #003399);
   border: none;
   border-radius: 16px;
@@ -112,19 +112,19 @@ body {
   width: 100%;
 }
 
-.login-button:active {
+.login-submit-btn:active {
   transform: scale(0.98);
   background: linear-gradient(135deg, #0055dd, #002288);
 }
 
-.login-link {
+.login-redirect-text {
   text-align: center;
   margin-top: 24px;
   color: #88c0ff;
   font-size: 15px;
 }
 
-.login-link a {
+.login-redirect-link {
   color: #0066ff;
   text-decoration: none;
   font-weight: 700;
@@ -133,21 +133,21 @@ body {
 }
 
 @media (max-width: 480px) {
-  .login-card {
+  .login-form-container {
     padding: 28px 20px;
     border-radius: 28px;
   }
   
-  .login-title {
+  .login-form-title {
     font-size: 28px;
     margin-bottom: 28px;
   }
   
-  .input-group input {
+  .login-text-input {
     padding: 15px;
   }
   
-  .login-button {
+  .login-submit-btn {
     padding: 16px;
     font-size: 17px;
   }
