@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn, FiDownload } from 'react-icons/fi';
 import './Login.css';
 
 const Login = () => {
@@ -33,10 +33,16 @@ const Login = () => {
     }
   };
 
+  const handleInstallClick = () => {
+    alert("Ilova o'rnatish boshlandi!\n\n(Agar brauzer PWA ni qo'llab-quvvatlasa, o'rnatish oynasi chiqadi)");
+    // Keyinchalik bu yerda real beforeinstallprompt event ishlatiladi
+  };
+
   return (
     <div className="login-page-wrapper">
       <div className="login-form-container">
         <h2 className="login-form-title">Kirish</h2>
+        
         <form onSubmit={handleSubmit} className="login-form-fields">
           <div className="login-field-group">
             <label className="login-field-label">
@@ -74,6 +80,16 @@ const Login = () => {
             <FiLogIn /> Kirish
           </button>
         </form>
+
+        <div className="install-section">
+          <p className="install-text">Ilovani telefon yoki kompyuteringizga o'rnatib oling</p>
+          <button 
+            onClick={handleInstallClick}
+            className="install-app-btn"
+          >
+            <FiDownload /> Telefon yoki kompyuterga o'rnatish
+          </button>
+        </div>
         
         <p className="login-redirect-text">
           Hisobingiz yo'qmi? <Link to="/register" className="login-redirect-link">Ro'yxatdan o'tish</Link>
