@@ -18,7 +18,7 @@ const DatingPage = () => {
   const navigate = useNavigate();
   const [currentProfile, setCurrentProfile] = useState(null);
   const [profiles, setProfiles] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0); // ✅ To'g'ri nom
   const [loading, setLoading] = useState(true);
   const [currentUser] = useState(JSON.parse(localStorage.getItem('currentUser') || 'null'));
   const [userHasProfile, setUserHasProfile] = useState(false);
@@ -40,14 +40,14 @@ const DatingPage = () => {
 
       if (otherProfiles.length > 0) {
         setCurrentProfile(otherProfiles[0]);
-        setCurrentIndex(0);
+        setCurrentProfileIndex(0); // ✅ currentIndex emas, currentProfileIndex
       }
       setLoading(false);
     }, 800);
   }, [currentUser, navigate]);
 
   const handleNext = () => {
-    setCurrentIndex(prev => {
+    setCurrentProfileIndex(prev => {
       const nextIndex = prev + 1;
       if (nextIndex >= profiles.length) {
         setCurrentProfile(null);
@@ -96,6 +96,10 @@ const DatingPage = () => {
     handleNext();
   };
 
+  const handleGoBack = () => {
+    navigate('/main');
+  };
+
   const getInterestIcon = (interest) => {
     switch (interest?.toLowerCase()) {
       case 'musiqa': return <FiMusic />;
@@ -119,7 +123,7 @@ const DatingPage = () => {
     return (
       <div className="dating-container">
         <div className="dating-header">
-          <button onClick={() => navigate('/main')} className="back-button">
+          <button onClick={handleGoBack} className="back-button">
             <FiArrowLeft />
           </button>
           <h1><FiHeart /> Dating</h1>
@@ -144,13 +148,17 @@ const DatingPage = () => {
     return (
       <div className="dating-container">
         <div className="dating-header">
+          <button onClick={handleGoBack} className="back-button">
+            <FiArrowLeft />
+          </button>
           <h1><FiHeart /> Dating</h1>
+          <div className="header-placeholder" />
         </div>
         <div className="empty-state">
           <FiUser className="empty-icon" />
           <h3>Hozircha boshqa foydalanuvchilar yo'q</h3>
           <p>Keyinroq qayta urinib ko'ring yoki do'stlaringizni taklif qiling</p>
-          <button onClick={() => navigate('/main')} className="action-button primary">
+          <button onClick={handleGoBack} className="action-button primary">
             Bosh sahifaga
           </button>
         </div>
@@ -161,7 +169,11 @@ const DatingPage = () => {
   return (
     <div className="dating-container">
       <div className="dating-header">
+        <button onClick={handleGoBack} className="back-button">
+          <FiArrowLeft />
+        </button>
         <h1><FiHeart /> Dating</h1>
+        <div className="header-placeholder" />
       </div>
 
       <div className="dating-card">
