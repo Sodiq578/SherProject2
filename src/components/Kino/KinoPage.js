@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiFilm, 
@@ -7,7 +7,7 @@ import {
   FiStar,
   FiArrowLeft,
   FiPlay
-} from 'react-icons/fi'; // FiTrendingUp, FiRadio, FiMusic, FiCoffee, FiAward olib tashlandi
+} from 'react-icons/fi';
 import './KinoPage.css';
 
 const KinoPage = () => {
@@ -31,21 +31,7 @@ const KinoPage = () => {
     'Thriller'
   ];
 
-  useEffect(() => {
-    loadMovies();
-  }, []);
-
-  useEffect(() => {
-    filterMovies();
-  }, [movies, searchTerm, selectedGenre, selectedType]);
-
-  const loadMovies = () => {
-    const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
-    setMovies(savedMovies);
-    setFilteredMovies(savedMovies);
-  };
-
-  const filterMovies = () => {
+  const filterMovies = useCallback(() => {
     let filtered = [...movies];
 
     if (searchTerm) {
@@ -65,6 +51,25 @@ const KinoPage = () => {
     }
 
     setFilteredMovies(filtered);
+  }, [movies, searchTerm, selectedGenre, selectedType]);
+
+  useEffect(() => {
+    loadMovies();
+  }, []);
+
+  useEffect(() => {
+    filterMovies();
+  }, [filterMovies]);
+
+  const loadMovies = () => {
+    const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
+    setMovies(savedMovies);
+    setFilteredMovies(savedMovies);
+  };
+
+  const handleGoBack = () => {
+    // ✅ TUZATILDI: Asosiy sahifaga qaytish (main page)
+    navigate('/main');
   };
 
   const handleMovieClick = (movie) => {
@@ -83,7 +88,7 @@ const KinoPage = () => {
   return (
     <div className="kino-container">
       <div className="kino-header">
-        <button onClick={() => navigate('/')} className="back-btn">
+        <button onClick={handleGoBack} className="back-btn"> {/* ✅ handleGoBack ishlatildi */}
           <FiArrowLeft />
         </button>
         <h1>Kinolar</h1>
