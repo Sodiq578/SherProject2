@@ -4,7 +4,6 @@ import {
   FiShoppingBag, 
   FiTrash2,
   FiUser,
-  FiCalendar,
   FiShield,
   FiHome,
   FiFilm,
@@ -16,9 +15,7 @@ import {
   FiEye,
   FiX,
   FiEdit2,
-  FiMapPin,
-  FiTag,
-  FiDollarSign
+  FiMapPin
 } from 'react-icons/fi';
 import './Admin.css';
 
