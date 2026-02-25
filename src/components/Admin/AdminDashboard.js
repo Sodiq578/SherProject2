@@ -8,7 +8,6 @@ import {
   FiLogOut,
   FiMenu,
   FiHome,
-  FiStar,
   FiTrendingUp,
   FiShield,
   FiCalendar,
@@ -17,7 +16,7 @@ import {
   FiSettings,
   FiBell,
   FiUser
-} from 'react-icons/fi';
+} from 'react-icons/fi'; // FiStar olib tashlandi
 import './Admin.css';
 
 const AdminDashboard = () => {

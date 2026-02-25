@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiShoppingBag, 
@@ -49,27 +49,8 @@ const AdminAds = () => {
     'boshqa'
   ];
 
-  useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem('adminUser'));
-    if (!admin) {
-      navigate('/admin');
-      return;
-    }
-    setAdminUser(admin);
-    loadAds();
-  }, [navigate]);
-
-  useEffect(() => {
-    filterAds();
-  }, [ads, searchTerm, filterCategory]);
-
-  const loadAds = () => {
-    const savedAds = JSON.parse(localStorage.getItem('ads') || '[]');
-    setAds(savedAds);
-    setFilteredAds(savedAds);
-  };
-
-  const filterAds = () => {
+  // filterAds ni useCallback bilan memoize qilish
+  const filterAds = useCallback(() => {
     let filtered = [...ads];
 
     if (searchTerm) {
@@ -84,6 +65,26 @@ const AdminAds = () => {
     }
 
     setFilteredAds(filtered);
+  }, [ads, searchTerm, filterCategory]);
+
+  useEffect(() => {
+    const admin = JSON.parse(localStorage.getItem('adminUser'));
+    if (!admin) {
+      navigate('/admin');
+      return;
+    }
+    setAdminUser(admin);
+    loadAds();
+  }, [navigate]);
+
+  useEffect(() => {
+    filterAds();
+  }, [filterAds]); // filterAds dependency sifatida
+
+  const loadAds = () => {
+    const savedAds = JSON.parse(localStorage.getItem('ads') || '[]'); // ✅ TUZATILDI: lStorage -> localStorage
+    setAds(savedAds);
+    setFilteredAds(savedAds);
   };
 
   const handleDelete = (adId) => {
@@ -360,7 +361,7 @@ const AdminAds = () => {
                 <div className="ad-card-body">
                   <h3>{ad.title}</h3>
                   <div className="ad-price">{formatPrice(ad.price)}</div>
-                  <p className="ad-description-preview">{ad.description.substring(0, 60)}...</p>
+                  <p className="ad-description-preview">{ad.description?.substring(0, 60)}...</p>
                   <div className="ad-meta">
                     <span><FiMapPin /> {ad.location}</span>
                     <span><FiEye /> {ad.views || 0}</span>

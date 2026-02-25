@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiHeart, 
   FiTrash2,
   FiUser,
-  FiCalendar,
   FiShield,
   FiHome,
   FiFilm,
@@ -13,14 +12,13 @@ import {
   FiLogOut,
   FiMenu,
   FiSearch,
-  FiEye,
   FiX,
   FiEdit2,
   FiMusic,
   FiMonitor,
   FiCamera,
   FiCoffee
-} from 'react-icons/fi';
+} from 'react-icons/fi'; // FiCalendar va FiEye olib tashlandi
 import './Admin.css';
 
 const AdminDating = () => {
@@ -52,6 +50,19 @@ const AdminDating = () => {
     { id: 'sayokat', label: 'Sayohat', icon: <FiHeart /> }
   ];
 
+  // filterProfiles ni useCallback bilan memoize qilish
+  const filterProfiles = useCallback(() => {
+    if (searchTerm) {
+      const filtered = profiles.filter(p => 
+        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.bio?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProfiles(filtered);
+    } else {
+      setFilteredProfiles(profiles);
+    }
+  }, [profiles, searchTerm]);
+
   useEffect(() => {
     const admin = JSON.parse(localStorage.getItem('adminUser'));
     if (!admin) {
@@ -64,24 +75,12 @@ const AdminDating = () => {
 
   useEffect(() => {
     filterProfiles();
-  }, [profiles, searchTerm]);
+  }, [filterProfiles]); // filterProfiles dependency sifatida
 
   const loadProfiles = () => {
     const savedProfiles = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
     setProfiles(savedProfiles);
     setFilteredProfiles(savedProfiles);
-  };
-
-  const filterProfiles = () => {
-    if (searchTerm) {
-      const filtered = profiles.filter(p => 
-        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.bio?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredProfiles(filtered);
-    } else {
-      setFilteredProfiles(profiles);
-    }
   };
 
   const handleDelete = (profileId) => {

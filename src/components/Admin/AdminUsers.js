@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiUsers, 
   FiTrash2,
-  FiMail,
   FiUser,
   FiCalendar,
   FiShield,
@@ -14,11 +13,8 @@ import {
   FiLogOut,
   FiMenu,
   FiSearch,
-  FiEye,
-  FiUserCheck,
-  FiUserX,
-  FiX  // ✅ QO'SHILDI
-} from 'react-icons/fi';
+  FiX
+} from 'react-icons/fi'; // FiMail, FiEye, FiUserCheck, FiUserX olib tashlandi
 import './Admin.css';
 
 const AdminUsers = () => {
@@ -29,6 +25,19 @@ const AdminUsers = () => {
   const [adminUser, setAdminUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
+
+  // filterUsers ni useCallback bilan memoize qilish
+  const filterUsers = useCallback(() => {
+    if (searchTerm) {
+      const filtered = users.filter(u => 
+        u.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  }, [users, searchTerm]);
 
   useEffect(() => {
     const admin = JSON.parse(localStorage.getItem('adminUser'));
@@ -42,24 +51,12 @@ const AdminUsers = () => {
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchTerm]);
+  }, [filterUsers]); // filterUsers dependency sifatida
 
   const loadUsers = () => {
     const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
     setUsers(savedUsers);
     setFilteredUsers(savedUsers);
-  };
-
-  const filterUsers = () => {
-    if (searchTerm) {
-      const filtered = users.filter(u => 
-        u.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.email?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers(users);
-    }
   };
 
   const handleDelete = (userId) => {

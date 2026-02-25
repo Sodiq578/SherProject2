@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiFilm, 
@@ -6,8 +6,6 @@ import {
   FiEdit2, 
   FiTrash2,
   FiStar,
-  FiCalendar,
-  FiTag,
   FiSave,
   FiX,
   FiShield,
@@ -18,15 +16,13 @@ import {
   FiLogOut,
   FiMenu,
   FiSearch,
-  FiFilter,
   FiEye,
-  FiClock,
   FiUser,
-  FiVideo,           // ✅ VIDEO IKONKASI
-  FiUpload,          // ✅ UPLOAD IKONKASI
-  FiLink,            // ✅ LINK IKONKASI
-  FiPlayCircle       // ✅ PLAY IKONKASI
-} from 'react-icons/fi';
+  FiVideo,
+  FiUpload,
+  FiLink,
+  FiPlayCircle
+} from 'react-icons/fi'; // FiCalendar, FiTag, FiFilter, FiClock olib tashlandi
 import './Admin.css';
 
 const AdminMovies = () => {
@@ -40,7 +36,7 @@ const AdminMovies = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterYear, setFilterYear] = useState('all');
-  const [videoSource, setVideoSource] = useState('youtube'); // 'youtube', 'file', 'url'
+  const [videoSource, setVideoSource] = useState('youtube');
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [videoPreview, setVideoPreview] = useState(null);
@@ -48,8 +44,8 @@ const AdminMovies = () => {
     title: '',
     description: '',
     posterUrl: '',
-    videoUrl: '',           // ✅ VIDEO URL
-    videoFile: null,        // ✅ VIDEO FILE
+    videoUrl: '',
+    videoFile: null,
     year: '',
     genre: [],
     rating: '',
@@ -59,27 +55,8 @@ const AdminMovies = () => {
     cast: ''
   });
 
-  useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem('adminUser'));
-    if (!admin) {
-      navigate('/admin');
-      return;
-    }
-    setAdminUser(admin);
-    loadMovies();
-  }, [navigate]);
-
-  useEffect(() => {
-    filterMovies();
-  }, [movies, searchTerm, filterType, filterYear]);
-
-  const loadMovies = () => {
-    const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
-    setMovies(savedMovies);
-    setFilteredMovies(savedMovies);
-  };
-
-  const filterMovies = () => {
+  // filterMovies ni useCallback bilan memoize qilish
+  const filterMovies = useCallback(() => {
     let filtered = [...movies];
 
     if (searchTerm) {
@@ -98,6 +75,26 @@ const AdminMovies = () => {
     }
 
     setFilteredMovies(filtered);
+  }, [movies, searchTerm, filterType, filterYear]);
+
+  useEffect(() => {
+    const admin = JSON.parse(localStorage.getItem('adminUser'));
+    if (!admin) {
+      navigate('/admin');
+      return;
+    }
+    setAdminUser(admin);
+    loadMovies();
+  }, [navigate]);
+
+  useEffect(() => {
+    filterMovies();
+  }, [filterMovies]); // filterMovies dependency sifatida
+
+  const loadMovies = () => {
+    const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
+    setMovies(savedMovies);
+    setFilteredMovies(savedMovies);
   };
 
   const handleChange = (e) => {
@@ -124,17 +121,14 @@ const AdminMovies = () => {
     }));
   };
 
-  // ✅ VIDEO FILE UPLOAD HANDLER
   const handleVideoFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Video fayl tekshirish
       if (!file.type.startsWith('video/')) {
         alert('Iltimos, video fayl tanlang!');
         return;
       }
 
-      // Hajm tekshirish (50MB dan katta bo'lmasin)
       if (file.size > 50 * 1024 * 1024) {
         alert('Video hajmi 50MB dan kichik bo\'lishi kerak!');
         return;
@@ -146,11 +140,9 @@ const AdminMovies = () => {
         videoFile: file
       }));
 
-      // Video preview yaratish
       const videoUrl = URL.createObjectURL(file);
       setVideoPreview(videoUrl);
 
-      // Progress simulyatsiyasi
       let progress = 0;
       const interval = setInterval(() => {
         progress += 10;
@@ -162,7 +154,6 @@ const AdminMovies = () => {
     }
   };
 
-  // ✅ VIDEO URL HANDLER
   const handleVideoUrlChange = (e) => {
     const url = e.target.value;
     setFormData(prev => ({
@@ -170,7 +161,6 @@ const AdminMovies = () => {
       videoUrl: url
     }));
 
-    // YouTube video ID ni olish
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       const videoId = extractYouTubeId(url);
       if (videoId) {
@@ -179,7 +169,6 @@ const AdminMovies = () => {
     }
   };
 
-  // ✅ YouTube ID ni olish
   const extractYouTubeId = (url) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
@@ -189,12 +178,10 @@ const AdminMovies = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Video ma'lumotlarini saqlash
     let videoData = {};
     if (videoSource === 'youtube' || videoSource === 'url') {
       videoData = { videoUrl: formData.videoUrl };
     } else if (videoSource === 'file' && selectedVideo) {
-      // Faylni base64 formatiga o'tkazish (localStorage uchun)
       const reader = new FileReader();
       reader.readAsDataURL(selectedVideo);
       reader.onload = () => {
@@ -221,7 +208,6 @@ const AdminMovies = () => {
       views: editingMovie ? editingMovie.views || 0 : 0
     };
 
-    // videoFile ni o'chirish (base64 formatda saqlangan)
     delete movieData.videoFile;
 
     let updatedMovies;
@@ -442,7 +428,6 @@ const AdminMovies = () => {
                   </div>
                 </div>
 
-                {/* ✅ VIDEO QO'SHISH BO'LIMI */}
                 <div className="form-section">
                   <h4 className="section-title">
                     <FiVideo /> Video qo'shish
@@ -483,7 +468,7 @@ const AdminMovies = () => {
                         placeholder="https://youtube.com/watch?v=..."
                       />
                       <small className="input-hint">
-                        Misol: https://youtube.com/watch?v=abc123 yoki https://youtu.be/abc123
+                        Misol: https://youtube.com/watch?v=abc123
                       </small>
                     </div>
                   )}
@@ -700,7 +685,6 @@ const AdminMovies = () => {
                       <div className="movie-title-cell">
                         <strong>{movie.title}</strong>
                         {movie.director && <small>{movie.director}</small>}
-                        {/* ✅ VIDEO BORLIGINI KO'RSATISH */}
                         {(movie.videoUrl || movie.videoData) && (
                           <span className="video-badge">
                             <FiVideo /> Video mavjud
