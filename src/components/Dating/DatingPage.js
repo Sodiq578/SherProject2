@@ -18,7 +18,7 @@ const DatingPage = () => {
   const navigate = useNavigate();
   const [currentProfile, setCurrentProfile] = useState(null);
   const [profiles, setProfiles] = useState([]);
-  const [currentProfileIndex, setCurrentProfileIndex] = useState(0); // ✅ To'g'ri nom
+  // ✅ currentProfileIndex ishlatilmayapti - olib tashlandi
   const [loading, setLoading] = useState(true);
   const [currentUser] = useState(JSON.parse(localStorage.getItem('currentUser') || 'null'));
   const [userHasProfile, setUserHasProfile] = useState(false);
@@ -40,22 +40,23 @@ const DatingPage = () => {
 
       if (otherProfiles.length > 0) {
         setCurrentProfile(otherProfiles[0]);
-        setCurrentProfileIndex(0); // ✅ currentIndex emas, currentProfileIndex
+        // ✅ currentProfileIndex ishlatilmayapti - olib tashlandi
       }
       setLoading(false);
     }, 800);
   }, [currentUser, navigate]);
 
   const handleNext = () => {
-    setCurrentProfileIndex(prev => {
-      const nextIndex = prev + 1;
-      if (nextIndex >= profiles.length) {
-        setCurrentProfile(null);
-        return prev;
-      }
+    if (!profiles.length) return;
+    
+    const currentIndex = profiles.findIndex(p => p.id === currentProfile?.id);
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < profiles.length) {
       setCurrentProfile(profiles[nextIndex]);
-      return nextIndex;
-    });
+    } else {
+      setCurrentProfile(null);
+    }
   };
 
   const handleLike = () => {
