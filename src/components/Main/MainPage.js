@@ -33,7 +33,7 @@ const MainPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
-    localStorage.removeItem('datingProfiles'); // Profil ma'lumotlarini ham tozalash
+    localStorage.removeItem('datingProfiles');
     navigate('/');
   };
 
@@ -129,6 +129,11 @@ const MainPage = () => {
         <button onClick={() => navigate('/elonlar')} className="main-button elon">
           <FiShoppingBag className="button-icon" />
           <span className="button-text">E'lonlar</span>
+        </button>
+
+        <button onClick={() => navigate('/savollar')} className="main-button elon">
+          <FiShoppingBag className="button-icon" />
+          <span className="button-text">Savollar</span>
         </button>
       </div>
 

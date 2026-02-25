@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';  // ✅ useState qo'shildi
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 
@@ -26,6 +26,9 @@ import AdminMovies from './components/Admin/AdminMovies';
 import AdminUsers from './components/Admin/AdminUsers';
 import AdminDating from './components/Admin/AdminDating';
 import AdminAds from './components/Admin/AdminAds';
+
+// Savollar
+import PollCard from './components/PollCard/PollCard';
 
 // Keyboard shortcut komponenti
 const KeyboardHandler = ({ children }) => {
@@ -150,6 +153,9 @@ function App() {
             
             {/* Elonlar */}
             <Route path="/elonlar" element={<ElonlarPage />} />
+            
+            {/* Savollar */}
+            <Route path="/savollar" element={<PollCard />} />
             
             {/* Admin */}
             <Route path="/admin" element={<AdminLogin />} />
