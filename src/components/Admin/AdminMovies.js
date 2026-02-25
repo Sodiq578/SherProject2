@@ -22,7 +22,7 @@ import {
   FiUpload,
   FiLink,
   FiPlayCircle
-} from 'react-icons/fi'; // FiCalendar, FiTag, FiFilter, FiClock olib tashlandi
+} from 'react-icons/fi';
 import './Admin.css';
 
 const AdminMovies = () => {
@@ -55,7 +55,6 @@ const AdminMovies = () => {
     cast: ''
   });
 
-  // filterMovies ni useCallback bilan memoize qilish
   const filterMovies = useCallback(() => {
     let filtered = [...movies];
 
@@ -89,7 +88,7 @@ const AdminMovies = () => {
 
   useEffect(() => {
     filterMovies();
-  }, [filterMovies]); // filterMovies dependency sifatida
+  }, [filterMovies]);
 
   const loadMovies = () => {
     const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
@@ -169,8 +168,9 @@ const AdminMovies = () => {
     }
   };
 
+  // ✅ TUZATILGAN: No-useless-escape xatosi yo'q
   const extractYouTubeId = (url) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
   };
