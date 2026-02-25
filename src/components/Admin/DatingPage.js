@@ -18,7 +18,7 @@ const DatingPage = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [profiles, setProfiles] = useState([]);
-  // ✅ currentIndex o'rniga currentProfileIndex ishlatilyapti
+  // ✅ currentIndex emas - currentProfileIndex ishlatilyapti
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   const [likedProfiles, setLikedProfiles] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
@@ -74,7 +74,7 @@ const DatingPage = () => {
   };
 
   const handleGoBack = () => {
-    navigate('/main'); // Asosiy sahifaga qaytish
+    navigate('/main');
   };
 
   const getInterestIcon = (interest) => {
