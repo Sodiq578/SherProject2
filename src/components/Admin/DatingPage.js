@@ -18,7 +18,8 @@ const DatingPage = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [profiles, setProfiles] = useState([]);
-  const [currentProfileIndex, setCurrentProfileIndex] = useState(0); // currentIndex o'rniga currentProfileIndex
+  // ✅ currentIndex o'rniga currentProfileIndex ishlatilyapti
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   const [likedProfiles, setLikedProfiles] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -72,6 +73,10 @@ const DatingPage = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate('/main'); // Asosiy sahifaga qaytish
+  };
+
   const getInterestIcon = (interest) => {
     switch(interest) {
       case 'musiqa': return '🎵';
@@ -83,10 +88,6 @@ const DatingPage = () => {
     }
   };
 
-  const formatAge = (age) => {
-    return `${age} yosh`;
-  };
-
   if (!currentUser) {
     return null;
   }
@@ -95,7 +96,7 @@ const DatingPage = () => {
     return (
       <div className="dating-container">
         <div className="dating-header">
-          <button onClick={() => navigate(-1)} className="back-btn">
+          <button onClick={handleGoBack} className="back-btn">
             <FiArrowLeft />
           </button>
           <h1>Dating</h1>
@@ -116,7 +117,7 @@ const DatingPage = () => {
     return (
       <div className="dating-container">
         <div className="dating-header">
-          <button onClick={() => navigate(-1)} className="back-btn">
+          <button onClick={handleGoBack} className="back-btn">
             <FiArrowLeft />
           </button>
           <h1>Dating</h1>
@@ -138,7 +139,7 @@ const DatingPage = () => {
   return (
     <div className="dating-container">
       <div className="dating-header">
-        <button onClick={() => navigate(-1)} className="back-btn">
+        <button onClick={handleGoBack} className="back-btn">
           <FiArrowLeft />
         </button>
         <h1>Dating</h1>
@@ -208,7 +209,27 @@ const DatingPage = () => {
                 <FiX />
               </button>
             </div>
-            {/* Filter content here */}
+            <div className="filter-section">
+              <h4>Yosh oralig'i</h4>
+              <div className="age-range">
+                <input 
+                  type="range" 
+                  min="18" 
+                  max="60" 
+                  value={filters.ageRange[0]} 
+                  onChange={(e) => setFilters({...filters, ageRange: [parseInt(e.target.value), filters.ageRange[1]]})}
+                />
+                <span>{filters.ageRange[0]} - {filters.ageRange[1]}</span>
+              </div>
+            </div>
+            <div className="filter-section">
+              <h4>Jins</h4>
+              <select value={filters.gender} onChange={(e) => setFilters({...filters, gender: e.target.value})}>
+                <option value="all">Hammasi</option>
+                <option value="male">Erkak</option>
+                <option value="female">Ayol</option>
+              </select>
+            </div>
           </div>
         </div>
       )}
