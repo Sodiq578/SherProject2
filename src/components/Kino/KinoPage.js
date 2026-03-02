@@ -47,7 +47,7 @@ const KinoPage = () => {
     '1990-1999', '1980-1989', '1970-1979'
   ];
 
-  // YouTube trailers
+  // YouTube treylerlar
   const trailers = {
     1: "https://www.youtube.com/embed/U2Qp5pL3ovA?autoplay=1",
     2: "https://www.youtube.com/embed/Idh8n5XuYIA?autoplay=1",
@@ -101,7 +101,7 @@ const KinoPage = () => {
     50: "https://www.youtube.com/embed/JNwNXF9Y6kY?autoplay=1"
   };
 
-  // Video URLs (working samples)
+  // Asl video manzillari
   const videoUrls = {
     1: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     4: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
@@ -115,50 +115,9 @@ const KinoPage = () => {
     45: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
   };
 
-  // 50+ movies with working poster URLs
+  // 50+ ta kinolar
   const sampleMovies = [
-    {
-      id: 1,
-      title: "Dune: Part Two",
-      year: "2024",
-      genre: ["Sci-Fi", "Adventure", "Action"],
-      director: "Denis Villeneuve",
-      rating: 9.2,
-      duration: "2h 46m",
-      description: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
-      cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Austin Butler"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-      type: "movie",
-      trending: true
-    },
-    {
-      id: 2,
-      title: "Deadpool 3",
-      year: "2024",
-      genre: ["Action", "Comedy", "Adventure"],
-      director: "Shawn Levy",
-      rating: 8.9,
-      duration: "2h 10m",
-      description: "Deadpool travels through time with Wolverine, experiencing new adventures in the Marvel multiverse.",
-      cast: ["Ryan Reynolds", "Hugh Jackman", "Emma Corrin"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/4wbD3rxCqS3z8QkJ9Lge6DUMueP.jpg",
-      type: "movie",
-      trending: true
-    },
-    {
-      id: 3,
-      title: "Kung Fu Panda 4",
-      year: "2024",
-      genre: ["Animation", "Action", "Adventure"],
-      director: "Mike Mitchell",
-      rating: 8.5,
-      duration: "1h 34m",
-      description: "Po must train a new warrior to fight a new enemy - a magical chameleon, and maintain peace in the Valley of Peace.",
-      cast: ["Jack Black", "Awkwafina", "Viola Davis"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/kDp1vUBnMpe8ak4rjgl3cLELqjU.jpg",
-      type: "cartoon",
-      trending: true
-    },
+   
     {
       id: 4,
       title: "Oppenheimer",
@@ -167,12 +126,12 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 9.3,
       duration: "3h 0m",
-      description: "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.",
+      description: "Atom bombasining yaratilish tarixi va uning yaratuvchisi J. Robert Oppenheimerning hayoti haqida.",
       cast: ["Cillian Murphy", "Emily Blunt", "Robert Downey Jr."],
-      posterUrl: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg",
       type: "movie",
       trending: true,
-      awards: "7 Oscars"
+      awards: "7 Oscar"
     },
     {
       id: 5,
@@ -182,9 +141,9 @@ const KinoPage = () => {
       director: "Greta Gerwig",
       rating: 8.7,
       duration: "1h 54m",
-      description: "Barbie and Ken travel to the real world and discover the joys and perils of being human.",
+      description: "Barbie va Ken haqiqiy dunyoga sayohat qilishadi.",
       cast: ["Margot Robbie", "Ryan Gosling", "America Ferrera"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjk1NC00MTc4LTk1NTQtMmUxNTljM2I0NDA5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg",
       type: "movie"
     },
     {
@@ -195,9 +154,9 @@ const KinoPage = () => {
       director: "Joaquim Dos Santos",
       rating: 9.4,
       duration: "2h 20m",
-      description: "Miles Morales embarks on a new adventure across the multiverse with various Spider-People.",
+      description: "Miles Morales o'rgimchak-odamlar multiverse bo'ylab yangi sarguzashtni boshlaydi.",
       cast: ["Shameik Moore", "Hailee Steinfeld", "Oscar Isaac"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg",
       type: "cartoon",
       trending: true
     },
@@ -209,9 +168,9 @@ const KinoPage = () => {
       director: "Chad Stahelski",
       rating: 9.1,
       duration: "2h 49m",
-      description: "John Wick faces his most dangerous adversaries yet in his final battle for freedom.",
+      description: "John Wick o'zining so'nggi jangiga tayyor.",
       cast: ["Keanu Reeves", "Donnie Yen", "Bill Skarsgård"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTdkZGFjNmZiMTEwXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg",
       type: "movie"
     },
     {
@@ -222,9 +181,9 @@ const KinoPage = () => {
       director: "Joseph Kosinski",
       rating: 9.2,
       duration: "2h 10m",
-      description: "After 36 years, Maverick trains a new generation of pilots for a dangerous mission.",
+      description: "36 yildan so'ng Maverick yangi avlod uchuvchilarni tayyorlaydi.",
       cast: ["Tom Cruise", "Miles Teller", "Jennifer Connelly"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZWYzOGEwNTgtNWU3NS00ZTQ0LWJkODUtMmVhMjIwMjA1ZmQwXkEyXkFqcGdeQXVyMjI4MjA5MzA@._V1_.jpg",
       type: "movie",
       trending: true
     },
@@ -236,9 +195,9 @@ const KinoPage = () => {
       director: "James Cameron",
       rating: 8.9,
       duration: "3h 12m",
-      description: "Jake Sully and Neytiri join the Metkayina clan to protect their underwater world.",
+      description: "Jake Sully va Neytiri Pandoraning suv osti dunyosida yashaydigan Metkayina qabilasiga qo'shilishadi.",
       cast: ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_.jpg",
       type: "movie"
     },
     {
@@ -249,9 +208,9 @@ const KinoPage = () => {
       director: "Matt Reeves",
       rating: 8.8,
       duration: "2h 56m",
-      description: "Batman fights corruption in Gotham City while confronting the Riddler.",
+      description: "Betmen Gotham shahridagi korrupsiyaga qarshi kurashadi.",
       cast: ["Robert Pattinson", "Zoë Kravitz", "Paul Dano"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg",
       type: "movie"
     },
     {
@@ -262,9 +221,9 @@ const KinoPage = () => {
       director: "Denis Villeneuve",
       rating: 8.8,
       duration: "2h 35m",
-      description: "Paul Atreides moves with his family to the most dangerous planet, Arrakis.",
+      description: "Pol Atreides oilasi bilan birga eng xavfli sayyoraga ko'chib o'tadi.",
       cast: ["Timothée Chalamet", "Rebecca Ferguson", "Oscar Isaac"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
       type: "movie"
     },
     {
@@ -275,9 +234,9 @@ const KinoPage = () => {
       director: "Jon Watts",
       rating: 9.3,
       duration: "2h 28m",
-      description: "When Spider-Man's identity is revealed, he asks Doctor Strange for help, opening the multiverse.",
+      description: "O'rgimchak-odamning kimligi oshkor bo'lgach, u Doktor Strenjdan yordam so'raydi.",
       cast: ["Tom Holland", "Zendaya", "Benedict Cumberbatch"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg",
       type: "movie",
       trending: true
     },
@@ -289,9 +248,9 @@ const KinoPage = () => {
       director: "Jared Bush",
       rating: 8.6,
       duration: "1h 42m",
-      description: "A magical family in Colombia discovers the power of being ordinary.",
+      description: "Kolumbiyada sehrli kuchlarga ega oila haqida.",
       cast: ["Stephanie Beatriz", "John Leguizamo", "Diane Guerrero"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/4j0PNHkMr5ax3IA8tj4xy0nf4Ih.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNjE5NzA4ZDctOTJkZi00NzM0LTkwOTYtMDI4MmNkMzIxODhkXkEyXkFqcGdeQXVyNjY1MTg4Mzc@._V1_.jpg",
       type: "cartoon"
     },
     {
@@ -302,9 +261,9 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 8.2,
       duration: "2h 30m",
-      description: "A secret agent manipulates time to prevent World War III.",
+      description: "Vaqtni orqaga qaytarish orqali dunyoni qutqarish.",
       cast: ["John David Washington", "Robert Pattinson", "Elizabeth Debicki"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/k68nPLbIST6NP96JmTxmZijEvCA.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZDE5NzhjNGYtNGMxZS00YzUwLWE3YjUtNGJjZTMyNTA2M2NlXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
       type: "movie"
     },
     {
@@ -315,9 +274,9 @@ const KinoPage = () => {
       director: "Pete Docter",
       rating: 8.9,
       duration: "1h 40m",
-      description: "A jazz musician discovers the true meaning of life and passion.",
+      description: "O'zining haqiqiy iste'dodini kashf etish haqida.",
       cast: ["Jamie Foxx", "Tina Fey", "Graham Norton"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/hm58Jw4Lw8OIeECIq5qyPYhAeRJ.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZGE1MDg5M2MtNTFkZS00NzllLTgyMTMtZmU4YzU5Y2Q0Y2U4XkEyXkFqcGdeQXVyMTM0NTc2NDgw._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -329,9 +288,9 @@ const KinoPage = () => {
       director: "Anthony Russo",
       rating: 9.5,
       duration: "3h 1m",
-      description: "The Avengers assemble for their final battle against Thanos.",
+      description: "Qasoskorlar Thanos bilan so'nggi jangda.",
       cast: ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_.jpg",
       type: "movie",
       trending: true
     },
@@ -343,11 +302,11 @@ const KinoPage = () => {
       director: "Todd Phillips",
       rating: 9.2,
       duration: "2h 2m",
-      description: "The origin story of Gotham's most infamous villain.",
+      description: "Jokerning kelib chiqish hikoyasi.",
       cast: ["Joaquin Phoenix", "Robert De Niro", "Zazie Beetz"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk5YmY3MzIwXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
       type: "movie",
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 18,
@@ -357,9 +316,9 @@ const KinoPage = () => {
       director: "Josh Cooley",
       rating: 8.7,
       duration: "1h 40m",
-      description: "Woody and his friends rescue Forky and discover new adventures.",
+      description: "Vudi va uning do'stlari Forkini qutqarishadi.",
       cast: ["Tom Hanks", "Tim Allen", "Annie Potts"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/w9kR8qbmQ01HwnvK4alvnQ2ca0L.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTYzMDM4NzkxOV5BMl5BanBnXkFtZTgwNzM1Mzg2NzM@._V1_.jpg",
       type: "cartoon"
     },
     {
@@ -370,9 +329,9 @@ const KinoPage = () => {
       director: "Anthony Russo",
       rating: 9.1,
       duration: "2h 29m",
-      description: "The Avengers unite to stop Thanos from collecting all Infinity Stones.",
+      description: "Qasoskorlar Thanosga qarshi birlashadi.",
       cast: ["Robert Downey Jr.", "Chris Hemsworth", "Mark Ruffalo"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_.jpg",
       type: "movie"
     },
     {
@@ -383,9 +342,9 @@ const KinoPage = () => {
       director: "Bob Persichetti",
       rating: 9.4,
       duration: "1h 57m",
-      description: "Miles Morales becomes Spider-Man and meets other spider-people.",
+      description: "Miles Morales o'rgimchak-odamga aylanadi.",
       cast: ["Shameik Moore", "Jake Johnson", "Hailee Steinfeld"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8acv2xMksHbA.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzMV5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -397,9 +356,9 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 8.6,
       duration: "1h 46m",
-      description: "The evacuation of Dunkirk during World War II.",
+      description: "Ikkinchi jahon urushidagi Dunkirk evakuatsiyasi.",
       cast: ["Fionn Whitehead", "Tom Hardy", "Mark Rylance"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/ebSnODDg9lbsMJhN9N3VvBY2KzN.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BN2YyZjQ0NTEtNzU5MS00NGZkLTg0MTEtYzJmMWY3MWRhZjM2XkEyXkFqcGdeQXVyMDA4NzMyOA@@._V1_.jpg",
       type: "movie"
     },
     {
@@ -410,11 +369,11 @@ const KinoPage = () => {
       director: "Lee Unkrich",
       rating: 9.1,
       duration: "1h 45m",
-      description: "Miguel discovers his family's history on the Day of the Dead.",
+      description: "Migel o'z oilasining tarixini kashf etadi.",
       cast: ["Anthony Gonzalez", "Gael García Bernal", "Benjamin Bratt"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/askg3SMvhqEl4OL52YuvdtY40Yb.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkMDE3ZjAxXkEyXkFqcGdeQXVyODA4OTIyOQ@@._V1_.jpg",
       type: "cartoon",
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 23,
@@ -424,11 +383,11 @@ const KinoPage = () => {
       director: "Alejandro G. Iñárritu",
       rating: 8.6,
       duration: "2h 36m",
-      description: "A frontiersman fights for survival after being left for dead.",
+      description: "Ovchi Hugh Glass omon qolish uchun kurashadi.",
       cast: ["Leonardo DiCaprio", "Tom Hardy", "Will Poulter"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/tUcBYxV6I6HPpmF2fS3D7TbeYqD.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDE5OWMzM2QtOTU2ZS00NzAyLWI2MDEtOTRlYjIxZGM0OWRjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg",
       type: "movie",
-      awards: "3 Oscars"
+      awards: "3 Oscar"
     },
     {
       id: 24,
@@ -438,9 +397,9 @@ const KinoPage = () => {
       director: "Byron Howard",
       rating: 8.8,
       duration: "1h 48m",
-      description: "Judy Hopps solves a mystery in the city of Zootopia.",
+      description: "Judy Hopps Zootopia shahrida jinoyatni ochadi.",
       cast: ["Ginnifer Goodwin", "Jason Bateman", "Idris Elba"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/hlK0e0wAQ3VLuJcsfIYPvb4JVud.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -452,11 +411,11 @@ const KinoPage = () => {
       director: "George Miller",
       rating: 8.7,
       duration: "2h 0m",
-      description: "Max and Furiosa fight for freedom in the desert wasteland.",
+      description: "Max va Furiosa cho'lda ozodlik uchun kurashadi.",
       cast: ["Tom Hardy", "Charlize Theron", "Nicholas Hoult"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
       type: "movie",
-      awards: "6 Oscars"
+      awards: "6 Oscar"
     },
     {
       id: 26,
@@ -466,9 +425,9 @@ const KinoPage = () => {
       director: "Pete Docter",
       rating: 9.0,
       duration: "1h 35m",
-      description: "The emotions inside a young girl's mind guide her through life.",
+      description: "Rileyning his-tuyg'ulari uning hayotini boshqaradi.",
       cast: ["Amy Poehler", "Bill Hader", "Lewis Black"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -480,9 +439,9 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 9.2,
       duration: "2h 49m",
-      description: "A team of explorers travel through a wormhole in space to save humanity.",
+      description: "Yer sayyorasi o'lim arafasida turgan bir paytda, bir guruh kashfiyotchilar insoniyatni qutqarish uchun kosmosga sayohat qiladi.",
       cast: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
       type: "movie",
       trending: true
     },
@@ -494,9 +453,9 @@ const KinoPage = () => {
       director: "Phil Lord",
       rating: 8.2,
       duration: "1h 40m",
-      description: "An ordinary LEGO figure is mistakenly identified as the key to saving the world.",
+      description: "Oddiy lego figurasi Emmet dunyoni qutqarish uchun sayohatga chiqadi.",
       cast: ["Chris Pratt", "Will Ferrell", "Elizabeth Banks"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/lMfpp3QZ8R2QqV5r5CpkP8DOhpB.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTg4MDk1ODExN15BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_.jpg",
       type: "cartoon"
     },
     {
@@ -507,9 +466,9 @@ const KinoPage = () => {
       director: "Martin Scorsese",
       rating: 8.8,
       duration: "3h 0m",
-      description: "The rise and fall of stockbroker Jordan Belfort on Wall Street.",
+      description: "Jordan Belfortning Wall Streetdagi yuksalishi va qulashi.",
       cast: ["Leonardo DiCaprio", "Jonah Hill", "Margot Robbie"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/34m2tygAYBGmqA8aYC2jF3rUZBg.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_.jpg",
       type: "movie"
     },
     {
@@ -520,11 +479,11 @@ const KinoPage = () => {
       director: "Chris Buck",
       rating: 8.4,
       duration: "1h 42m",
-      description: "Two sisters must save their kingdom from an eternal winter.",
+      description: "Elsa va Anna opa-singillar qirollikni qutqarishadi.",
       cast: ["Kristen Bell", "Idina Menzel", "Jonathan Groff"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/kgwjIb2JDHRhNk13lmSxiClFjVk.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTQ1MjQwMTE5OF5BMl5BanBnXkFtZTgwNjk3MTcyMDE@._V1_.jpg",
       type: "cartoon",
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 31,
@@ -534,9 +493,9 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 8.8,
       duration: "2h 44m",
-      description: "Batman faces his greatest challenge yet against Bane.",
+      description: "Betmen Bane bilan jang qiladi.",
       cast: ["Christian Bale", "Tom Hardy", "Anne Hathaway"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/hr0L2aueqlP2BYUblTTjmtn0hw4.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_.jpg",
       type: "movie"
     },
     {
@@ -547,9 +506,9 @@ const KinoPage = () => {
       director: "Rich Moore",
       rating: 8.1,
       duration: "1h 41m",
-      description: "A video game villain wants to be a hero and explores other games.",
+      description: "Ralph video o'yinlar dunyosida sarguzashtni boshlaydi.",
       cast: ["John C. Reilly", "Sarah Silverman", "Jack McBrayer"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/93FsJavRjaDfC9cT3HqS3s2DnuP.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNzMxNTExOTkyMF5BMl5BanBnXkFtZTcwMzEyNDc0OA@@._V1_.jpg",
       type: "cartoon"
     },
     {
@@ -560,12 +519,12 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 9.3,
       duration: "2h 28m",
-      description: "A thief who enters people's dreams must plant an idea instead of stealing one.",
+      description: "Dominik Kokk odamlarning tushlariga kirib ma'lumot o'g'irlaydi.",
       cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
       type: "movie",
       trending: true,
-      awards: "4 Oscars"
+      awards: "4 Oscar"
     },
     {
       id: 34,
@@ -575,11 +534,11 @@ const KinoPage = () => {
       director: "Lee Unkrich",
       rating: 8.9,
       duration: "1h 43m",
-      description: "Woody and his friends face being donated to a daycare center.",
+      description: "Vudi va uning do'stlari yangi uyga ko'chib o'tishadi.",
       cast: ["Tom Hanks", "Tim Allen", "Joan Cusack"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/mMltbSxwEdNE4Cv8QYLpzkHWTDo.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_.jpg",
       type: "cartoon",
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 35,
@@ -589,11 +548,11 @@ const KinoPage = () => {
       director: "James Cameron",
       rating: 8.5,
       duration: "2h 42m",
-      description: "A paralyzed marine becomes part of the Na'vi on the planet Pandora.",
+      description: "Pandora sayyorasida insonlar va Na'vilar o'rtasidagi mojaro.",
       cast: ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5MzRiXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_.jpg",
       type: "movie",
-      awards: "3 Oscars"
+      awards: "3 Oscar"
     },
     {
       id: 36,
@@ -603,12 +562,12 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 9.5,
       duration: "2h 32m",
-      description: "Batman faces his greatest enemy, the Joker, who wants to create chaos.",
+      description: "Betmen Joker bilan jang qiladi.",
       cast: ["Christian Bale", "Heath Ledger", "Aaron Eckhart"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
       type: "movie",
       trending: true,
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 37,
@@ -618,9 +577,9 @@ const KinoPage = () => {
       director: "Andrew Stanton",
       rating: 8.9,
       duration: "1h 38m",
-      description: "The last robot on Earth falls in love with another robot from space.",
+      description: "Yer sayyorasidagi so'nggi robot EVAni sevib qoladi.",
       cast: ["Ben Burtt", "Elissa Knight", "Jeff Garlin"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/hbhFnRzzg6ZDmm8YAmxBnQpAIPM.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTczOTA3MzY2N15BMl5BanBnXkFtZTcwOTYwNjE2MQ@@._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -632,9 +591,9 @@ const KinoPage = () => {
       director: "Christopher Nolan",
       rating: 8.8,
       duration: "2h 10m",
-      description: "Two rival magicians engage in a bitter competition to create the ultimate illusion.",
+      description: "Ikki sehrgar o'rtasidagi raqobat.",
       cast: ["Christian Bale", "Hugh Jackman", "Scarlett Johansson"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/5t8PTvaoJhSJxin3T9KdLhjSWYp.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1_.jpg",
       type: "movie"
     },
     {
@@ -645,11 +604,11 @@ const KinoPage = () => {
       director: "Peter Jackson",
       rating: 9.6,
       duration: "3h 21m",
-      description: "Frodo and Sam journey to Mordor to destroy the One Ring.",
+      description: "Frodo va Sem Uzukni yo'q qilish uchun Mordorga boradi.",
       cast: ["Elijah Wood", "Viggo Mortensen", "Ian McKellen"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
       type: "movie",
-      awards: "11 Oscars"
+      awards: "11 Oscar"
     },
     {
       id: 40,
@@ -659,9 +618,9 @@ const KinoPage = () => {
       director: "Andrew Stanton",
       rating: 8.7,
       duration: "1h 40m",
-      description: "A clownfish searches the ocean for his missing son.",
+      description: "Marlin o'g'li Nemoni qutqarish uchun okean bo'ylab sayohat qiladi.",
       cast: ["Albert Brooks", "Ellen DeGeneres", "Alexander Gould"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/eHuGQ10FUzK1mdOY69wF5pGgEf5.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZTAzNWZlNmUtZDEzYi00ZjA5LWIwYjEtZGM1NWE1MjE4YWRhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
       type: "cartoon",
       awards: "Oscar"
     },
@@ -673,11 +632,11 @@ const KinoPage = () => {
       director: "Lana Wachowski",
       rating: 9.0,
       duration: "2h 16m",
-      description: "A computer programmer discovers reality is a simulation controlled by machines.",
+      description: "Kompyuter dasturchisi Neo haqiqatni kashf etadi.",
       cast: ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
       type: "movie",
-      awards: "4 Oscars"
+      awards: "4 Oscar"
     },
     {
       id: 42,
@@ -687,9 +646,9 @@ const KinoPage = () => {
       director: "John Lasseter",
       rating: 8.5,
       duration: "1h 32m",
-      description: "Woody is stolen by a toy collector, and his friends set out to rescue him.",
+      description: "Vudi o'g'irlanadi va uning do'stlari uni qutqarishadi.",
       cast: ["Tom Hanks", "Tim Allen", "Joan Cusack"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/3CmK3X1cZX2T9U2R7H0s2C7tG6B.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMWM5ZDcxMTYtNTEyNS00MDRkLWI3YTItNThmMGExMWY4NDIwXkEyXkFqcGdeQXVyNjUwNzk3NDc@._V1_.jpg",
       type: "cartoon"
     },
     {
@@ -700,11 +659,11 @@ const KinoPage = () => {
       director: "James Cameron",
       rating: 8.7,
       duration: "3h 14m",
-      description: "A love story unfolds aboard the ill-fated RMS Titanic.",
+      description: "Titanik kemasidagi sevgi hikoyasi.",
       cast: ["Leonardo DiCaprio", "Kate Winslet", "Billy Zane"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg",
       type: "movie",
-      awards: "11 Oscars"
+      awards: "11 Oscar"
     },
     {
       id: 44,
@@ -714,9 +673,9 @@ const KinoPage = () => {
       director: "Quentin Tarantino",
       rating: 9.3,
       duration: "2h 34m",
-      description: "Interconnected stories of crime in Los Angeles.",
+      description: "Los-Anjeles jinoyat dunyosidagi bir-biri bilan bog'langan hikoyalar.",
       cast: ["John Travolta", "Uma Thurman", "Samuel L. Jackson"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
       type: "movie"
     },
     {
@@ -727,11 +686,11 @@ const KinoPage = () => {
       director: "Roger Allers",
       rating: 9.1,
       duration: "1h 28m",
-      description: "A young lion prince must reclaim his kingdom from his evil uncle.",
+      description: "Arslon Simba o'z taxtini qaytarib olishi kerak.",
       cast: ["Matthew Broderick", "Jeremy Irons", "James Earl Jones"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_.jpg",
       type: "cartoon",
-      awards: "2 Oscars"
+      awards: "2 Oscar"
     },
     {
       id: 46,
@@ -741,11 +700,11 @@ const KinoPage = () => {
       director: "Steven Spielberg",
       rating: 9.5,
       duration: "3h 15m",
-      description: "Oskar Schindler saves Jews during the Holocaust.",
+      description: "Oskar Shindler yahudiylarni qutqarish uchun harakat qiladi.",
       cast: ["Liam Neeson", "Ralph Fiennes", "Ben Kingsley"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNDE4OTMxMTctNmRhYy00NWE2LTg3YzItYTk3M2UwOTU5Njg4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
       type: "movie",
-      awards: "7 Oscars"
+      awards: "7 Oscar"
     },
     {
       id: 47,
@@ -755,9 +714,9 @@ const KinoPage = () => {
       director: "Robert Zemeckis",
       rating: 9.0,
       duration: "1h 56m",
-      description: "A teenager is accidentally sent 30 years into the past in a time-traveling DeLorean.",
+      description: "Marty McFly vaqt mashinasida o'tmishga boradi.",
       cast: ["Michael J. Fox", "Christopher Lloyd", "Lea Thompson"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/xlBivetfrtFj4dYpE0IF9RYo2iK.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
       type: "movie"
     },
     {
@@ -768,9 +727,9 @@ const KinoPage = () => {
       director: "John Hughes",
       rating: 8.3,
       duration: "1h 37m",
-      description: "Five high school students bond during Saturday detention.",
+      description: "Besh o'quvchi yakshanba kuni maktabda qolishadi.",
       cast: ["Emilio Estevez", "Judd Nelson", "Molly Ringwald"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/6N2Wj1xpdG7YqR8QhAq6F9iN2xj.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOTM5N2ZmZTMtNjlmOS00YzU2LWE5YzktYzY5NzUzNjYzYzJiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
       type: "movie"
     },
     {
@@ -781,11 +740,11 @@ const KinoPage = () => {
       director: "Steven Spielberg",
       rating: 8.5,
       duration: "1h 55m",
-      description: "A young boy befriends a stranded alien and helps him return home.",
+      description: "Yerda qolib ketgan o'zga sayyoralik bola bilan do'stlashadi.",
       cast: ["Henry Thomas", "Drew Barrymore", "Peter Coyote"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/8htLKK03TJjKZOXJgihZCu8v0Pw.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTQ2ODFlMDAtNzdhOC00ZDYzLWE3YTMtNDU4ZGFmZmJmYTczXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
       type: "movie",
-      awards: "4 Oscars"
+      awards: "4 Oscar"
     },
     {
       id: 50,
@@ -795,14 +754,14 @@ const KinoPage = () => {
       director: "Irvin Kershner",
       rating: 9.2,
       duration: "2h 4m",
-      description: "Luke Skywalker trains with Yoda while his friends are pursued by Darth Vader.",
+      description: "Imperiya qarshi zarba beradi va Lyuk Darth Vader bilan jang qiladi.",
       cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"],
-      posterUrl: "https://image.tmdb.org/t/p/w500/7BuH8itoSrLExs2YZSsM01Qk2no.jpg",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYmU1NDRjNDgtMzhiMi00NjZmLTg5NGItZDNiZjU5NTU4OTE0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
       type: "movie"
     }
   ];
 
-  // Filter function
+  // Filter funksiyasi
   const filterMovies = useCallback(() => {
     setIsLoading(true);
     let filtered = [...movies];
@@ -842,7 +801,7 @@ const KinoPage = () => {
     }, 300);
   }, [movies, searchTerm, selectedGenre, selectedType, selectedYear]);
 
-  // Load movies
+  // Kinolarni yuklash
   useEffect(() => {
     loadMovies();
   }, []);
@@ -851,7 +810,7 @@ const KinoPage = () => {
     filterMovies();
   }, [filterMovies]);
 
-  // Load liked movies
+  // Like holatini yuklash
   useEffect(() => {
     const savedLikes = JSON.parse(localStorage.getItem('likedMovies') || '[]');
     setLikedMovies(savedLikes);
@@ -862,7 +821,7 @@ const KinoPage = () => {
     const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
     
     if (savedMovies.length === 0) {
-      // Add videos and trailers
+      // Video va treylerlarni qo'shish
       const moviesWithMedia = sampleMovies.map(movie => ({
         ...movie,
         videoUrl: videoUrls[movie.id] || null,
@@ -937,7 +896,7 @@ const KinoPage = () => {
         <button onClick={handleGoBack} className="back-btn">
           <FiArrowLeft size={24} />
         </button>
-        <h1>🎬 MOVIES</h1>
+        <h1>🎬 KINOLAR</h1>
         <button onClick={() => setShowFilters(true)} className="filter-btn">
           <FiFilter size={22} />
           {(selectedGenre !== 'all' || selectedType !== 'all' || selectedYear !== 'all') && (
@@ -952,7 +911,7 @@ const KinoPage = () => {
           <FiSearch className="search-icon" size={20} />
           <input
             type="text"
-            placeholder="Search movies..."
+            placeholder="Kino qidirish..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -969,7 +928,7 @@ const KinoPage = () => {
         <div className="trending-section">
           <div className="section-title">
             <FiTrendingUp className="trending-icon" />
-            <h2>Trending Movies</h2>
+            <h2>Trenddagi kinolar</h2>
             <div className="karusel-controls">
               <button 
                 className="karusel-btn"
@@ -1012,7 +971,7 @@ const KinoPage = () => {
       {/* Active Filters */}
       {(selectedGenre !== 'all' || selectedType !== 'all' || selectedYear !== 'all') && (
         <div className="active-filters">
-          <span>Active filters:</span>
+          <span>Aktiv filterlar:</span>
           {selectedGenre !== 'all' && (
             <span className="filter-tag">
               {selectedGenre}
@@ -1021,7 +980,7 @@ const KinoPage = () => {
           )}
           {selectedType !== 'all' && (
             <span className="filter-tag">
-              {selectedType === 'movie' ? 'Movie' : 'Cartoon'}
+              {selectedType === 'movie' ? 'Film' : 'Multfilm'}
               <button onClick={() => setSelectedType('all')}>✕</button>
             </span>
           )}
@@ -1036,7 +995,7 @@ const KinoPage = () => {
 
       {/* Stats */}
       <div className="stats-bar">
-        <span>📊 {filteredMovies.length} movies found</span>
+        <span>📊 {filteredMovies.length} ta kino topildi</span>
         {filteredMovies.length > 0 && (
           <span className="avg-rating">
             ⭐ {(filteredMovies.reduce((acc, m) => acc + m.rating, 0) / filteredMovies.length).toFixed(1)}
@@ -1048,7 +1007,7 @@ const KinoPage = () => {
       {isLoading ? (
         <div className="loading-container">
           <div className="loader"></div>
-          <p>Loading movies...</p>
+          <p>Kinolar yuklanmoqda...</p>
         </div>
       ) : (
         /* Movies Grid */
@@ -1075,7 +1034,7 @@ const KinoPage = () => {
                     <FiStar /> {formatRating(movie.rating)}
                   </div>
                   <div className={`kino-type-badge ${movie.type}`}>
-                    {movie.type === 'movie' ? '🎬 Movie' : '✨ Cartoon'}
+                    {movie.type === 'movie' ? '🎬 Film' : '✨ Multfilm'}
                   </div>
                   {movie.trending && (
                     <div className="trending-badge">
@@ -1118,13 +1077,13 @@ const KinoPage = () => {
           ) : (
             <div className="no-movies">
               <FiFilm className="no-movies-icon" size={64} />
-              <h3>No movies found</h3>
-              <p>Try a different search term or clear filters</p>
+              <h3>Kinolar topilmadi</h3>
+              <p>Boshqa qidiruv so'zini kiriting yoki filtrlarni tozalang</p>
               <button 
                 className="clear-filters-btn"
                 onClick={clearAllFilters}
               >
-                Clear Filters
+                Filterlarni tozalash
               </button>
             </div>
           )}
@@ -1136,14 +1095,14 @@ const KinoPage = () => {
         <div className="filters-modal" onClick={() => setShowFilters(false)}>
           <div className="filters-content" onClick={e => e.stopPropagation()}>
             <div className="filters-header">
-              <h3>📋 Filters</h3>
+              <h3>📋 Filterlar</h3>
               <button onClick={() => setShowFilters(false)} className="close-filters">
                 <FiX size={24} />
               </button>
             </div>
             
             <div className="filter-section">
-              <h4>🎭 Genre</h4>
+              <h4>🎭 Janr</h4>
               <div className="filter-options">
                 {genres.map(genre => (
                   <button
@@ -1151,38 +1110,38 @@ const KinoPage = () => {
                     className={`filter-option ${selectedGenre === genre ? 'active' : ''}`}
                     onClick={() => setSelectedGenre(genre)}
                   >
-                    {genre === 'all' ? 'All' : genre}
+                    {genre === 'all' ? 'Barchasi' : genre}
                   </button>
                 ))}
               </div>
             </div>
 
             <div className="filter-section">
-              <h4>📺 Type</h4>
+              <h4>📺 Tur</h4>
               <div className="filter-options">
                 <button
                   className={`filter-option ${selectedType === 'all' ? 'active' : ''}`}
                   onClick={() => setSelectedType('all')}
                 >
-                  All
+                  Barchasi
                 </button>
                 <button
                   className={`filter-option ${selectedType === 'movie' ? 'active' : ''}`}
                   onClick={() => setSelectedType('movie')}
                 >
-                  🎬 Movie
+                  🎬 Film
                 </button>
                 <button
                   className={`filter-option ${selectedType === 'cartoon' ? 'active' : ''}`}
                   onClick={() => setSelectedType('cartoon')}
                 >
-                  ✨ Cartoon
+                  ✨ Multfilm
                 </button>
               </div>
             </div>
 
             <div className="filter-section">
-              <h4>📅 Year</h4>
+              <h4>📅 Yil</h4>
               <div className="filter-options">
                 {years.map(year => (
                   <button
@@ -1190,7 +1149,7 @@ const KinoPage = () => {
                     className={`filter-option ${selectedYear === year ? 'active' : ''}`}
                     onClick={() => setSelectedYear(year)}
                   >
-                    {year === 'all' ? 'All' : year}
+                    {year === 'all' ? 'Barchasi' : year}
                   </button>
                 ))}
               </div>
@@ -1201,7 +1160,7 @@ const KinoPage = () => {
                 className="apply-filters"
                 onClick={() => setShowFilters(false)}
               >
-                Apply
+                Qo'llash
               </button>
             </div>
           </div>
@@ -1238,29 +1197,29 @@ const KinoPage = () => {
               <div className="movie-details">
                 <div className="movie-detail-item">
                   <FiCalendar className="detail-icon" />
-                  <span><strong>Year:</strong> {selectedMovie.year}</span>
+                  <span><strong>Yil:</strong> {selectedMovie.year}</span>
                 </div>
                 
                 <div className="movie-detail-item">
                   <FiFilm className="detail-icon" />
-                  <span><strong>Genre:</strong> {selectedMovie.genre?.join(', ')}</span>
+                  <span><strong>Janr:</strong> {selectedMovie.genre?.join(', ')}</span>
                 </div>
                 
                 <div className="movie-detail-item">
                   <FiUser className="detail-icon" />
-                  <span><strong>Director:</strong> {selectedMovie.director || 'Unknown'}</span>
+                  <span><strong>Rejissyor:</strong> {selectedMovie.director || 'Noma\'lum'}</span>
                 </div>
                 
                 <div className="movie-detail-item">
                   <FiClock className="detail-icon" />
-                  <span><strong>Duration:</strong> {selectedMovie.duration}</span>
+                  <span><strong>Davomiylik:</strong> {selectedMovie.duration}</span>
                 </div>
                 
                 <p className="movie-description">{selectedMovie.description}</p>
                 
                 {selectedMovie.cast?.length > 0 && (
                   <div className="movie-cast">
-                    <strong>Cast:</strong>
+                    <strong>Aktyorlar:</strong>
                     <div className="cast-list">
                       {selectedMovie.cast.map((actor, index) => (
                         <span key={index} className="cast-item">{actor}</span>
@@ -1274,7 +1233,7 @@ const KinoPage = () => {
                     onClick={() => handleLike(selectedMovie.id)}
                     className={`like-btn ${likedMovies.includes(selectedMovie.id) ? 'liked' : ''}`}
                   >
-                    <FiHeart /> {likedMovies.includes(selectedMovie.id) ? 'Favorited' : 'Add to Favorites'}
+                    <FiHeart /> {likedMovies.includes(selectedMovie.id) ? 'Sevimli' : 'Sevimlilarga qo\'shish'}
                   </button>
                   
                   <button 
@@ -1283,7 +1242,7 @@ const KinoPage = () => {
                     disabled={!selectedMovie.videoUrl && !selectedMovie.trailerUrl}
                   >
                     <FiPlay /> 
-                    {(selectedMovie.videoUrl || selectedMovie.trailerUrl) ? '▶️ Watch' : '⏳ Coming Soon'}
+                    {(selectedMovie.videoUrl || selectedMovie.trailerUrl) ? '▶️ Ko\'rish' : '⏳ Tez kunda'}
                   </button>
                 </div>
               </div>
