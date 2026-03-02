@@ -11,6 +11,8 @@ import MainPage from './components/Main/MainPage';
 
 // Kino
 import KinoPage from './components/Kino/KinoPage';
+import KinoWatch from "./components/Kino/KinoWatch";
+
 
 // Dating
 import DatingPage from './components/Dating/DatingPage';
@@ -64,6 +66,13 @@ const KeyboardHandler = ({ children }) => {
         navigate('/main');
       }
       
+      // Ctrl+Alt+K bosilganda kino sahifasiga o'tish
+      if (e.ctrlKey && e.altKey && e.key === 'k') {
+        e.preventDefault();
+        console.log('Ctrl+Alt+K pressed - navigating to kino');
+        navigate('/kino');
+      }
+      
       // Ctrl+Alt+H bosilganda shortcutlarni ko'rsatish
       if (e.ctrlKey && e.altKey && e.key === 'h') {
         e.preventDefault();
@@ -100,7 +109,7 @@ const ShortcutHint = () => {
   return (
     <div className="shortcut-hint">
       <div className="shortcut-header">
-        <h3>Keyboard Shortcuts</h3>
+        <h3>⌨️ Keyboard Shortcuts</h3>
         <button onClick={() => setShowHint(false)}>✕</button>
       </div>
       <div className="shortcut-list">
@@ -119,6 +128,10 @@ const ShortcutHint = () => {
         <div className="shortcut-item">
           <span className="shortcut-keys">Ctrl+Alt+M</span>
           <span className="shortcut-desc">Main page</span>
+        </div>
+        <div className="shortcut-item">
+          <span className="shortcut-keys">Ctrl+Alt+K</span>
+          <span className="shortcut-desc">Kino page</span>
         </div>
         <div className="shortcut-item">
           <span className="shortcut-keys">Ctrl+Alt+H</span>
@@ -146,6 +159,7 @@ function App() {
             
             {/* Kino */}
             <Route path="/kino" element={<KinoPage />} />
+            <Route path="/kino/watch/:id" element={<KinoWatch />} />
             
             {/* Dating */}
             <Route path="/dating" element={<DatingPage />} />
