@@ -133,3 +133,136 @@ html {
   transform: translateY(-3px);
   box-shadow: 0 12px 35px rgba(0, 140, 110, 0.5);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  padding: 20px;
+}
+
+.not-found-content {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 50px 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.not-found-content h1 {
+  font-size: 100px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  background: linear-gradient(45deg, #00f2fe, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.not-found-content h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.not-found-content p {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.not-found-actions button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.home-btn {
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  color: white;
+}
+
+.home-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0, 114, 255, 0.6);
+}
+
+.back-btn {
+  background: transparent;
+  border: 2px solid #ffffff;
+  color: #fff;
+}
+
+.back-btn:hover {
+  background: #fff;
+  color: #203a43;
+  transform: translateY(-3px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .not-found-content {
+    padding: 35px 20px;
+  }
+
+  .not-found-content h1 {
+    font-size: 70px;
+  }
+
+  .not-found-content h2 {
+    font-size: 22px;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+
+  .not-found-actions button {
+    width: 100%;
+  }
+}

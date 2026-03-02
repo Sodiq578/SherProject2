@@ -1112,3 +1112,424 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Banner Section - Full CSS with Responsive */
+.banner-reklama {
+  width: 100%;
+  height: 500px;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  position: relative;
+  border: 2px solid rgba(0, 150, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.banner-reklama::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(0, 102, 255, 0.2) 0%, 
+    rgba(0, 150, 255, 0.1) 50%,
+    transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.banner-reklama::after {
+  content: '🔥 Chegirma';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.banner-reklama img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.banner-reklama:hover {
+  border-color: rgba(0, 150, 255, 0.8);
+  box-shadow: 0 20px 40px rgba(0, 102, 255, 0.5);
+}
+
+.banner-reklama:hover img {
+  transform: scale(1.1);
+}
+
+/* Banner Content (Agar matn qo'shmoqchi bo'lsangiz) */
+.banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+  z-index: 2;
+  transform: translateY(100%);
+  transition: transform 0.5s ease;
+}
+
+.banner-reklama:hover .banner-content {
+  transform: translateY(0);
+}
+
+.banner-content h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.banner-content p {
+  font-size: 16px;
+  color: #88c0ff;
+  margin-bottom: 15px;
+}
+
+.banner-button {
+  background: linear-gradient(135deg, #0066ff, #00aaff);
+  border: none;
+  border-radius: 30px;
+  padding: 10px 25px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.banner-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 102, 255, 0.4);
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .banner-reklama {
+    height: 350px;
+    border-radius: 24px;
+  }
+  
+  .banner-reklama::after {
+    top: 15px;
+    right: 15px;
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  .banner-content {
+    padding: 25px;
+  }
+  
+  .banner-content h3 {
+    font-size: 22px;
+  }
+  
+  .banner-content p {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Large (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .banner-reklama {
+    height: 280px;
+    border-radius: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .banner-reklama::after {
+    top: 12px;
+    right: 12px;
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+  
+  .banner-content {
+    padding: 20px;
+  }
+  
+  .banner-content h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .banner-content p {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  
+  .banner-button {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (max-width: 480px) {
+  .banner-reklama {
+    height: 200px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    border-width: 1.5px;
+  }
+  
+  .banner-reklama::after {
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 20px;
+  }
+  
+  .banner-content {
+    padding: 15px;
+  }
+  
+  .banner-content h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  
+  .banner-content p {
+    font-size: 12px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .banner-button {
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: 25px;
+  }
+}
+
+/* Mobile Extra Small (320px dan kichik) */
+@media (max-width: 320px) {
+  .banner-reklama {
+    height: 160px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+  
+  .banner-reklama::after {
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+  
+  .banner-content {
+    padding: 12px;
+  }
+  
+  .banner-content h3 {
+    font-size: 16px;
+  }
+  
+  .banner-content p {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .banner-button {
+    padding: 5px 14px;
+    font-size: 11px;
+  }
+}
+
+/* Landscape orientation */
+@media (max-height: 600px) and (orientation: landscape) {
+  .banner-reklama {
+    height: 180px;
+  }
+}
+
+/* High-resolution screens */
+@media (min-width: 1440px) {
+  .banner-reklama {
+    height: 600px;
+    border-radius: 32px;
+  }
+  
+  .banner-reklama::after {
+    top: 25px;
+    right: 25px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  .banner-content {
+    padding: 40px;
+  }
+  
+  .banner-content h3 {
+    font-size: 32px;
+  }
+  
+  .banner-content p {
+    font-size: 18px;
+  }
+  
+  .banner-button {
+    padding: 12px 30px;
+    font-size: 16px;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .banner-reklama {
+    height: 700px;
+    border-radius: 36px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .banner-reklama {
+    border-color: rgba(0, 150, 255, 0.5);
+  }
+  
+  .banner-content {
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .banner-reklama {
+    border-color: #fff;
+  }
+  
+  .banner-reklama::after {
+    background: #ff0000;
+    color: #fff;
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .banner-reklama img,
+  .banner-content,
+  .banner-reklama::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .banner-reklama:hover img {
+    transform: none;
+  }
+}
+
+/* iPhone notch and safe area support */
+@supports (padding: max(0px)) {
+  .banner-reklama {
+    margin-left: max(16px, env(safe-area-inset-left));
+    margin-right: max(16px, env(safe-area-inset-right));
+    width: calc(100% - max(16px, env(safe-area-inset-left)) - max(16px, env(safe-area-inset-right)));
+  }
+}
+
+
+
+/* Banner loading animation */
+@keyframes bannerPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.banner-reklama.loading {
+  animation: bannerPulse 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, #1a1f2a, #2a2f3a);
+}
+
+.banner-reklama.loading img {
+  opacity: 0;
+}
+
+/* Banner error state */
+.banner-reklama.error {
+  background: linear-gradient(135deg, #2a1f1f, #3a2a2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.banner-reklama.error img {
+  display: none;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .banner-reklama:hover img {
+    transform: none;
+  }
+  
+  .banner-content {
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3));
+  }
+  
+  .banner-reklama:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Print styles */
+@media print {
+  .banner-reklama {
+    border: 2px solid #000;
+    box-shadow: none;
+    height: 300px;
+    page-break-inside: avoid;
+  }
+  
+  .banner-reklama::after {
+    background: #000;
+    color: #fff;
+    border: 1px solid #fff;
+  }
+}

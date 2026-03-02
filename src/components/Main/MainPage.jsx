@@ -103,6 +103,8 @@ const MainPage = () => {
           </div>
         </div>
         
+    
+
         <div className="header-right">
           {/* Notification Bell */}
           <div className="notification-badge" onClick={() => navigate('/notifications')}>
@@ -181,6 +183,10 @@ const MainPage = () => {
         </div>
       </div>
 
+
+  <div className="banner-reklama">
+       <img src="https://plus.unsplash.com/premium_photo-1682681903841-1f98ce6a1175?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRyaW5rfGVufDB8fDB8fHww" alt="" />
+      </div>
       {/* Stats Cards Row */}
       <div className="stats-row">
         <div className="stats-card small">
