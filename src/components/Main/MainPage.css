@@ -795,6 +795,7 @@
 
 /* Daily Tip */
 .daily-tip {
+  
   background: linear-gradient(135deg, rgba(0, 102, 255, 0.2), rgba(0, 150, 255, 0.1));
   border: 1px solid rgba(0, 150, 255, 0.3);
   border-radius: 26px;
@@ -803,10 +804,10 @@
   align-items: center;
   gap: 12px;
   margin-top: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: pulse 3s infinite;
+ 
 }
+
+
 
 .tip-icon {
   color: #0066ff;

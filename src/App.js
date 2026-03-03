@@ -1,42 +1,105 @@
 // src/App.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 
-// Gallery
-import Gallery from './components/gallery/gallery';
+// Lazy loading for better performance
+const Gallery = lazy(() => import('./components/gallery/gallery'));
+const Music = lazy(() => import('./components/music/music'));
+const Login = lazy(() => import('./components/Auth/Login'));
+const Register = lazy(() => import('./components/Auth/Register'));
+const MainPage = lazy(() => import('./components/Main/MainPage'));
+const KinoPage = lazy(() => import('./components/Kino/KinoPage'));
+const KinoWatch = lazy(() => import('./components/Kino/KinoWatch'));
+const DatingPage = lazy(() => import('./components/Dating/DatingPage'));
+const ProfileForm = lazy(() => import('./components/Dating/ProfileForm'));
+const ElonlarPage = lazy(() => import('./components/Elonlar/ElonlarPage'));
+const AdminLogin = lazy(() => import('./components/Admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./components/Admin/AdminDashboard'));
+const AdminMovies = lazy(() => import('./components/Admin/AdminMovies'));
+const AdminUsers = lazy(() => import('./components/Admin/AdminUsers'));
+const AdminDating = lazy(() => import('./components/Admin/AdminDating'));
+const AdminAds = lazy(() => import('./components/Admin/AdminAds'));
+const PollCard = lazy(() => import('./components/PollCard/PollCard'));
+const AdminBanner = lazy(() => import('./components/Admin/AdminBaner')); // To'g'rilangan import
 
-// Music
-import Music from './components/music/music';
+// Loading Component
+const LoadingSpinner = () => (
+  <div className="loading-screen">
+    <div className="spinner"></div>
+    <p>Yuklanmoqda...</p>
+  </div>
+);
 
-// Auth Components
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
 
-// Main Page
-import MainPage from './components/Main/MainPage';
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
 
-// Kino Components
-import KinoPage from './components/Kino/KinoPage';
-import KinoWatch from "./components/Kino/KinoWatch";
+  componentDidCatch(error, errorInfo) {
+    console.error('App Error:', error, errorInfo);
+  }
 
-// Dating Components
-import DatingPage from './components/Dating/DatingPage';
-import ProfileForm from './components/Dating/ProfileForm';
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-boundary">
+          <h1>Xatolik yuz berdi</h1>
+          <p>{this.state.error?.message}</p>
+          <button onClick={() => window.location.reload()}>
+            Qayta yuklash
+          </button>
+        </div>
+      );
+    }
 
-// Elonlar Components
-import ElonlarPage from './components/Elonlar/ElonlarPage';
+    return this.props.children;
+  }
+}
 
-// Admin Components
-import AdminLogin from './components/Admin/AdminLogin';
-import AdminDashboard from './components/Admin/AdminDashboard';
-import AdminMovies from './components/Admin/AdminMovies';
-import AdminUsers from './components/Admin/AdminUsers';
-import AdminDating from './components/Admin/AdminDating';
-import AdminAds from './components/Admin/AdminAds';
+// Route Constants
+const ROUTES = {
+  HOME: '/',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  MAIN: '/main',
+  KINO: '/kino',
+  KINO_WATCH: '/kino/watch/:id',
+  DATING: '/dating',
+  DATING_FORM: '/dating/profile-form',
+  MUSIC: '/music',
+  GALLERY: '/gallery',
+  ELONLAR: '/elonlar',
+  SAVOLLAR: '/savollar',
+  ADMIN: '/admin',
+  ADMIN_BANNER: '/admin/banner',
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_MOVIES: '/admin/movies',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_DATING: '/admin/dating',
+  ADMIN_ADS: '/admin/ads'
+};
 
-// Poll/Savollar Components
-import PollCard from './components/PollCard/PollCard';
+// Keyboard Shortcuts Configuration
+const KEYBOARD_SHORTCUTS = [
+  { keys: 'Ctrl+Alt+T', desc: 'Admin panel', route: ROUTES.ADMIN },
+  { keys: 'Ctrl+Alt+L', desc: 'Login', route: ROUTES.LOGIN },
+  { keys: 'Ctrl+Alt+R', desc: 'Register', route: ROUTES.REGISTER },
+  { keys: 'Ctrl+Alt+M', desc: 'Main page', route: ROUTES.MAIN },
+  { keys: 'Ctrl+Alt+K', desc: 'Kino page', route: ROUTES.KINO },
+  { keys: 'Ctrl+Alt+D', desc: 'Dating page', route: ROUTES.DATING },
+  { keys: 'Ctrl+Alt+E', desc: 'E\'lonlar', route: ROUTES.ELONLAR },
+  { keys: 'Ctrl+Alt+G', desc: 'Gallery', route: ROUTES.GALLERY },
+  { keys: 'Ctrl+Alt+S', desc: 'Music', route: ROUTES.MUSIC },
+  { keys: 'Ctrl+Alt+H', desc: 'Bu oynani ko\'rsatish/yopish', action: 'toggle' },
+  { keys: 'ESC', desc: 'Oynani yopish', action: 'close' }
+];
 
 // Keyboard Handler Component
 const KeyboardHandler = ({ children }) => {
@@ -45,118 +108,65 @@ const KeyboardHandler = ({ children }) => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ctrl+Alt+T - Admin panel
-      if (e.ctrlKey && e.altKey && e.key === 't') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+T pressed - navigating to admin');
-        navigate('/admin');
+      // Ignore shortcuts when typing in input fields
+      if (e.target.tagName === 'INPUT' || 
+          e.target.tagName === 'TEXTAREA' || 
+          e.target.isContentEditable) {
+        return;
       }
+
+      const shortcuts = {
+        'ctrl+alt+t': () => navigate(ROUTES.ADMIN),
+        'ctrl+alt+l': () => navigate(ROUTES.LOGIN),
+        'ctrl+alt+r': () => navigate(ROUTES.REGISTER),
+        'ctrl+alt+m': () => navigate(ROUTES.MAIN),
+        'ctrl+alt+k': () => navigate(ROUTES.KINO),
+        'ctrl+alt+d': () => navigate(ROUTES.DATING),
+        'ctrl+alt+e': () => navigate(ROUTES.ELONLAR),
+        'ctrl+alt+g': () => navigate(ROUTES.GALLERY),
+        'ctrl+alt+s': () => navigate(ROUTES.MUSIC),
+        'ctrl+alt+h': () => setShowShortcuts(prev => !prev),
+        'escape': () => setShowShortcuts(false)
+      };
+
+      const key = `${e.ctrlKey ? 'ctrl+' : ''}${e.altKey ? 'alt+' : ''}${e.key.toLowerCase()}`;
       
-      // Ctrl+Alt+L - Login
-      if (e.ctrlKey && e.altKey && e.key === 'l') {
+      if (shortcuts[key]) {
         e.preventDefault();
-        console.log('Ctrl+Alt+L pressed - navigating to login');
-        navigate('/login');
-      }
-      
-      // Ctrl+Alt+R - Register
-      if (e.ctrlKey && e.altKey && e.key === 'r') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+R pressed - navigating to register');
-        navigate('/register');
-      }
-      
-      // Ctrl+Alt+M - Main page
-      if (e.ctrlKey && e.altKey && e.key === 'm') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+M pressed - navigating to main');
-        navigate('/main');
-      }
-      
-      // Ctrl+Alt+K - Kino page
-      if (e.ctrlKey && e.altKey && e.key === 'k') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+K pressed - navigating to kino');
-        navigate('/kino');
-      }
-      
-      // Ctrl+Alt+D - Dating page
-      if (e.ctrlKey && e.altKey && e.key === 'd') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+D pressed - navigating to dating');
-        navigate('/dating');
-      }
-      
-      // Ctrl+Alt+E - Elonlar page
-      if (e.ctrlKey && e.altKey && e.key === 'e') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+E pressed - navigating to elonlar');
-        navigate('/elonlar');
-      }
-      
-      // Ctrl+Alt+G - Gallery
-      if (e.ctrlKey && e.altKey && e.key === 'g') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+G pressed - navigating to gallery');
-        navigate('/gallery');
-      }
-      
-      // Ctrl+Alt+S - Music
-      if (e.ctrlKey && e.altKey && e.key === 's') {
-        e.preventDefault();
-        console.log('Ctrl+Alt+S pressed - navigating to music');
-        navigate('/music');
-      }
-      
-      // Ctrl+Alt+H - Show shortcuts
-      if (e.ctrlKey && e.altKey && e.key === 'h') {
-        e.preventDefault();
-        setShowShortcuts(prev => !prev);
-      }
-      
-      // Escape - Close shortcuts
-      if (e.key === 'Escape' && showShortcuts) {
-        setShowShortcuts(false);
+        shortcuts[key]();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate, showShortcuts]);
+  }, [navigate]);
 
   return (
     <>
       {children}
-      {showShortcuts && <ShortcutHint onClose={() => setShowShortcuts(false)} />}
+      {showShortcuts && (
+        <ShortcutHint onClose={() => setShowShortcuts(false)} />
+      )}
     </>
   );
 };
 
 // Shortcut Hint Component
 const ShortcutHint = ({ onClose }) => {
-  const shortcuts = [
-    { keys: 'Ctrl+Alt+T', desc: 'Admin panel' },
-    { keys: 'Ctrl+Alt+L', desc: 'Login' },
-    { keys: 'Ctrl+Alt+R', desc: 'Register' },
-    { keys: 'Ctrl+Alt+M', desc: 'Main page' },
-    { keys: 'Ctrl+Alt+K', desc: 'Kino page' },
-    { keys: 'Ctrl+Alt+D', desc: 'Dating page' },
-    { keys: 'Ctrl+Alt+E', desc: 'E\'lonlar' },
-    { keys: 'Ctrl+Alt+G', desc: 'Gallery' },
-    { keys: 'Ctrl+Alt+S', desc: 'Music' },
-    { keys: 'Ctrl+Alt+H', desc: 'Bu oynani ko\'rsatish/yopish' },
-    { keys: 'ESC', desc: 'Oynani yopish' }
-  ];
-
   return (
     <div className="shortcut-overlay" onClick={onClose}>
       <div className="shortcut-modal" onClick={e => e.stopPropagation()}>
         <div className="shortcut-header">
-          <h2>⌨️ Keyboard Shortcuts</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <h2>
+            <span className="shortcut-icon">⌨️</span>
+            Klaviatura yorliqlari
+          </h2>
+          <button className="close-btn" onClick={onClose} aria-label="Yopish">
+            ✕
+          </button>
         </div>
         <div className="shortcut-grid">
-          {shortcuts.map((shortcut, index) => (
+          {KEYBOARD_SHORTCUTS.map((shortcut, index) => (
             <div key={index} className="shortcut-item">
               <span className="shortcut-keys">{shortcut.keys}</span>
               <span className="shortcut-desc">{shortcut.desc}</span>
@@ -172,265 +182,51 @@ const ShortcutHint = ({ onClose }) => {
 };
 
 // Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const ProtectedRoute = ({ children, requireAdmin = false }) => {
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    isAdmin: false,
+    isLoading: true
+  });
 
   useEffect(() => {
     const checkAuth = () => {
-      const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (user) {
-        setIsAuthenticated(true);
-      } else {
-        navigate('/login');
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const admin = JSON.parse(localStorage.getItem('admin'));
+        
+        setAuthState({
+          isAuthenticated: !!currentUser,
+          isAdmin: admin?.isAdmin || currentUser?.isAdmin || false,
+          isLoading: false
+        });
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setAuthState({
+          isAuthenticated: false,
+          isAdmin: false,
+          isLoading: false
+        });
       }
-      setIsLoading(false);
     };
 
     checkAuth();
-  }, [navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="loader"></div>
-        <p>Yuklanmoqda...</p>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? children : null;
-};
-
-// Admin Route Component
-const AdminRoute = ({ children }) => {
-  const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAdmin = () => {
-      const admin = JSON.parse(localStorage.getItem('admin') || 'null');
-      if (admin && admin.isAdmin) {
-        setIsAdmin(true);
-      } else {
-        navigate('/admin');
-      }
-      setIsLoading(false);
-    };
-
-    checkAdmin();
-  }, [navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="loader"></div>
-        <p>Yuklanmoqda...</p>
-      </div>
-    );
-  }
-
-  return isAdmin ? children : null;
-};
-
-// Main App Component
-function App() {
-  const [appLoaded, setAppLoaded] = useState(false);
-
-  useEffect(() => {
-    // App yuklanganini belgilash
-    setAppLoaded(true);
-
-    // LocalStorage ni tekshirish va default ma'lumotlarni o'rnatish
-    if (!localStorage.getItem('users')) {
-      // Default users
-      const defaultUsers = [
-        {
-          id: 1,
-          username: 'admin',
-          email: 'admin@example.com',
-          password: 'admin123',
-          isAdmin: true
-        }
-      ];
-      localStorage.setItem('users', JSON.stringify(defaultUsers));
-    }
-
-    // Admin ma'lumotlarini tekshirish
-    if (!localStorage.getItem('admin')) {
-      const defaultAdmin = {
-        id: 1,
-        username: 'admin',
-        email: 'admin@example.com',
-        isAdmin: true,
-        loggedIn: false
-      };
-      localStorage.setItem('admin', JSON.stringify(defaultAdmin));
-    }
-
-    console.log('App initialized successfully');
   }, []);
 
-  if (!appLoaded) {
-    return (
-      <div className="initial-loading">
-        <div className="loader"></div>
-        <p>Ilova yuklanmoqda...</p>
-      </div>
-    );
+  if (authState.isLoading) {
+    return <LoadingSpinner />;
   }
 
-  return (
-    <Router>
-      <KeyboardHandler>
-        <div className="App">
-          <Routes>
-            {/* Redirect root to login */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            
-            {/* Auth Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            
-            {/* Protected Main Routes */}
-            <Route 
-              path="/main" 
-              element={
-                <ProtectedRoute>
-                  <MainPage />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Kino Routes */}
-            <Route 
-              path="/kino" 
-              element={
-                <ProtectedRoute>
-                  <KinoPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/kino/watch/:id" 
-              element={
-                <ProtectedRoute>
-                  <KinoWatch />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Dating Routes */}
-            <Route 
-              path="/dating" 
-              element={
-                <ProtectedRoute>
-                  <DatingPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dating/profile-form" 
-              element={
-                <ProtectedRoute>
-                  <ProfileForm />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Music Route */}
-            <Route 
-              path="/music" 
-              element={
-                <ProtectedRoute>
-                  <Music />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Gallery Route */}
-            <Route 
-              path="/gallery" 
-              element={
-                <ProtectedRoute>
-                  <Gallery />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Elonlar Route */}
-            <Route 
-              path="/elonlar" 
-              element={
-                <ProtectedRoute>
-                  <ElonlarPage />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Savollar/Poll Route */}
-            <Route 
-              path="/savollar" 
-              element={
-                <ProtectedRoute>
-                  <PollCard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route 
-              path="/admin/dashboard" 
-              element={
-                <AdminRoute>
-                  <AdminDashboard />
-                </AdminRoute>
-              } 
-            />
-            <Route 
-              path="/admin/movies" 
-              element={
-                <AdminRoute>
-                  <AdminMovies />
-                </AdminRoute>
-              } 
-            />
-            <Route 
-              path="/admin/users" 
-              element={
-                <AdminRoute>
-                  <AdminUsers />
-                </AdminRoute>
-              } 
-            />
-            <Route 
-              path="/admin/dating" 
-              element={
-                <AdminRoute>
-                  <AdminDating />
-                </AdminRoute>
-              } 
-            />
-            <Route 
-              path="/admin/ads" 
-              element={
-                <AdminRoute>
-                  <AdminAds />
-                </AdminRoute>
-              } 
-            />
-            
-            {/* 404 - Not Found Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </KeyboardHandler>
-    </Router>
-  );
-}
+  if (!authState.isAuthenticated) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
+
+  if (requireAdmin && !authState.isAdmin) {
+    return <Navigate to={ROUTES.MAIN} replace />;
+  }
+
+  return children;
+};
 
 // 404 Not Found Component
 const NotFound = () => {
@@ -441,9 +237,9 @@ const NotFound = () => {
       <div className="not-found-content">
         <h1>404</h1>
         <h2>Sahifa topilmadi</h2>
-        <p>Kechirasiz, siz qidirgan sahifa mavjud emas.</p>
+        <p>Kechirasiz, siz qidirgan sahifa mavjud emas yoki o'chirilgan.</p>
         <div className="not-found-actions">
-          <button onClick={() => navigate('/main')} className="home-btn">
+          <button onClick={() => navigate(ROUTES.MAIN)} className="home-btn">
             Bosh sahifaga qaytish
           </button>
           <button onClick={() => navigate(-1)} className="back-btn">
@@ -454,5 +250,224 @@ const NotFound = () => {
     </div>
   );
 };
+
+// Main App Component
+function App() {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    const initializeApp = () => {
+      try {
+        // Initialize default data if not exists
+        if (!localStorage.getItem('users')) {
+          const defaultUsers = [
+            {
+              id: 1,
+              username: 'admin',
+              email: 'admin@example.com',
+              // Note: In production, never store plain passwords
+              // This is just for demo purposes
+              password: 'admin123',
+              isAdmin: true,
+              createdAt: new Date().toISOString()
+            }
+          ];
+          localStorage.setItem('users', JSON.stringify(defaultUsers));
+        }
+
+        // Initialize admin session if not exists
+        if (!localStorage.getItem('admin')) {
+          localStorage.setItem('admin', JSON.stringify(null));
+        }
+
+        // Initialize current user if not exists
+        if (!localStorage.getItem('currentUser')) {
+          localStorage.setItem('currentUser', JSON.stringify(null));
+        }
+
+        console.log('App initialized successfully');
+      } catch (error) {
+        console.error('App initialization error:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeApp();
+  }, []);
+
+  if (!isInitialized) {
+    return (
+      <div className="initial-loading">
+        <div className="loader"></div>
+        <p>Ilova yuklanmoqda...</p>
+      </div>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <Router>
+        <KeyboardHandler>
+          <div className="App">
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                {/* Redirect root to login */}
+                <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
+                
+                {/* Auth Routes */}
+                <Route path={ROUTES.LOGIN} element={<Login />} />
+                <Route path={ROUTES.REGISTER} element={<Register />} />
+                
+                {/* Protected Routes */}
+                <Route 
+                  path={ROUTES.MAIN} 
+                  element={
+                    <ProtectedRoute>
+                      <MainPage />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.KINO} 
+                  element={
+                    <ProtectedRoute>
+                      <KinoPage />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.KINO_WATCH} 
+                  element={
+                    <ProtectedRoute>
+                      <KinoWatch />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.DATING} 
+                  element={
+                    <ProtectedRoute>
+                      <DatingPage />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.DATING_FORM} 
+                  element={
+                    <ProtectedRoute>
+                      <ProfileForm />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.MUSIC} 
+                  element={
+                    <ProtectedRoute>
+                      <Music />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.GALLERY} 
+                  element={
+                    <ProtectedRoute>
+                      <Gallery />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.ELONLAR} 
+                  element={
+                    <ProtectedRoute>
+                      <ElonlarPage />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.SAVOLLAR} 
+                  element={
+                    <ProtectedRoute>
+                      <PollCard />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Admin Banner Route */}
+                <Route 
+                  path={ROUTES.ADMIN_BANNER} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminBanner />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Admin Routes */}
+                <Route path={ROUTES.ADMIN} element={<AdminLogin />} />
+                
+                <Route 
+                  path={ROUTES.ADMIN_DASHBOARD} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.ADMIN_MOVIES} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminMovies />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.ADMIN_USERS} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminUsers />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.ADMIN_DATING} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminDating />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path={ROUTES.ADMIN_ADS} 
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <AdminAds />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* 404 Route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </div>
+        </KeyboardHandler>
+      </Router>
+    </ErrorBoundary>
+  );
+}
 
 export default App;

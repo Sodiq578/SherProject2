@@ -15,8 +15,13 @@ import {
   FiDownload,
   FiSettings,
   FiBell,
-  FiUser
-} from 'react-icons/fi'; // FiStar olib tashlandi
+  FiUser,
+  FiImage, // Yangi import
+  FiEdit2,
+  FiTrash2,
+  FiPlus,
+  FiX
+} from 'react-icons/fi';
 import './Admin.css';
 
 const AdminDashboard = () => {
@@ -26,12 +31,26 @@ const AdminDashboard = () => {
     movies: 0,
     dating: 0,
     ads: 0,
-    totalViews: 0
+    totalViews: 0,
+    banners: 0 // Yangi
   });
   const [recentActivities, setRecentActivities] = useState([]);
   const [adminUser, setAdminUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState([]);
+  
+  // Banner state'lari
+  const [banners, setBanners] = useState([]);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [editingBanner, setEditingBanner] = useState(null);
+  const [bannerForm, setBannerForm] = useState({
+    id: '',
+    imageUrl: '',
+    title: '',
+    description: '',
+    link: '',
+    discount: ''
+  });
 
   useEffect(() => {
     const admin = JSON.parse(localStorage.getItem('adminUser'));
@@ -46,6 +65,7 @@ const AdminDashboard = () => {
     const movies = JSON.parse(localStorage.getItem('movies') || '[]');
     const dating = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
     const ads = JSON.parse(localStorage.getItem('ads') || '[]');
+    const banners = JSON.parse(localStorage.getItem('banners') || '[]');
 
     // Kinolardan umumiy ko'rishlar soni
     const totalViews = ads.reduce((sum, ad) => sum + (ad.views || 0), 0);
@@ -55,26 +75,110 @@ const AdminDashboard = () => {
       movies: movies.length,
       dating: dating.length,
       ads: ads.length,
-      totalViews
+      totalViews,
+      banners: banners.length // Yangi
     });
+
+    setBanners(banners);
 
     // Oxirgi aktiviteler
     const activities = [
       ...movies.slice(0, 3).map(m => ({ type: 'movie', text: `Yangi kino: ${m.title}`, time: m.createdAt })),
       ...users.slice(0, 3).map(u => ({ type: 'user', text: `Yangi foydalanuvchi: ${u.username}`, time: new Date().toISOString() })),
+      ...banners.slice(0, 2).map(b => ({ type: 'banner', text: `Banner: ${b.title}`, time: new Date().toISOString() }))
     ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5);
 
     setRecentActivities(activities);
 
     // Bildirishnomalar
+    const notifs = [];
     if (movies.length === 0) {
-      setNotifications([{ type: 'warning', text: 'Hali kinolar qo\'shilmagan' }]);
+      notifs.push({ type: 'warning', text: 'Hali kinolar qo\'shilmagan' });
     }
+    if (banners.length === 0) {
+      notifs.push({ type: 'info', text: 'Bannerlar mavjud emas' });
+    }
+    setNotifications(notifs);
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('adminUser');
     navigate('/admin');
+  };
+
+  // Banner funksiyalari
+  const handleAddBanner = () => {
+    setEditingBanner(null);
+    setBannerForm({
+      id: Date.now().toString(),
+      imageUrl: '',
+      title: '',
+      description: '',
+      link: '',
+      discount: ''
+    });
+    setShowBannerModal(true);
+  };
+
+  const handleEditBanner = (banner) => {
+    setEditingBanner(banner);
+    setBannerForm(banner);
+    setShowBannerModal(true);
+  };
+
+  const handleDeleteBanner = (bannerId) => {
+    if (window.confirm('Bu bannerni o\'chirishni xohlaysizmi?')) {
+      const updatedBanners = banners.filter(b => b.id !== bannerId);
+      setBanners(updatedBanners);
+      localStorage.setItem('banners', JSON.stringify(updatedBanners));
+      
+      // Statistikani yangilash
+      setStats(prev => ({ ...prev, banners: updatedBanners.length }));
+      
+      // Aktivitelarga qo'shish
+      const newActivity = {
+        type: 'banner',
+        text: 'Banner o\'chirildi',
+        time: new Date().toISOString()
+      };
+      setRecentActivities(prev => [newActivity, ...prev.slice(0, 4)]);
+    }
+  };
+
+  const handleSaveBanner = (e) => {
+    e.preventDefault();
+    
+    if (!bannerForm.imageUrl || !bannerForm.title) {
+      alert('Rasm va sarlavha majburiy!');
+      return;
+    }
+
+    let updatedBanners;
+    if (editingBanner) {
+      // Tahrirlash
+      updatedBanners = banners.map(b => 
+        b.id === editingBanner.id ? bannerForm : b
+      );
+    } else {
+      // Yangi qo'shish
+      updatedBanners = [...banners, { ...bannerForm, id: Date.now().toString() }];
+    }
+
+    setBanners(updatedBanners);
+    localStorage.setItem('banners', JSON.stringify(updatedBanners));
+    
+    // Statistikani yangilash
+    setStats(prev => ({ ...prev, banners: updatedBanners.length }));
+    
+    // Aktivitelarga qo'shish
+    const newActivity = {
+      type: 'banner',
+      text: editingBanner ? 'Banner tahrirlandi' : 'Yangi banner qo\'shildi',
+      time: new Date().toISOString()
+    };
+    setRecentActivities(prev => [newActivity, ...prev.slice(0, 4)]);
+    
+    setShowBannerModal(false);
   };
 
   const formatDate = (dateString) => {
@@ -135,6 +239,13 @@ const AdminDashboard = () => {
           <button onClick={() => navigate('/admin/ads')} className="menu-item">
             <FiShoppingBag /> E'lonlar
             {stats.ads > 0 && <span className="menu-badge">{stats.ads}</span>}
+          </button>
+          <button onClick={() => {
+            // Bannerlar bo'limiga o'tish
+            document.getElementById('banners-section').scrollIntoView({ behavior: 'smooth' });
+          }} className="menu-item">
+            <FiImage /> Bannerlar
+            {stats.banners > 0 && <span className="menu-badge">{stats.banners}</span>}
           </button>
         </div>
 
@@ -228,6 +339,63 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* Banner Section - Yangi qo'shilgan qism */}
+        <div id="banners-section" className="dashboard-card banners-section">
+          <div className="card-header">
+            <div className="header-left">
+              <FiImage className="section-icon" />
+              <h3>Bannerlar boshqaruvi</h3>
+            </div>
+            <button onClick={handleAddBanner} className="add-banner-btn">
+              <FiPlus /> Yangi banner
+            </button>
+          </div>
+
+          <div className="banners-grid">
+            {banners.length > 0 ? (
+              banners.map((banner) => (
+                <div key={banner.id} className="banner-item">
+                  <div className="banner-preview">
+                    <img src={banner.imageUrl} alt={banner.title} />
+                    {banner.discount && (
+                      <span className="banner-discount-badge">{banner.discount}</span>
+                    )}
+                  </div>
+                  <div className="banner-info">
+                    <h4>{banner.title}</h4>
+                    <p>{banner.description}</p>
+                    <div className="banner-meta">
+                      <span className="banner-link">{banner.link || 'Havola yo\'q'}</span>
+                    </div>
+                    <div className="banner-actions">
+                      <button 
+                        onClick={() => handleEditBanner(banner)}
+                        className="banner-action edit"
+                      >
+                        <FiEdit2 />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteBanner(banner.id)}
+                        className="banner-action delete"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-banners">
+                <FiImage className="no-banners-icon" />
+                <p>Hali bannerlar mavjud emas</p>
+                <button onClick={handleAddBanner} className="add-first-banner">
+                  <FiPlus /> Birinchi banner qo'shish
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Charts and Recent Activity */}
         <div className="dashboard-grid">
           <div className="dashboard-card recent-activities">
@@ -240,7 +408,9 @@ const AdminDashboard = () => {
                 recentActivities.map((activity, index) => (
                   <div key={index} className={`activity-item ${activity.type}`}>
                     <div className="activity-icon">
-                      {activity.type === 'movie' ? <FiFilm /> : <FiUsers />}
+                      {activity.type === 'movie' ? <FiFilm /> : 
+                       activity.type === 'user' ? <FiUsers /> : 
+                       activity.type === 'banner' ? <FiImage /> : <FiBell />}
                     </div>
                     <div className="activity-content">
                       <p>{activity.text}</p>
@@ -278,6 +448,10 @@ const AdminDashboard = () => {
                 <FiShoppingBag />
                 <span>E'lonlar</span>
               </button>
+              <button onClick={handleAddBanner} className="quick-action banner">
+                <FiImage />
+                <span>Banner qo'shish</span>
+              </button>
             </div>
           </div>
 
@@ -302,10 +476,98 @@ const AdminDashboard = () => {
                 <span>Status</span>
                 <span className="info-value status-active">Aktiv</span>
               </div>
+              <div className="info-row">
+                <span>Bannerlar</span>
+                <span className="info-value">{stats.banners}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Banner Modal */}
+      {showBannerModal && (
+        <div className="modal-overlay" onClick={() => setShowBannerModal(false)}>
+          <div className="modal-content banner-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{editingBanner ? 'Bannerni tahrirlash' : 'Yangi banner qo\'shish'}</h3>
+              <button className="close-btn" onClick={() => setShowBannerModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveBanner}>
+              <div className="form-group">
+                <label>Rasm URL *</label>
+                <input
+                  type="text"
+                  value={bannerForm.imageUrl}
+                  onChange={e => setBannerForm({...bannerForm, imageUrl: e.target.value})}
+                  placeholder="https://example.com/image.jpg"
+                  required
+                />
+                {bannerForm.imageUrl && (
+                  <div className="image-preview">
+                    <img src={bannerForm.imageUrl} alt="Preview" />
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Sarlavha *</label>
+                <input
+                  type="text"
+                  value={bannerForm.title}
+                  onChange={e => setBannerForm({...bannerForm, title: e.target.value})}
+                  placeholder="Banner sarlavhasi"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Tavsif</label>
+                <textarea
+                  value={bannerForm.description}
+                  onChange={e => setBannerForm({...bannerForm, description: e.target.value})}
+                  placeholder="Banner tavsifi"
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Havola (Link)</label>
+                  <input
+                    type="text"
+                    value={bannerForm.link}
+                    onChange={e => setBannerForm({...bannerForm, link: e.target.value})}
+                    placeholder="/kino yoki https://..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Chegirma</label>
+                  <input
+                    type="text"
+                    value={bannerForm.discount}
+                    onChange={e => setBannerForm({...bannerForm, discount: e.target.value})}
+                    placeholder="-20% yoki Bepul"
+                  />
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setShowBannerModal(false)}>
+                  Bekor qilish
+                </button>
+                <button type="submit" className="save-btn">
+                  {editingBanner ? 'Saqlash' : 'Qo\'shish'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

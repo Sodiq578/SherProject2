@@ -145,6 +145,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  
 }
 
 .filter-btn:hover {
@@ -172,6 +173,9 @@
   justify-content: center;
   transition: all 0.3s ease;
 }
+
+
+
 
 .view-mode-btn:hover {
   background: rgba(0, 102, 255, 0.2);
