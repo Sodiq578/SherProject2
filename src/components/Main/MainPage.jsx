@@ -21,6 +21,7 @@ import {
   FiGift,
   FiAward
 } from 'react-icons/fi';
+import BannerCarousel from './BannerCarousel';
 import './MainPage.css';
 
 const MainPage = () => {
@@ -28,8 +29,6 @@ const MainPage = () => {
   const [userCount, setUserCount] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
-  const [notifications, setNotifications] = useState(3);
-  const [recentActivities, setRecentActivities] = useState([]);
   const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
@@ -42,13 +41,6 @@ const MainPage = () => {
     if (!user) {
       navigate('/');
     }
-
-    // Soxta aktivliklar
-    setRecentActivities([
-      { id: 1, text: 'Yangi kino qo\'shildi: "Dune 2"', time: '5 min', icon: '🎬' },
-      { id: 2, text: 'Datingda 3 ta yangi profil', time: '15 min', icon: '💕' },
-      { id: 3, text: 'E\'lonlar bo\'limida 5 ta yangi e\'lon', time: '30 min', icon: '📦' },
-    ]);
 
     // Welcome xabarni 3 sekundan keyin yopish
     const timer = setTimeout(() => setShowWelcome(false), 3000);
@@ -102,14 +94,12 @@ const MainPage = () => {
             <h1 className='name-title'>{currentUser?.username}</h1>
           </div>
         </div>
-        
-    
 
         <div className="header-right">
           {/* Notification Bell */}
           <div className="notification-badge" onClick={() => navigate('/notifications')}>
             <FiBell />
-            {notifications > 0 && <span className="badge">{notifications}</span>}
+            {3 > 0 && <span className="badge">3</span>}
           </div>
 
           <button 
@@ -183,10 +173,19 @@ const MainPage = () => {
         </div>
       </div>
 
+      {/* Banner Carousel */}
+      <BannerCarousel 
+        onBannerClick={(banner) => {
+          if (banner.link) {
+            if (banner.link.startsWith('http')) {
+              window.open(banner.link, '_blank');
+            } else {
+              navigate(banner.link);
+            }
+          }
+        }}
+      />
 
-  <div className="banner-reklama">
-       <img src="https://plus.unsplash.com/premium_photo-1682681903841-1f98ce6a1175?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGRyaW5rfGVufDB8fDB8fHww" alt="" />
-      </div>
       {/* Stats Cards Row */}
       <div className="stats-row">
         <div className="stats-card small">
@@ -278,8 +277,6 @@ const MainPage = () => {
         </div>
       </div>
 
-     
-
       {/* Profile Card */}
       <div className="profile-card">
         <div className="profile-header">
@@ -301,7 +298,6 @@ const MainPage = () => {
             <FiStar className="info-icon" />
             Anketa to'ldirilsa, boshqalarning anketalarini ko'rish va ular bilan tanishish mumkin
           </p>
-       
         </div>
 
         {/* Progress Bar */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
   FiArrowLeft, 
@@ -113,29 +113,28 @@ const KinoWatch = () => {
     45: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
   };
 
-  useEffect(() => {
-    loadMovie();
-  }, [id]);
+  const loadRecommendedMovies = useCallback((currentMovie, allMovies) => {
+    const recommended = allMovies
+      .filter(m => m.id !== currentMovie.id && 
+             m.genre?.some(g => currentMovie.genre?.includes(g)))
+      .slice(0, 6)
+      .map(m => ({
+        ...m,
+        trailerUrl: trailers[m.id],
+        videoUrl: videoUrls[m.id]
+      }));
+    setRecommendedMovies(recommended);
+  }, []);
 
-  useEffect(() => {
-    if (videoRef.current && !isTrailer) {
-      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
-      videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
-      videoRef.current.addEventListener('ended', handleVideoEnd);
-      videoRef.current.addEventListener('error', handleVideoError);
+  const handleVideoError = useCallback(() => {
+    setVideoError(true);
+    if (movie && trailers[movie.id]) {
+      setIsTrailer(true);
+      setVideoError(false);
     }
+  }, [movie]);
 
-    return () => {
-      if (videoRef.current && !isTrailer) {
-        videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-        videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        videoRef.current.removeEventListener('ended', handleVideoEnd);
-        videoRef.current.removeEventListener('error', handleVideoError);
-      }
-    };
-  }, [movie, isTrailer]);
-
-  const loadMovie = () => {
+  const loadMovie = useCallback(() => {
     const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
     const foundMovie = savedMovies.find(m => m.id === parseInt(id));
     
@@ -156,28 +155,35 @@ const KinoWatch = () => {
     }
     
     setIsLoading(false);
-  };
+  }, [id, loadRecommendedMovies]);
 
-  const loadRecommendedMovies = (currentMovie, allMovies) => {
-    const recommended = allMovies
-      .filter(m => m.id !== currentMovie.id && 
-             m.genre?.some(g => currentMovie.genre?.includes(g)))
-      .slice(0, 6)
-      .map(m => ({
-        ...m,
-        trailerUrl: trailers[m.id],
-        videoUrl: videoUrls[m.id]
-      }));
-    setRecommendedMovies(recommended);
-  };
+  useEffect(() => {
+    loadMovie();
+  }, [loadMovie]);
 
-  const handleVideoError = () => {
-    setVideoError(true);
-    if (movie && trailers[movie.id]) {
-      setIsTrailer(true);
-      setVideoError(false);
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (videoElement && !isTrailer) {
+      const handleTimeUpdate = () => setCurrentTime(videoElement.currentTime);
+      const handleLoadedMetadata = () => setDuration(videoElement.duration);
+      const handleVideoEnd = () => {
+        setIsPlaying(false);
+        setShowControls(true);
+      };
+
+      videoElement.addEventListener('timeupdate', handleTimeUpdate);
+      videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+      videoElement.addEventListener('ended', handleVideoEnd);
+      videoElement.addEventListener('error', handleVideoError);
+
+      return () => {
+        videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+        videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        videoElement.removeEventListener('ended', handleVideoEnd);
+        videoElement.removeEventListener('error', handleVideoError);
+      };
     }
-  };
+  }, [movie, isTrailer, handleVideoError]);
 
   const handleGoBack = () => {
     navigate('/kino');
@@ -216,19 +222,6 @@ const KinoWatch = () => {
       if (index > -1) likedMovies.splice(index, 1);
     }
     localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
-  };
-
-  const handleTimeUpdate = () => {
-    setCurrentTime(videoRef.current.currentTime);
-  };
-
-  const handleLoadedMetadata = () => {
-    setDuration(videoRef.current.duration);
-  };
-
-  const handleVideoEnd = () => {
-    setIsPlaying(false);
-    setShowControls(true);
   };
 
   const togglePlay = () => {
@@ -316,16 +309,6 @@ const KinoWatch = () => {
   const handleMovieClick = (movieId) => {
     navigate(`/kino/watch/${movieId}`);
     window.location.reload();
-  };
-
-  const retryVideo = () => {
-    setVideoError(false);
-    if (movie && trailers[movie.id]) {
-      setIsTrailer(true);
-    } else if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play();
-    }
   };
 
   if (isLoading) {

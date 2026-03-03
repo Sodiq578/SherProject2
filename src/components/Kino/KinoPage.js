@@ -117,7 +117,50 @@ const KinoPage = () => {
 
   // 50+ ta kinolar
   const sampleMovies = [
-   
+    {
+      id: 1,
+      title: "Dune: Part Two",
+      year: "2024",
+      genre: ["Sci-Fi", "Adventure", "Drama"],
+      director: "Denis Villeneuve",
+      rating: 9.2,
+      duration: "2h 46m",
+      description: "Pol Atreides Chani va Fremenlar bilan birga Dune sayyorasini ozod qilish uchun kurashni davom ettiradi.",
+      cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
+      type: "movie",
+      trending: true,
+      awards: "6 Oscar nominatsiyasi"
+    },
+    {
+      id: 2,
+      title: "Poor Things",
+      year: "2023",
+      genre: ["Comedy", "Drama", "Romance"],
+      director: "Yorgos Lanthimos",
+      rating: 8.8,
+      duration: "2h 21m",
+      description: "Bella Baxter ismli yosh ayol o'zini o'zi kashf qilish va dunyoni o'rganish sarguzashtini boshlaydi.",
+      cast: ["Emma Stone", "Mark Ruffalo", "Willem Dafoe"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMIzYzM2hZGQtZWQzMi00ZGU4LTk2ZmYtY2Y0MjY5YzQwYzBkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg",
+      type: "movie",
+      trending: true,
+      awards: "4 Oscar"
+    },
+    {
+      id: 3,
+      title: "The Boys in the Boat",
+      year: "2023",
+      genre: ["Biography", "Drama", "Sport"],
+      director: "George Clooney",
+      rating: 7.9,
+      duration: "2h 4m",
+      description: "1936 yilgi Olimpiadada AQSh eshkak eshish jamoasining g'alabali hikoyasi.",
+      cast: ["Joel Edgerton", "Callum Turner", "Peter Guinness"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BZjE5ZjQ3NGYtMmM2My00OWY2LTg5ZmMtYjUyYzQ0YzQ5YzQyXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg",
+      type: "movie",
+      trending: false
+    },
     {
       id: 4,
       title: "Oppenheimer",
@@ -144,7 +187,8 @@ const KinoPage = () => {
       description: "Barbie va Ken haqiqiy dunyoga sayohat qilishadi.",
       cast: ["Margot Robbie", "Ryan Gosling", "America Ferrera"],
       posterUrl: "https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjk1NC00MTc4LTk1NTQtMmUxNTljM2I0NDA5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg",
-      type: "movie"
+      type: "movie",
+      trending: true
     },
     {
       id: 6,
@@ -378,7 +422,7 @@ const KinoPage = () => {
     {
       id: 23,
       title: "The Revenant",
-      year: "2016",
+      year: "2015",
       genre: ["Adventure", "Drama", "Thriller"],
       director: "Alejandro G. Iñárritu",
       rating: 8.6,
@@ -391,20 +435,6 @@ const KinoPage = () => {
     },
     {
       id: 24,
-      title: "Zootopia",
-      year: "2016",
-      genre: ["Animation", "Adventure", "Comedy"],
-      director: "Byron Howard",
-      rating: 8.8,
-      duration: "1h 48m",
-      description: "Judy Hopps Zootopia shahrida jinoyatni ochadi.",
-      cast: ["Ginnifer Goodwin", "Jason Bateman", "Idris Elba"],
-      posterUrl: "https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_.jpg",
-      type: "cartoon",
-      awards: "Oscar"
-    },
-    {
-      id: 25,
       title: "Mad Max: Fury Road",
       year: "2015",
       genre: ["Action", "Adventure", "Sci-Fi"],
@@ -418,7 +448,7 @@ const KinoPage = () => {
       awards: "6 Oscar"
     },
     {
-      id: 26,
+      id: 25,
       title: "Inside Out",
       year: "2015",
       genre: ["Animation", "Comedy", "Family"],
@@ -432,7 +462,7 @@ const KinoPage = () => {
       awards: "Oscar"
     },
     {
-      id: 27,
+      id: 26,
       title: "Interstellar",
       year: "2014",
       genre: ["Sci-Fi", "Drama", "Adventure"],
@@ -446,20 +476,7 @@ const KinoPage = () => {
       trending: true
     },
     {
-      id: 28,
-      title: "The LEGO Movie",
-      year: "2014",
-      genre: ["Animation", "Action", "Adventure"],
-      director: "Phil Lord",
-      rating: 8.2,
-      duration: "1h 40m",
-      description: "Oddiy lego figurasi Emmet dunyoni qutqarish uchun sayohatga chiqadi.",
-      cast: ["Chris Pratt", "Will Ferrell", "Elizabeth Banks"],
-      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTg4MDk1ODExN15BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_.jpg",
-      type: "cartoon"
-    },
-    {
-      id: 29,
+      id: 27,
       title: "The Wolf of Wall Street",
       year: "2013",
       genre: ["Biography", "Comedy", "Crime"],
@@ -472,7 +489,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 30,
+      id: 28,
       title: "Frozen",
       year: "2013",
       genre: ["Animation", "Adventure", "Comedy"],
@@ -486,7 +503,7 @@ const KinoPage = () => {
       awards: "2 Oscar"
     },
     {
-      id: 31,
+      id: 29,
       title: "The Dark Knight Rises",
       year: "2012",
       genre: ["Action", "Drama", "Thriller"],
@@ -499,20 +516,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 32,
-      title: "Wreck-It Ralph",
-      year: "2012",
-      genre: ["Animation", "Adventure", "Comedy"],
-      director: "Rich Moore",
-      rating: 8.1,
-      duration: "1h 41m",
-      description: "Ralph video o'yinlar dunyosida sarguzashtni boshlaydi.",
-      cast: ["John C. Reilly", "Sarah Silverman", "Jack McBrayer"],
-      posterUrl: "https://m.media-amazon.com/images/M/MV5BNzMxNTExOTkyMF5BMl5BanBnXkFtZTcwMzEyNDc0OA@@._V1_.jpg",
-      type: "cartoon"
-    },
-    {
-      id: 33,
+      id: 30,
       title: "Inception",
       year: "2010",
       genre: ["Action", "Adventure", "Sci-Fi"],
@@ -527,7 +531,7 @@ const KinoPage = () => {
       awards: "4 Oscar"
     },
     {
-      id: 34,
+      id: 31,
       title: "Toy Story 3",
       year: "2010",
       genre: ["Animation", "Adventure", "Comedy"],
@@ -541,7 +545,7 @@ const KinoPage = () => {
       awards: "2 Oscar"
     },
     {
-      id: 35,
+      id: 32,
       title: "Avatar",
       year: "2009",
       genre: ["Action", "Adventure", "Fantasy"],
@@ -555,7 +559,7 @@ const KinoPage = () => {
       awards: "3 Oscar"
     },
     {
-      id: 36,
+      id: 33,
       title: "The Dark Knight",
       year: "2008",
       genre: ["Action", "Crime", "Drama"],
@@ -570,7 +574,7 @@ const KinoPage = () => {
       awards: "2 Oscar"
     },
     {
-      id: 37,
+      id: 34,
       title: "WALL·E",
       year: "2008",
       genre: ["Animation", "Adventure", "Family"],
@@ -584,7 +588,7 @@ const KinoPage = () => {
       awards: "Oscar"
     },
     {
-      id: 38,
+      id: 35,
       title: "The Prestige",
       year: "2006",
       genre: ["Drama", "Mystery", "Sci-Fi"],
@@ -597,7 +601,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 39,
+      id: 36,
       title: "The Lord of the Rings: The Return of the King",
       year: "2003",
       genre: ["Adventure", "Drama", "Fantasy"],
@@ -611,7 +615,7 @@ const KinoPage = () => {
       awards: "11 Oscar"
     },
     {
-      id: 40,
+      id: 37,
       title: "Finding Nemo",
       year: "2003",
       genre: ["Animation", "Adventure", "Comedy"],
@@ -625,7 +629,7 @@ const KinoPage = () => {
       awards: "Oscar"
     },
     {
-      id: 41,
+      id: 38,
       title: "The Matrix",
       year: "1999",
       genre: ["Action", "Sci-Fi"],
@@ -639,7 +643,7 @@ const KinoPage = () => {
       awards: "4 Oscar"
     },
     {
-      id: 42,
+      id: 39,
       title: "Toy Story 2",
       year: "1999",
       genre: ["Animation", "Adventure", "Comedy"],
@@ -652,7 +656,7 @@ const KinoPage = () => {
       type: "cartoon"
     },
     {
-      id: 43,
+      id: 40,
       title: "Titanic",
       year: "1997",
       genre: ["Drama", "Romance"],
@@ -666,7 +670,7 @@ const KinoPage = () => {
       awards: "11 Oscar"
     },
     {
-      id: 44,
+      id: 41,
       title: "Pulp Fiction",
       year: "1994",
       genre: ["Crime", "Drama"],
@@ -679,7 +683,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 45,
+      id: 42,
       title: "The Lion King",
       year: "1994",
       genre: ["Animation", "Adventure", "Drama"],
@@ -693,7 +697,7 @@ const KinoPage = () => {
       awards: "2 Oscar"
     },
     {
-      id: 46,
+      id: 43,
       title: "Schindler's List",
       year: "1993",
       genre: ["Biography", "Drama", "History"],
@@ -707,7 +711,7 @@ const KinoPage = () => {
       awards: "7 Oscar"
     },
     {
-      id: 47,
+      id: 44,
       title: "Back to the Future",
       year: "1985",
       genre: ["Adventure", "Comedy", "Sci-Fi"],
@@ -720,7 +724,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 48,
+      id: 45,
       title: "The Breakfast Club",
       year: "1985",
       genre: ["Comedy", "Drama"],
@@ -733,7 +737,7 @@ const KinoPage = () => {
       type: "movie"
     },
     {
-      id: 49,
+      id: 46,
       title: "E.T. the Extra-Terrestrial",
       year: "1982",
       genre: ["Family", "Sci-Fi"],
@@ -747,7 +751,7 @@ const KinoPage = () => {
       awards: "4 Oscar"
     },
     {
-      id: 50,
+      id: 47,
       title: "The Empire Strikes Back",
       year: "1980",
       genre: ["Action", "Adventure", "Fantasy"],
@@ -758,6 +762,48 @@ const KinoPage = () => {
       cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"],
       posterUrl: "https://m.media-amazon.com/images/M/MV5BYmU1NDRjNDgtMzhiMi00NjZmLTg5NGItZDNiZjU5NTU4OTE0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
       type: "movie"
+    },
+    {
+      id: 48,
+      title: "Alien",
+      year: "1979",
+      genre: ["Horror", "Sci-Fi"],
+      director: "Ridley Scott",
+      rating: 8.7,
+      duration: "1h 57m",
+      description: "Kosmik kema ekipaji o'lik sayyoradan signal qabul qiladi va dahshatli maxluqni uyg'otadi.",
+      cast: ["Sigourney Weaver", "Tom Skerritt", "John Hurt"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOGQzZTBjMjQtOTVmMS00NGE5LWEyYmMtOGQ1ZDRjZDQwYzE1XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_.jpg",
+      type: "movie",
+      awards: "Oscar"
+    },
+    {
+      id: 49,
+      title: "Star Wars",
+      year: "1977",
+      genre: ["Action", "Adventure", "Fantasy"],
+      director: "George Lucas",
+      rating: 9.0,
+      duration: "2h 1m",
+      description: "Lyuk Skywalker imperiyaga qarshi kurashda ittifoqchilar bilan birlashadi.",
+      cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BOTA5NjhiOTAtZWM0ZC00MWNhLThiMzEtZDFkOTk2OTU1ZDJkXkEyXkFqcGdeQXVyMTA4NDI1NTQx._V1_.jpg",
+      type: "movie",
+      awards: "6 Oscar"
+    },
+    {
+      id: 50,
+      title: "Jaws",
+      year: "1975",
+      genre: ["Adventure", "Thriller"],
+      director: "Steven Spielberg",
+      rating: 8.3,
+      duration: "2h 4m",
+      description: "Katta akula dam olish orolidagi odamlarga hujum qiladi.",
+      cast: ["Roy Scheider", "Robert Shaw", "Richard Dreyfuss"],
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMmVmODY1MzEtYTMwZC00MzIyLThiYjYtNWFmMzE0Mzg3YzRjXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg",
+      type: "movie",
+      awards: "3 Oscar"
     }
   ];
 
@@ -802,21 +848,7 @@ const KinoPage = () => {
   }, [movies, searchTerm, selectedGenre, selectedType, selectedYear]);
 
   // Kinolarni yuklash
-  useEffect(() => {
-    loadMovies();
-  }, []);
-
-  useEffect(() => {
-    filterMovies();
-  }, [filterMovies]);
-
-  // Like holatini yuklash
-  useEffect(() => {
-    const savedLikes = JSON.parse(localStorage.getItem('likedMovies') || '[]');
-    setLikedMovies(savedLikes);
-  }, []);
-
-  const loadMovies = () => {
+  const loadMovies = useCallback(() => {
     setIsLoading(true);
     const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
     
@@ -836,7 +868,21 @@ const KinoPage = () => {
     }
     
     setIsLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadMovies();
+  }, [loadMovies]);
+
+  useEffect(() => {
+    filterMovies();
+  }, [filterMovies]);
+
+  // Like holatini yuklash
+  useEffect(() => {
+    const savedLikes = JSON.parse(localStorage.getItem('likedMovies') || '[]');
+    setLikedMovies(savedLikes);
+  }, []);
 
   const handleGoBack = () => {
     navigate('/main');

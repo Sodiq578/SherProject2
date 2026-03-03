@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   FiPlay,
   FiPause,
@@ -14,16 +14,11 @@ import {
   FiClock,
   FiCalendar,
   FiList,
-  FiShuffle,
-  FiRepeat,
   FiVolume2,
   FiVolumeX,
   FiDownload,
   FiShare2,
   FiPlus,
-  FiCheck,
-  FiStar,
-  FiAward,
   FiGlobe,
   FiFlag
 } from 'react-icons/fi';
@@ -153,7 +148,7 @@ const Music = () => {
       language: "O'zbek"
     },
 
-    // XORIJIY QO'SHIQLAR (INGLIZ)
+    // XORIJY QO'SHIQLAR (INGLIZ)
     {
       id: 7,
       title: "Blinding Lights",
@@ -486,15 +481,10 @@ const Music = () => {
     }
   ];
 
-  // API dan ma'lumot olish (Deezer API misol)
-  const fetchSongsFromAPI = async () => {
+  // API dan ma'lumot olish
+  const fetchSongsFromAPI = useCallback(async () => {
     try {
       setLoading(true);
-      
-      // Haqiqiy API uchun:
-      // const response = await fetch('https://api.deezer.com/chart/0/tracks');
-      // const data = await response.json();
-      // setSongs(data.data);
       
       // Mock ma'lumotlar
       setTimeout(() => {
@@ -520,11 +510,11 @@ const Music = () => {
       console.error('API xatosi:', error);
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSongsFromAPI();
-  }, []);
+  }, [fetchSongsFromAPI]);
 
   // Qidiruv funksiyasi
   useEffect(() => {

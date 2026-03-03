@@ -2121,7 +2121,7 @@ const Gallery = () => {
   };
 
   // Rasmlarni yuklash
-  const fetchImages = async (reset = false) => {
+  const fetchImages = useCallback(async (reset = false) => {
     try {
       if (reset) {
         setLoading(true);
@@ -2167,19 +2167,18 @@ const Gallery = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, [page]);
 
-  // Initial load
   useEffect(() => {
     fetchImages(true);
-  }, []);
+  }, [fetchImages]);
 
   // Page o'zgarganda yuklash
   useEffect(() => {
     if (page > 1) {
       fetchImages();
     }
-  }, [page]);
+  }, [page, fetchImages]);
 
   // Filterlash
   useEffect(() => {
