@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   FiPlay, 
   FiPause, 
@@ -115,6 +115,70 @@ const mockSongs = [
     coverUrl: "https://i.scdn.co/image/ab67616d0000b2737a6c9e3c8c8c8c8c8c8c8c8",
     audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     featured: true
+  },
+  {
+    id: 7,
+    title: "Smells Like Teen Spirit",
+    artist: "Nirvana",
+    album: "Nevermind",
+    duration: "5:01",
+    genre: "rock",
+    mood: "energetic",
+    language: "english",
+    year: 1991,
+    plays: 4500000,
+    likes: 280000,
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2735c5c5c5c5c5c5c5c5c5c5c5c",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+    featured: true
+  },
+  {
+    id: 8,
+    title: "Uzizim",
+    artist: "Shoxrux",
+    album: "Sevgi",
+    duration: "4:30",
+    genre: "uzpop",
+    mood: "romantic",
+    language: "uzbek",
+    year: 2022,
+    plays: 900000,
+    likes: 45000,
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e8e8e8e8e8e8e8e8e8e8e8e8",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+    featured: false
+  },
+  {
+    id: 9,
+    title: "Hotel California",
+    artist: "Eagles",
+    album: "Hotel California",
+    duration: "6:30",
+    genre: "rock",
+    mood: "calm",
+    language: "english",
+    year: 1976,
+    plays: 6000000,
+    likes: 350000,
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273f9f9f9f9f9f9f9f9f9f9f9f9",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+    featured: true
+  },
+  {
+    id: 10,
+    title: "Dance Monkey",
+    artist: "Tones and I",
+    album: "The Kids Are Coming",
+    duration: "3:29",
+    genre: "pop",
+    mood: "energetic",
+    language: "english",
+    year: 2019,
+    plays: 5500000,
+    likes: 320000,
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273a0a0a0a0a0a0a0a0a0a0a0a0",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+    featured: false
   }
 ];
 
@@ -231,8 +295,10 @@ const Music = () => {
     } else {
       setCurrentSong(song);
       setTimeout(() => {
-        audioRef.current.play();
-        setIsPlaying(true);
+        if (audioRef.current) {
+          audioRef.current.play();
+          setIsPlaying(true);
+        }
       }, 100);
     }
   };
@@ -368,7 +434,7 @@ const Music = () => {
         </div>
       )}
 
-      {/* Filters */}
+      {/* Filters sdsfv */}
       {showFilters && (
         <div className="filters-panel">
           <div className="filter-section">
