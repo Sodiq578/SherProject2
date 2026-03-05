@@ -27,16 +27,7 @@ html {
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.05);
 }
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
+ 
 /* iPhone-like tap highlight */
 * {
   -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
@@ -49,7 +40,7 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;

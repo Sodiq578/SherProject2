@@ -1,41 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   FiLogOut, 
   FiFilm, 
   FiHeart, 
   FiShoppingBag,
-  FiUser,
-  FiUsers,
-  FiEdit2,
-  FiMenu,
-  FiX,
-  FiSettings,
-  FiBell,
-  FiStar,
-  FiTrendingUp,
-  FiCalendar,
-  FiMessageCircle,
-  FiMusic,
-  FiCamera,
-  FiGift,
-  FiAward,
-  FiHome,
-  FiCompass,
-  FiVideo,
-  FiHeadphones
+  FiUser, 
+  FiUsers, 
+  FiEdit2, 
+  FiMenu, 
+  FiX, 
+  FiSettings, 
+  FiBell, 
+  FiStar, 
+  FiTrendingUp, 
+  FiCalendar, 
+  FiMessageCircle, 
+  FiMusic, 
+  FiCamera, 
+  FiGift, 
+  FiAward, 
+  FiHome, 
+  FiCompass, 
+  FiVideo, 
+  FiHeadphones, 
+  FiSearch, 
+  FiPlus, 
+  FiGrid,
+  FiMapPin,
+  FiClock,
+  FiThumbsUp,
+  FiShare2,
+  FiBookmark,
+  FiMoreVertical
 } from 'react-icons/fi';
 import BannerCarousel from './BannerCarousel';
 import './MainPage.css';
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [userCount, setUserCount] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [notifications, setNotifications] = useState(3);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -48,16 +60,33 @@ const MainPage = () => {
       navigate('/');
     }
 
+    // Get current path for active tab
+    const path = location.pathname;
+    if (path === '/') setActiveTab('home');
+    else if (path === '/explore') setActiveTab('explore');
+    else if (path === '/kino') setActiveTab('kino');
+    else if (path === '/music') setActiveTab('music');
+    else if (path === '/dating') setActiveTab('dating');
+    else if (path === '/elonlar') setActiveTab('elonlar');
+    else if (path === '/savollar') setActiveTab('savollar');
+
     const timer = setTimeout(() => setShowWelcome(false), 3000);
     
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
+
+    // Scroll event for scroll-to-top button
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
     
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [navigate]);
+  }, [navigate, location]);
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
@@ -67,6 +96,13 @@ const MainPage = () => {
 
   const handleFillProfile = () => {
     navigate('/dating/profile-form');
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   useEffect(() => {
@@ -93,6 +129,21 @@ const MainPage = () => {
     return 3;
   };
 
+  // Navigatsiya funksiyalari
+  const handleNavigation = (tab, path) => {
+    setActiveTab(tab);
+    navigate(path);
+    setShowMenu(false);
+  };
+
+  // Featured content
+  const featuredContent = [
+    { id: 1, title: 'O\'zbek kinolari', image: 'https://via.placeholder.com/150', icon: <FiFilm /> },
+    { id: 2, title: 'Trenddagi musiqalar', image: 'https://via.placeholder.com/150', icon: <FiMusic /> },
+    { id: 3, title: 'Yangi tanishlar', image: 'https://via.placeholder.com/150', icon: <FiHeart /> },
+    { id: 4, title: 'Mashhur e\'lonlar', image: 'https://via.placeholder.com/150', icon: <FiShoppingBag /> }
+  ];
+
   return (
     <div className="main-container">
       {/* Welcome Animation */}
@@ -103,6 +154,13 @@ const MainPage = () => {
         </div>
       )}
 
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button className="scroll-top-btn" onClick={scrollToTop}>
+          <FiTrendingUp />
+        </button>
+      )}
+
       {/* Header */}
       <header className="main-header">
         <div className="header-left">
@@ -110,12 +168,16 @@ const MainPage = () => {
             <span className="greeting-text">{getGreeting()},</span>
             <h1 className="name-title">{currentUser?.username}</h1>
           </div>
+          <div className="location-badge">
+            <FiMapPin />
+            <span>Toshkent</span>
+          </div>
         </div>
 
         <div className="header-right">
           <div className="notification-badge" onClick={() => navigate('/notifications')}>
             <FiBell />
-            <span className="badge">3</span>
+            {notifications > 0 && <span className="badge">{notifications}</span>}
           </div>
 
           <button 
@@ -138,11 +200,24 @@ const MainPage = () => {
                 <div className="user-details">
                   <span className="user-name">{currentUser?.username}</span>
                   <span className="user-email">{currentUser?.email}</span>
-                   
+                  <span className="user-badge">Premium</span>
                 </div>
               </div>
               
-              
+              <div className="menu-stats">
+                <div className="menu-stat-item">
+                  <FiHeart />
+                  <span>24</span>
+                </div>
+                <div className="menu-stat-item">
+                  <FiUsers />
+                  <span>12</span>
+                </div>
+                <div className="menu-stat-item">
+                  <FiStar />
+                  <span>4.8</span>
+                </div>
+              </div>
               
               <div className="menu-divider"></div>
               
@@ -150,17 +225,22 @@ const MainPage = () => {
                 <FiEdit2 /> Profil sozlash
               </button>
               
-              <button className="menu-item">
+              <button className="menu-item" onClick={() => navigate('/settings')}>
                 <FiSettings /> Sozlamalar
               </button>
               
-              <button className="menu-item">
-                <FiMessageCircle /> Xabarlar <span className="menu-badge">2</span>
+              <button className="menu-item" onClick={() => navigate('/messages')}>
+                <FiMessageCircle /> Xabarlar 
+                <span className="menu-badge">2</span>
+              </button>
+
+              <button className="menu-item" onClick={() => navigate('/saved')}>
+                <FiBookmark /> Saqlanganlar
               </button>
               
               <div className="menu-divider"></div>
               
-              <button onClick={() => { handleLogout(); setShowMenu(false); }} className="menu-item logout">
+              <button onClick={handleLogout} className="menu-item logout">
                 <FiLogOut /> Chiqish
               </button>
             </div>
@@ -183,7 +263,7 @@ const MainPage = () => {
 
       {/* Stats Cards Row */}
       <div className="stats-row" style={{ gridTemplateColumns: `repeat(${Math.min(3, getGridColumns())}, 1fr)` }}>
-        <div className="stats-card small">
+        <div className="stats-card small" onClick={() => navigate('/users')}>
           <FiUsers className="stats-icon small" />
           <div className="stats-info">
             <span className="stats-label">Foydalanuvchilar</span>
@@ -191,19 +271,19 @@ const MainPage = () => {
           </div>
         </div>
 
-        <div className="stats-card small">
-          <FiTrendingUp className="stats-icon small" />
+        <div className="stats-card small" onClick={() => navigate('/dating/matches')}>
+          <FiHeart className="stats-icon small" />
           <div className="stats-info">
-            <span className="stats-label">Online</span>
+            <span className="stats-label">Mosliklar</span>
             <span className="stats-number small">24</span>
           </div>
         </div>
 
-        <div className="stats-card small">
-          <FiCalendar className="stats-icon small" />
+        <div className="stats-card small" onClick={() => navigate('/active-now')}>
+          <FiTrendingUp className="stats-icon small" />
           <div className="stats-info">
-            <span className="stats-label">Kunlik</span>
-            <span className="stats-number small">156</span>
+            <span className="stats-label">Hozir online</span>
+            <span className="stats-number small">127</span>
           </div>
         </div>
       </div>
@@ -250,6 +330,24 @@ const MainPage = () => {
         </button>
       </div>
 
+      {/* Featured Section */}
+      <div className="featured-section">
+        <h3 className="section-title">
+          <FiAward className="section-icon" />
+          Mashhur kontentlar
+        </h3>
+        <div className="featured-grid">
+          {featuredContent.map(item => (
+            <div key={item.id} className="featured-card">
+              <div className="featured-image">
+                {item.icon}
+              </div>
+              <span className="featured-title">{item.title}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Quick Actions */}
       <div className="quick-actions">
         <h3 className="section-title">
@@ -260,14 +358,20 @@ const MainPage = () => {
           <button className="action-chip" onClick={handleFillProfile}>
             <FiEdit2 /> Anketa
           </button>
-          <button className="action-chip">
+          <button className="action-chip" onClick={() => navigate('/favorites')}>
             <FiHeart /> Tanlanganlar
           </button>
-          <button className="action-chip">
+          <button className="action-chip" onClick={() => navigate('/kino/latest')}>
             <FiFilm /> Kinolar
           </button>
-          <button className="action-chip">
+          <button className="action-chip" onClick={() => navigate('/friends')}>
             <FiUser /> Do'stlar
+          </button>
+          <button className="action-chip" onClick={() => navigate('/search')}>
+            <FiSearch /> Qidirish
+          </button>
+          <button className="action-chip" onClick={() => navigate('/trending')}>
+            <FiTrendingUp /> Trend
           </button>
         </div>
       </div>
@@ -306,6 +410,21 @@ const MainPage = () => {
             <div className="progress-fill" style={{width: '65%'}}></div>
           </div>
         </div>
+
+        <div className="profile-stats-mini">
+          <div className="mini-stat">
+            <FiClock />
+            <span>2 kun</span>
+          </div>
+          <div className="mini-stat">
+            <FiThumbsUp />
+            <span>45</span>
+          </div>
+          <div className="mini-stat">
+            <FiShare2 />
+            <span>12</span>
+          </div>
+        </div>
       </div>
 
       {/* Daily Tip */}
@@ -316,44 +435,83 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Activity Feed */}
+      <div className="activity-feed">
+        <h3 className="section-title">
+          <FiClock className="section-icon" />
+          So'nggi faoliyatlar
+        </h3>
+        <div className="feed-items">
+          <div className="feed-item">
+            <div className="feed-icon">
+              <FiHeart />
+            </div>
+            <div className="feed-content">
+              <span className="feed-text">Sevimli filmingizga like qo'yildi</span>
+              <span className="feed-time">5 daqiqa oldin</span>
+            </div>
+          </div>
+          <div className="feed-item">
+            <div className="feed-icon">
+              <FiMessageCircle />
+            </div>
+            <div className="feed-content">
+              <span className="feed-text">Yangi xabar kelib tushdi</span>
+              <span className="feed-time">15 daqiqa oldin</span>
+            </div>
+          </div>
+          <div className="feed-item">
+            <div className="feed-icon">
+              <FiUser />
+            </div>
+            <div className="feed-content">
+              <span className="feed-text">Yangi obunachi qo'shildi</span>
+              <span className="feed-time">1 soat oldin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation - iPhone Style (Baland qilingan) */}
       <nav className="bottom-nav">
         <button 
           className={`nav-item ${activeTab === 'home' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('home'); navigate('/'); }}
+          onClick={() => handleNavigation('home', '/')}
         >
           <FiHome className="nav-icon" />
-          <span className="nav-label">Bosh</span>
+          <span className="nav-label">Bosh sahifa</span>
+          {activeTab === 'home' && <span className="nav-indicator"></span>}
         </button>
+        
+      
         
         <button 
-          className={`nav-item ${activeTab === 'explore' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('explore'); navigate('/explore'); }}
+          className={`nav-item ${activeTab === 'dating' ? 'active' : ''}`}
+          onClick={() => handleNavigation('dating', '/dating')}
         >
-          <FiCompass className="nav-icon" />
-          <span className="nav-label">Kashf</span>
-        </button>
-        
-        <button className="nav-item add-button" onClick={() => navigate('/create')}>
-          <div className="add-button-inner">
-            <FiVideo className="add-icon" />
-          </div>
+          <FiHeart className="nav-icon" />
+          <span className="nav-label">Tanishuv</span>
+          {activeTab === 'dating' && <span className="nav-indicator"></span>}
+          <span className="nav-badge hot">3</span>
         </button>
         
         <button 
           className={`nav-item ${activeTab === 'kino' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('kino'); navigate('/kino'); }}
+          onClick={() => handleNavigation('kino', '/kino')}
         >
           <FiFilm className="nav-icon" />
-          <span className="nav-label">Kino</span>
+          <span className="nav-label">Kinolar</span>
+          {activeTab === 'kino' && <span className="nav-indicator"></span>}
+          <span className="nav-badge">Yangi</span>
         </button>
         
         <button 
           className={`nav-item ${activeTab === 'music' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('music'); navigate('/music'); }}
+          onClick={() => handleNavigation('music', '/music')}
         >
           <FiHeadphones className="nav-icon" />
           <span className="nav-label">Musiqa</span>
+          {activeTab === 'music' && <span className="nav-indicator"></span>}
         </button>
       </nav>
     </div>
