@@ -434,6 +434,8 @@ const Music = () => {
         </div>
       )}
 
+      
+
       {/* Filters sdsfv */}
       {showFilters && (
         <div className="filters-panel">
