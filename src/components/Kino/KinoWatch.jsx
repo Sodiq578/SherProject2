@@ -21,6 +21,44 @@ import {
 } from 'react-icons/fi';
 import './KinoWatch.css';
 
+// YouTube treylerlar - KOMPONENTDAN TASHQARIDA
+const trailers = {
+  1: "https://www.youtube.com/embed/U2Qp5pL3ovA?autoplay=1",
+  2: "https://www.youtube.com/embed/Idh8n5XuYIA?autoplay=1",
+  3: "https://www.youtube.com/embed/_inKs4eeHiI?autoplay=1",
+  4: "https://www.youtube.com/embed/bK6ldnjE3Y0?autoplay=1",
+  5: "https://www.youtube.com/embed/pBk4NYhWNMM?autoplay=1",
+  6: "https://www.youtube.com/embed/shW9i6k8cB0?autoplay=1",
+  7: "https://www.youtube.com/embed/qEVUtrk8_B4?autoplay=1",
+  8: "https://www.youtube.com/embed/giXco2jaZ_4?autoplay=1",
+  9: "https://www.youtube.com/embed/a8Gx8wiNbs8?autoplay=1",
+  10: "https://www.youtube.com/embed/mqqft2x_Aa4?autoplay=1",
+  11: "https://www.youtube.com/embed/8g18jFHCLXk?autoplay=1",
+  12: "https://www.youtube.com/embed/JfVOs4VSpmA?autoplay=1",
+  13: "https://www.youtube.com/embed/CaimKeDcudo?autoplay=1",
+  14: "https://www.youtube.com/embed/LdOM0x0XDMo?autoplay=1",
+  15: "https://www.youtube.com/embed/4TojlZYqPUo?autoplay=1",
+  16: "https://www.youtube.com/embed/TcMBFSGVi1c?autoplay=1",
+  17: "https://www.youtube.com/embed/zAGVQLHvwOY?autoplay=1",
+  18: "https://www.youtube.com/embed/wmiIUN-7qhE?autoplay=1",
+  19: "https://www.youtube.com/embed/6ZfuNTqbHE8?autoplay=1",
+  20: "https://www.youtube.com/embed/g4Hbz2jLxvQ?autoplay=1"
+};
+
+// Asl video manzillari - KOMPONENTDAN TASHQARIDA
+const videoUrls = {
+  1: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  4: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  16: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  27: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  33: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  36: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  41: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  43: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  44: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  45: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+};
+
 const KinoWatch = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -45,74 +83,7 @@ const KinoWatch = () => {
   const containerRef = useRef(null);
   const controlsTimeout = useRef(null);
 
-  // YouTube treylerlar
-  const trailers = {
-    1: "https://www.youtube.com/embed/U2Qp5pL3ovA?autoplay=1",
-    2: "https://www.youtube.com/embed/Idh8n5XuYIA?autoplay=1",
-    3: "https://www.youtube.com/embed/_inKs4eeHiI?autoplay=1",
-    4: "https://www.youtube.com/embed/bK6ldnjE3Y0?autoplay=1",
-    5: "https://www.youtube.com/embed/pBk4NYhWNMM?autoplay=1",
-    6: "https://www.youtube.com/embed/shW9i6k8cB0?autoplay=1",
-    7: "https://www.youtube.com/embed/qEVUtrk8_B4?autoplay=1",
-    8: "https://www.youtube.com/embed/giXco2jaZ_4?autoplay=1",
-    9: "https://www.youtube.com/embed/a8Gx8wiNbs8?autoplay=1",
-    10: "https://www.youtube.com/embed/mqqft2x_Aa4?autoplay=1",
-    11: "https://www.youtube.com/embed/8g18jFHCLXk?autoplay=1",
-    12: "https://www.youtube.com/embed/JfVOs4VSpmA?autoplay=1",
-    13: "https://www.youtube.com/embed/CaimKeDcudo?autoplay=1",
-    14: "https://www.youtube.com/embed/LdOM0x0XDMo?autoplay=1",
-    15: "https://www.youtube.com/embed/4TojlZYqPUo?autoplay=1",
-    16: "https://www.youtube.com/embed/TcMBFSGVi1c?autoplay=1",
-    17: "https://www.youtube.com/embed/zAGVQLHvwOY?autoplay=1",
-    18: "https://www.youtube.com/embed/wmiIUN-7qhE?autoplay=1",
-    19: "https://www.youtube.com/embed/6ZfuNTqbHE8?autoplay=1",
-    20: "https://www.youtube.com/embed/g4Hbz2jLxvQ?autoplay=1",
-    21: "https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1",
-    22: "https://www.youtube.com/embed/Ga6RYejo6Hk?autoplay=1",
-    23: "https://www.youtube.com/embed/LoebZZ8K5N0?autoplay=1",
-    24: "https://www.youtube.com/embed/jWM0ct-OLsM?autoplay=1",
-    25: "https://www.youtube.com/embed/hEJnMQG9ev8?autoplay=1",
-    26: "https://www.youtube.com/embed/seMwpP0yeu4?autoplay=1",
-    27: "https://www.youtube.com/embed/zSWdZVtXT7E?autoplay=1",
-    28: "https://www.youtube.com/embed/fZ_JOBCLF-I?autoplay=1",
-    29: "https://www.youtube.com/embed/iszwuX1AK6A?autoplay=1",
-    30: "https://www.youtube.com/embed/TbQm5doF_Uc?autoplay=1",
-    31: "https://www.youtube.com/embed/g8evyE9TuYk?autoplay=1",
-    32: "https://www.youtube.com/embed/87E6N7ToCxs?autoplay=1",
-    33: "https://www.youtube.com/embed/YoHD9XEInc0?autoplay=1",
-    34: "https://www.youtube.com/embed/JcpWXaA2qeg?autoplay=1",
-    35: "https://www.youtube.com/embed/5PSNL1qE6VY?autoplay=1",
-    36: "https://www.youtube.com/embed/EXeTwQWrcwY?autoplay=1",
-    37: "https://www.youtube.com/embed/CZ1CATNbXg0?autoplay=1",
-    38: "https://www.youtube.com/embed/RLtaA9fFNXU?autoplay=1",
-    39: "https://www.youtube.com/embed/r5X-hFf6Bwo?autoplay=1",
-    40: "https://www.youtube.com/embed/2zLkasScy7A?autoplay=1",
-    41: "https://www.youtube.com/embed/vKQi3bBA1y8?autoplay=1",
-    42: "https://www.youtube.com/embed/Lu0sotERXhI?autoplay=1",
-    43: "https://www.youtube.com/embed/CHekzSiZjrY?autoplay=1",
-    44: "https://www.youtube.com/embed/s7EdQ4FqbhY?autoplay=1",
-    45: "https://www.youtube.com/embed/lFzVJEksoDY?autoplay=1",
-    46: "https://www.youtube.com/embed/gG22XNhtnoY?autoplay=1",
-    47: "https://www.youtube.com/embed/qvsgGtivCgs?autoplay=1",
-    48: "https://www.youtube.com/embed/BSXBvor47Zs?autoplay=1",
-    49: "https://www.youtube.com/embed/qYAETtIIClk?autoplay=1",
-    50: "https://www.youtube.com/embed/JNwNXF9Y6kY?autoplay=1"
-  };
-
-  // Asl video manzillari
-  const videoUrls = {
-    1: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    4: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    16: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    27: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    33: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    36: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    41: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    43: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    44: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-    45: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-  };
-
+  // Tavsiya qilinadigan kinolarni yuklash
   const loadRecommendedMovies = useCallback((currentMovie, allMovies) => {
     const recommended = allMovies
       .filter(m => m.id !== currentMovie.id && 
@@ -126,6 +97,7 @@ const KinoWatch = () => {
     setRecommendedMovies(recommended);
   }, []);
 
+  // Video xatolik
   const handleVideoError = useCallback(() => {
     setVideoError(true);
     if (movie && trailers[movie.id]) {
@@ -134,6 +106,7 @@ const KinoWatch = () => {
     }
   }, [movie]);
 
+  // Kinoni yuklash
   const loadMovie = useCallback(() => {
     const savedMovies = JSON.parse(localStorage.getItem('movies') || '[]');
     const foundMovie = savedMovies.find(m => m.id === parseInt(id));
