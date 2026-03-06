@@ -6,13 +6,12 @@ import {
   FaStepBackward, 
   FaMusic,
   FaHeadphones,
-  FaHeart,
   FaRandom,
   FaRedoAlt,
   FaVolumeUp,
   FaList
 } from 'react-icons/fa';
-import { FiMoreVertical, FiDownload, FiShare2 } from 'react-icons/fi';
+import { FiMoreVertical } from 'react-icons/fi';
 import './Music.css';
 
 const API_URL = 'https://free-music-api2.vercel.app/getSongs';
@@ -49,7 +48,6 @@ export default function Music() {
     song: null,
     index: -1,
     isPlaying: false,
-    isLiked: false,
     isShuffle: false,
     isRepeat: false,
     volume: 1,
@@ -151,6 +149,60 @@ export default function Music() {
     };
   }, [fetchSongs]);
 
+  // Keyingi qo'shiq
+  const handleNext = useCallback(() => {
+    if (songs.length === 0 || !currentState.song) return;
+    
+    let nextIndex;
+    if (currentState.isShuffle) {
+      nextIndex = Math.floor(Math.random() * songs.length);
+    } else {
+      nextIndex = (currentState.index + 1) % songs.length;
+    }
+    
+    // Keyingi qo'shiqni preload qilish
+    if (songs[nextIndex + 1]) {
+      preloadImage(songs[nextIndex + 1].songBanner);
+    }
+    
+    setCurrentState(prev => ({
+      ...prev,
+      song: songs[nextIndex],
+      index: nextIndex,
+      isPlaying: true
+    }));
+  }, [songs, currentState.song, currentState.index, currentState.isShuffle]);
+
+  // Oldingi qo'shiq
+  const handlePrev = useCallback(() => {
+    if (songs.length === 0 || !currentState.song) return;
+    
+    let prevIndex = currentState.index - 1;
+    if (prevIndex < 0) {
+      prevIndex = songs.length - 1;
+    }
+    
+    setCurrentState(prev => ({
+      ...prev,
+      song: songs[prevIndex],
+      index: prevIndex,
+      isPlaying: true
+    }));
+  }, [songs, currentState.song, currentState.index]);
+
+  // Tasodifiy qo'shiq
+  const handleShuffle = useCallback(() => {
+    if (songs.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * songs.length);
+    
+    setCurrentState(prev => ({
+      ...prev,
+      song: songs[randomIndex],
+      index: randomIndex,
+      isPlaying: true
+    }));
+  }, [songs]);
+
   // Audio event listener'lar
   useEffect(() => {
     const audio = audioRef.current;
@@ -191,7 +243,7 @@ export default function Music() {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [currentState.isRepeat, currentState.isShuffle]);
+  }, [currentState.isRepeat, currentState.isShuffle, handleNext, handleShuffle]);
 
   // Audio play/pause
   useEffect(() => {
@@ -243,68 +295,10 @@ export default function Music() {
         ...prev,
         song,
         index,
-        isPlaying: true,
-        isLiked: false
+        isPlaying: true
       }));
     }
   }, [currentState.song, songs]);
-
-  // Keyingi qo'shiq
-  const handleNext = useCallback(() => {
-    if (songs.length === 0 || !currentState.song) return;
-    
-    let nextIndex;
-    if (currentState.isShuffle) {
-      nextIndex = Math.floor(Math.random() * songs.length);
-    } else {
-      nextIndex = (currentState.index + 1) % songs.length;
-    }
-    
-    // Keyingi qo'shiqni preload qilish
-    if (songs[nextIndex + 1]) {
-      preloadImage(songs[nextIndex + 1].songBanner);
-    }
-    
-    setCurrentState(prev => ({
-      ...prev,
-      song: songs[nextIndex],
-      index: nextIndex,
-      isPlaying: true,
-      isLiked: false
-    }));
-  }, [songs, currentState.song, currentState.index, currentState.isShuffle]);
-
-  // Oldingi qo'shiq
-  const handlePrev = useCallback(() => {
-    if (songs.length === 0 || !currentState.song) return;
-    
-    let prevIndex = currentState.index - 1;
-    if (prevIndex < 0) {
-      prevIndex = songs.length - 1;
-    }
-    
-    setCurrentState(prev => ({
-      ...prev,
-      song: songs[prevIndex],
-      index: prevIndex,
-      isPlaying: true,
-      isLiked: false
-    }));
-  }, [songs, currentState.song, currentState.index]);
-
-  // Tasodifiy qo'shiq
-  const handleShuffle = useCallback(() => {
-    if (songs.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * songs.length);
-    
-    setCurrentState(prev => ({
-      ...prev,
-      song: songs[randomIndex],
-      index: randomIndex,
-      isPlaying: true,
-      isLiked: false
-    }));
-  }, [songs]);
 
   // Memoized qiymatlar
   const currentSong = useMemo(() => currentState.song, [currentState.song]);
@@ -416,8 +410,7 @@ export default function Music() {
                       </div>
                       <span className="time total">{durationFormatted}</span>
                     </div>
-
-                    {/* Control Buttons */}
+ 
                     <div className="control-buttons">
                       <button 
                         className={`control-btn ${currentState.isShuffle ? 'active' : ''}`}
@@ -444,8 +437,7 @@ export default function Music() {
                         <FaRedoAlt />
                       </button>
                     </div>
-
-                    {/* Volume Control */}
+ 
                     <div className="volume-control">
                       <FaVolumeUp className="volume-icon" />
                       <input 
@@ -478,8 +470,7 @@ export default function Music() {
               </div>
             )}
           </div>
-
-          {/* Playlist Section */}
+ 
           {currentState.showPlaylist && (
             <div className="playlist-wrapper">
               <div className="playlist-header">
