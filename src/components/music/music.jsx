@@ -141,10 +141,11 @@ export default function Music() {
   useEffect(() => {
     fetchSongs();
     
-    // Cleanup
+    // Cleanup - animationRef.current ni o'zgaruvchiga saqlash
+    const currentAnimation = animationRef.current;
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (currentAnimation) {
+        cancelAnimationFrame(currentAnimation);
       }
     };
   }, [fetchSongs]);
@@ -410,7 +411,8 @@ export default function Music() {
                       </div>
                       <span className="time total">{durationFormatted}</span>
                     </div>
- 
+
+                    {/* Control Buttons */}
                     <div className="control-buttons">
                       <button 
                         className={`control-btn ${currentState.isShuffle ? 'active' : ''}`}
@@ -437,7 +439,8 @@ export default function Music() {
                         <FaRedoAlt />
                       </button>
                     </div>
- 
+
+                    {/* Volume Control */}
                     <div className="volume-control">
                       <FaVolumeUp className="volume-icon" />
                       <input 
@@ -470,7 +473,8 @@ export default function Music() {
               </div>
             )}
           </div>
- 
+
+          {/* Playlist Section */}
           {currentState.showPlaylist && (
             <div className="playlist-wrapper">
               <div className="playlist-header">
