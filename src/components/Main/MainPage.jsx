@@ -14,25 +14,15 @@ import {
   FiBell, 
   FiStar, 
   FiTrendingUp, 
-  FiCalendar, 
   FiMessageCircle, 
   FiMusic, 
-  FiCamera, 
-  FiGift, 
-  FiAward, 
   FiHome, 
-  FiCompass, 
-  FiVideo, 
-  FiHeadphones, 
-  FiSearch, 
-  FiPlus, 
-  FiGrid,
+  FiHeadphones,
   FiMapPin,
   FiClock,
   FiThumbsUp,
   FiShare2,
-  FiBookmark,
-  FiMoreVertical
+  FiBookmark
 } from 'react-icons/fi';
 import BannerCarousel from './BannerCarousel';
 import './MainPage.css';
@@ -46,8 +36,10 @@ const MainPage = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [notifications, setNotifications] = useState(3);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Notifications soni - state o'rniga oddiy o'zgaruvchi
+  const notifications = 3;
 
   useEffect(() => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -63,12 +55,9 @@ const MainPage = () => {
     // Get current path for active tab
     const path = location.pathname;
     if (path === '/') setActiveTab('home');
-    else if (path === '/explore') setActiveTab('explore');
+    else if (path === '/dating') setActiveTab('dating');
     else if (path === '/kino') setActiveTab('kino');
     else if (path === '/music') setActiveTab('music');
-    else if (path === '/dating') setActiveTab('dating');
-    else if (path === '/elonlar') setActiveTab('elonlar');
-    else if (path === '/savollar') setActiveTab('savollar');
 
     const timer = setTimeout(() => setShowWelcome(false), 3000);
     
@@ -135,14 +124,6 @@ const MainPage = () => {
     navigate(path);
     setShowMenu(false);
   };
-
-  // Featured content
-  const featuredContent = [
-    { id: 1, title: 'O\'zbek kinolari', image: 'https://via.placeholder.com/150', icon: <FiFilm /> },
-    { id: 2, title: 'Trenddagi musiqalar', image: 'https://via.placeholder.com/150', icon: <FiMusic /> },
-    { id: 3, title: 'Yangi tanishlar', image: 'https://via.placeholder.com/150', icon: <FiHeart /> },
-    { id: 4, title: 'Mashhur e\'lonlar', image: 'https://via.placeholder.com/150', icon: <FiShoppingBag /> }
-  ];
 
   return (
     <div className="main-container">
@@ -289,7 +270,7 @@ const MainPage = () => {
       </div>
 
       {/* Main Feature Buttons */}
-      <div className="main-buttons" style={{ gridTemplateColumns: `repeat(${getGridColumns()}, 1fr)` }}>
+      <div className="main-buttons">
         <button onClick={() => navigate('/kino')} className="main-button kino">
           <div className="button-glow"></div>
           <FiFilm className="button-icon" />
@@ -322,56 +303,8 @@ const MainPage = () => {
           <FiMusic className="button-icon" />
           <span className="button-text">Musiqa</span>
         </button>
-
-        
       </div>
-
-      {/* Featured Section */}
-      <div className="featured-section">
-        <h3 className="section-title">
-          <FiAward className="section-icon" />
-          Mashhur kontentlar
-        </h3>
-        <div className="featured-grid">
-          {featuredContent.map(item => (
-            <div key={item.id} className="featured-card">
-              <div className="featured-image">
-                {item.icon}
-              </div>
-              <span className="featured-title">{item.title}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="quick-actions">
-        <h3 className="section-title">
-          <FiGift className="section-icon" />
-          Tezkor amallar
-        </h3>
-        <div className="action-chips">
-          <button className="action-chip" onClick={handleFillProfile}>
-            <FiEdit2 /> Anketa
-          </button>
-          <button className="action-chip" onClick={() => navigate('/favorites')}>
-            <FiHeart /> Tanlanganlar
-          </button>
-          <button className="action-chip" onClick={() => navigate('/kino/latest')}>
-            <FiFilm /> Kinolar
-          </button>
-          <button className="action-chip" onClick={() => navigate('/friends')}>
-            <FiUser /> Do'stlar
-          </button>
-          <button className="action-chip" onClick={() => navigate('/search')}>
-            <FiSearch /> Qidirish
-          </button>
-          <button className="action-chip" onClick={() => navigate('/trending')}>
-            <FiTrendingUp /> Trend
-          </button>
-        </div>
-      </div>
-
+ 
       {/* Profile Card */}
       <div className="profile-card">
         <div className="profile-header">
@@ -431,44 +364,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* Activity Feed */}
-      <div className="activity-feed">
-        <h3 className="section-title">
-          <FiClock className="section-icon" />
-          So'nggi faoliyatlar
-        </h3>
-        <div className="feed-items">
-          <div className="feed-item">
-            <div className="feed-icon">
-              <FiHeart />
-            </div>
-            <div className="feed-content">
-              <span className="feed-text">Sevimli filmingizga like qo'yildi</span>
-              <span className="feed-time">5 daqiqa oldin</span>
-            </div>
-          </div>
-          <div className="feed-item">
-            <div className="feed-icon">
-              <FiMessageCircle />
-            </div>
-            <div className="feed-content">
-              <span className="feed-text">Yangi xabar kelib tushdi</span>
-              <span className="feed-time">15 daqiqa oldin</span>
-            </div>
-          </div>
-          <div className="feed-item">
-            <div className="feed-icon">
-              <FiUser />
-            </div>
-            <div className="feed-content">
-              <span className="feed-text">Yangi obunachi qo'shildi</span>
-              <span className="feed-time">1 soat oldin</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Navigation - iPhone Style (Baland qilingan) */}
+      {/* Bottom Navigation - iPhone Style */}
       <nav className="bottom-nav">
         <button 
           className={`nav-item ${activeTab === 'home' ? 'active' : ''}`}
@@ -478,8 +374,6 @@ const MainPage = () => {
           <span className="nav-label">Bosh sahifa</span>
           {activeTab === 'home' && <span className="nav-indicator"></span>}
         </button>
-        
-      
         
         <button 
           className={`nav-item ${activeTab === 'dating' ? 'active' : ''}`}
