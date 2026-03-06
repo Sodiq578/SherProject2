@@ -323,11 +323,7 @@ const MainPage = () => {
           <span className="button-text">Musiqa</span>
         </button>
 
-        <button onClick={() => navigate('/gallery')} className="main-button gallery">
-          <div className="button-glow"></div>
-          <FiCamera className="button-icon" />
-          <span className="button-text">Gallery</span>
-        </button>
+        
       </div>
 
       {/* Featured Section */}
