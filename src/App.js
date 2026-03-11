@@ -1,9 +1,9 @@
 // src/App.js
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 
-// Lazy loading for better performance
+// Lazy loading
 const Gallery = lazy(() => import('./components/gallery/gallery'));
 const Music = lazy(() => import('./components/music/music'));
 const Login = lazy(() => import('./components/Auth/Login'));
@@ -21,7 +21,7 @@ const AdminUsers = lazy(() => import('./components/Admin/AdminUsers'));
 const AdminDating = lazy(() => import('./components/Admin/AdminDating'));
 const AdminAds = lazy(() => import('./components/Admin/AdminAds'));
 const PollCard = lazy(() => import('./components/PollCard/PollCard'));
-const AdminBanner = lazy(() => import('./components/Admin/AdminBaner')); // To'g'rilangan import
+const AdminBanner = lazy(() => import('./components/Admin/AdminBaner'));
 
 // Loading Component
 const LoadingSpinner = () => (
@@ -30,38 +30,6 @@ const LoadingSpinner = () => (
     <p>Yuklanmoqda...</p>
   </div>
 );
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('App Error:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="error-boundary">
-          <h1>Xatolik yuz berdi</h1>
-          <p>{this.state.error?.message}</p>
-          <button onClick={() => window.location.reload()}>
-            Qayta yuklash
-          </button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
 
 // Route Constants
 const ROUTES = {
@@ -86,149 +54,46 @@ const ROUTES = {
   ADMIN_ADS: '/admin/ads'
 };
 
-// Keyboard Shortcuts Configuration
-const KEYBOARD_SHORTCUTS = [
-  { keys: 'Ctrl+Alt+T', desc: 'Admin panel', route: ROUTES.ADMIN },
-  { keys: 'Ctrl+Alt+L', desc: 'Login', route: ROUTES.LOGIN },
-  { keys: 'Ctrl+Alt+R', desc: 'Register', route: ROUTES.REGISTER },
-  { keys: 'Ctrl+Alt+M', desc: 'Main page', route: ROUTES.MAIN },
-  { keys: 'Ctrl+Alt+K', desc: 'Kino page', route: ROUTES.KINO },
-  { keys: 'Ctrl+Alt+D', desc: 'Dating page', route: ROUTES.DATING },
-  { keys: 'Ctrl+Alt+E', desc: 'E\'lonlar', route: ROUTES.ELONLAR },
-  { keys: 'Ctrl+Alt+G', desc: 'Gallery', route: ROUTES.GALLERY },
-  { keys: 'Ctrl+Alt+S', desc: 'Music', route: ROUTES.MUSIC },
-  { keys: 'Ctrl+Alt+H', desc: 'Bu oynani ko\'rsatish/yopish', action: 'toggle' },
-  { keys: 'ESC', desc: 'Oynani yopish', action: 'close' }
-];
-
-// Keyboard Handler Component
-const KeyboardHandler = ({ children }) => {
-  const navigate = useNavigate();
-  const [showShortcuts, setShowShortcuts] = useState(false);
+// Protected Route Component (Optimallashtirilgan)
+const ProtectedRoute = React.memo(({ children, requireAdmin = false }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const checked = useRef(false);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Ignore shortcuts when typing in input fields
-      if (e.target.tagName === 'INPUT' || 
-          e.target.tagName === 'TEXTAREA' || 
-          e.target.isContentEditable) {
-        return;
-      }
-
-      const shortcuts = {
-        'ctrl+alt+t': () => navigate(ROUTES.ADMIN),
-        'ctrl+alt+l': () => navigate(ROUTES.LOGIN),
-        'ctrl+alt+r': () => navigate(ROUTES.REGISTER),
-        'ctrl+alt+m': () => navigate(ROUTES.MAIN),
-        'ctrl+alt+k': () => navigate(ROUTES.KINO),
-        'ctrl+alt+d': () => navigate(ROUTES.DATING),
-        'ctrl+alt+e': () => navigate(ROUTES.ELONLAR),
-        'ctrl+alt+g': () => navigate(ROUTES.GALLERY),
-        'ctrl+alt+s': () => navigate(ROUTES.MUSIC),
-        'ctrl+alt+h': () => setShowShortcuts(prev => !prev),
-        'escape': () => setShowShortcuts(false)
-      };
-
-      const key = `${e.ctrlKey ? 'ctrl+' : ''}${e.altKey ? 'alt+' : ''}${e.key.toLowerCase()}`;
+    if (!checked.current) {
+      checked.current = true;
       
-      if (shortcuts[key]) {
-        e.preventDefault();
-        shortcuts[key]();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate]);
-
-  return (
-    <>
-      {children}
-      {showShortcuts && (
-        <ShortcutHint onClose={() => setShowShortcuts(false)} />
-      )}
-    </>
-  );
-};
-
-// Shortcut Hint Component
-const ShortcutHint = ({ onClose }) => {
-  return (
-    <div className="shortcut-overlay" onClick={onClose}>
-      <div className="shortcut-modal" onClick={e => e.stopPropagation()}>
-        <div className="shortcut-header">
-          <h2>
-            <span className="shortcut-icon">⌨️</span>
-            Klaviatura yorliqlari
-          </h2>
-          <button className="close-btn" onClick={onClose} aria-label="Yopish">
-            ✕
-          </button>
-        </div>
-        <div className="shortcut-grid">
-          {KEYBOARD_SHORTCUTS.map((shortcut, index) => (
-            <div key={index} className="shortcut-item">
-              <span className="shortcut-keys">{shortcut.keys}</span>
-              <span className="shortcut-desc">{shortcut.desc}</span>
-            </div>
-          ))}
-        </div>
-        <div className="shortcut-footer">
-          <p>Tez o'tish uchun klaviatura tugmalaridan foydalaning</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Protected Route Component
-const ProtectedRoute = ({ children, requireAdmin = false }) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    isAdmin: false,
-    isLoading: true
-  });
-
-  useEffect(() => {
-    const checkAuth = () => {
+      // LocalStorage ni bir marta o'qish
       try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const admin = JSON.parse(localStorage.getItem('admin'));
         
-        setAuthState({
-          isAuthenticated: !!currentUser,
-          isAdmin: admin?.isAdmin || currentUser?.isAdmin || false,
-          isLoading: false
-        });
+        setIsAuthenticated(!!currentUser);
+        setIsAdmin(admin?.isAdmin || currentUser?.isAdmin || false);
       } catch (error) {
-        console.error('Auth check error:', error);
-        setAuthState({
-          isAuthenticated: false,
-          isAdmin: false,
-          isLoading: false
-        });
+        setIsAuthenticated(false);
+        setIsAdmin(false);
       }
-    };
-
-    checkAuth();
+    }
   }, []);
 
-  if (authState.isLoading) {
+  if (isAuthenticated === null) {
     return <LoadingSpinner />;
   }
 
-  if (!authState.isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  if (requireAdmin && !authState.isAdmin) {
+  if (requireAdmin && !isAdmin) {
     return <Navigate to={ROUTES.MAIN} replace />;
   }
 
   return children;
-};
+});
 
-// 404 Not Found Component
+// 404 Not Found
 const NotFound = () => {
   const navigate = useNavigate();
 
@@ -237,63 +102,57 @@ const NotFound = () => {
       <div className="not-found-content">
         <h1>404</h1>
         <h2>Sahifa topilmadi</h2>
-        <p>Kechirasiz, siz qidirgan sahifa mavjud emas yoki o'chirilgan.</p>
-        <div className="not-found-actions">
-          <button onClick={() => navigate(ROUTES.MAIN)} className="home-btn">
-            Bosh sahifaga qaytish
-          </button>
-          <button onClick={() => navigate(-1)} className="back-btn">
-            Orqaga qaytish
-          </button>
-        </div>
+        <p>Kechirasiz, siz qidirgan sahifa mavjud emas</p>
+        <button onClick={() => navigate(ROUTES.MAIN)}>
+          Bosh sahifaga qaytish
+        </button>
       </div>
     </div>
   );
 };
 
-// Main App Component
+// Main App Component (Optimallashtirilgan)
 function App() {
   const [isInitialized, setIsInitialized] = useState(false);
+  const initialized = useRef(false);
 
   useEffect(() => {
-    const initializeApp = () => {
+    // Faqat bir marta ishga tushirish
+    if (!initialized.current) {
+      initialized.current = true;
+      
       try {
-        // Initialize default data if not exists
+        // Tekshirish: agar users bo'lmasa, yaratish
         if (!localStorage.getItem('users')) {
           const defaultUsers = [
             {
               id: 1,
               username: 'admin',
-              email: 'admin@example.com',
-              // Note: In production, never store plain passwords
-              // This is just for demo purposes
+              email: 'admin@admin.com',
               password: 'admin123',
               isAdmin: true,
+              role: 'super_admin',
               createdAt: new Date().toISOString()
             }
           ];
           localStorage.setItem('users', JSON.stringify(defaultUsers));
         }
 
-        // Initialize admin session if not exists
+        // Boshqa default ma'lumotlar
         if (!localStorage.getItem('admin')) {
           localStorage.setItem('admin', JSON.stringify(null));
         }
-
-        // Initialize current user if not exists
+        
         if (!localStorage.getItem('currentUser')) {
           localStorage.setItem('currentUser', JSON.stringify(null));
         }
 
-        console.log('App initialized successfully');
       } catch (error) {
-        console.error('App initialization error:', error);
+        console.error('Init error:', error);
       } finally {
         setIsInitialized(true);
       }
-    };
-
-    initializeApp();
+    }
   }, []);
 
   if (!isInitialized) {
@@ -306,167 +165,41 @@ function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <Router>
-        <KeyboardHandler>
-          <div className="App">
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                {/* Redirect root to login */}
-                <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
-                
-                {/* Auth Routes */}
-                <Route path={ROUTES.LOGIN} element={<Login />} />
-                <Route path={ROUTES.REGISTER} element={<Register />} />
-                
-                {/* Protected Routes */}
-                <Route 
-                  path={ROUTES.MAIN} 
-                  element={
-                    <ProtectedRoute>
-                      <MainPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.KINO} 
-                  element={
-                    <ProtectedRoute>
-                      <KinoPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.KINO_WATCH} 
-                  element={
-                    <ProtectedRoute>
-                      <KinoWatch />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.DATING} 
-                  element={
-                    <ProtectedRoute>
-                      <DatingPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.DATING_FORM} 
-                  element={
-                    <ProtectedRoute>
-                      <ProfileForm />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.MUSIC} 
-                  element={
-                    <ProtectedRoute>
-                      <Music />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.GALLERY} 
-                  element={
-                    <ProtectedRoute>
-                      <Gallery />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.ELONLAR} 
-                  element={
-                    <ProtectedRoute>
-                      <ElonlarPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.SAVOLLAR} 
-                  element={
-                    <ProtectedRoute>
-                      <PollCard />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Admin Banner Route */}
-                <Route 
-                  path={ROUTES.ADMIN_BANNER} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminBanner />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Admin Routes */}
-                <Route path={ROUTES.ADMIN} element={<AdminLogin />} />
-                
-                <Route 
-                  path={ROUTES.ADMIN_DASHBOARD} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.ADMIN_MOVIES} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminMovies />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.ADMIN_USERS} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminUsers />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.ADMIN_DATING} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminDating />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path={ROUTES.ADMIN_ADS} 
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <AdminAds />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* 404 Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </div>
-        </KeyboardHandler>
-      </Router>
-    </ErrorBoundary>
+    <Router>
+      <div className="App">
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            {/* Redirect root to login */}
+            <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.LOGIN} replace />} />
+            
+            {/* Auth Routes */}
+            <Route path={ROUTES.LOGIN} element={<Login />} />
+            <Route path={ROUTES.REGISTER} element={<Register />} />
+            <Route path={ROUTES.ADMIN} element={<AdminLogin />} />
+            
+            {/* Protected Routes */}
+            <Route path={ROUTES.MAIN} element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+            <Route path={ROUTES.KINO} element={<ProtectedRoute><KinoPage /></ProtectedRoute>} />
+            <Route path={ROUTES.KINO_WATCH} element={<ProtectedRoute><KinoWatch /></ProtectedRoute>} />
+            <Route path={ROUTES.DATING} element={<ProtectedRoute><DatingPage /></ProtectedRoute>} />
+            <Route path={ROUTES.DATING_FORM} element={<ProtectedRoute><ProfileForm /></ProtectedRoute>} />
+            <Route path={ROUTES.MUSIC} element={<ProtectedRoute><Music /></ProtectedRoute>} />
+            <Route path={ROUTES.GALLERY} element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
+            <Route path={ROUTES.ELONLAR} element={<ProtectedRoute><ElonlarPage /></ProtectedRoute>} />
+            <Route path={ROUTES.SAVOLLAR} element={<ProtectedRoute><PollCard /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_BANNER} element={<ProtectedRoute requireAdmin={true}><AdminBanner /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_DASHBOARD} element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_MOVIES} element={<ProtectedRoute requireAdmin={true}><AdminMovies /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_USERS} element={<ProtectedRoute requireAdmin={true}><AdminUsers /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_DATING} element={<ProtectedRoute requireAdmin={true}><AdminDating /></ProtectedRoute>} />
+            <Route path={ROUTES.ADMIN_ADS} element={<ProtectedRoute requireAdmin={true}><AdminAds /></ProtectedRoute>} />
+            
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </div>
+    </Router>
   );
 }
 

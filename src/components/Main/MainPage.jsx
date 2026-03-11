@@ -149,10 +149,7 @@ const MainPage = () => {
             <span className="greeting-text">{getGreeting()},</span>
             <h1 className="name-title">{currentUser?.username}</h1>
           </div>
-          <div className="location-badge">
-            <FiMapPin />
-            <span>Toshkent</span>
-          </div>
+          
         </div>
 
         <div className="header-right">
@@ -260,13 +257,7 @@ const MainPage = () => {
           </div>
         </div>
 
-        <div className="stats-card small" onClick={() => navigate('/active-now')}>
-          <FiTrendingUp className="stats-icon small" />
-          <div className="stats-info">
-            <span className="stats-label">Hozir online</span>
-            <span className="stats-number small">127</span>
-          </div>
-        </div>
+       
       </div>
 
       {/* Main Feature Buttons */}

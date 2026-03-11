@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiFilm, 
@@ -16,28 +16,41 @@ import {
   FiSettings,
   FiBell,
   FiUser,
-  FiImage, // Yangi import
+  FiImage,
   FiEdit2,
   FiTrash2,
   FiPlus,
-  FiX
+  FiX,
+  FiActivity,
+  FiBarChart2,
+  FiStar,
+  FiZap,
+  FiGlobe
 } from 'react-icons/fi';
-import './Admin.css';
+import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const mounted = useRef(true);
+  const initialized = useRef(false);
+  
+  // State'lar
   const [stats, setStats] = useState({
     users: 0,
     movies: 0,
     dating: 0,
     ads: 0,
     totalViews: 0,
-    banners: 0 // Yangi
+    banners: 0,
+    totalLikes: 0,
+    activeUsers: 0
   });
+  
   const [recentActivities, setRecentActivities] = useState([]);
   const [adminUser, setAdminUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   // Banner state'lari
   const [banners, setBanners] = useState([]);
@@ -49,65 +62,113 @@ const AdminDashboard = () => {
     title: '',
     description: '',
     link: '',
-    discount: ''
+    discount: '',
+    order: 0,
+    active: true,
+    createdAt: ''
   });
 
+  // Ma'lumotlarni yuklash
   useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem('adminUser'));
-    if (!admin) {
-      navigate('/admin');
-      return;
+    if (!initialized.current) {
+      initialized.current = true;
+      loadDashboardData();
     }
-    setAdminUser(admin);
+    
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
-    // Statistikani hisoblash
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const movies = JSON.parse(localStorage.getItem('movies') || '[]');
-    const dating = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
-    const ads = JSON.parse(localStorage.getItem('ads') || '[]');
-    const banners = JSON.parse(localStorage.getItem('banners') || '[]');
+  const loadDashboardData = useCallback(() => {
+    try {
+      const admin = JSON.parse(localStorage.getItem('admin')) || 
+                    JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!admin?.isAdmin) {
+        navigate('/admin');
+        return;
+      }
+      
+      setAdminUser(admin);
 
-    // Kinolardan umumiy ko'rishlar soni
-    const totalViews = ads.reduce((sum, ad) => sum + (ad.views || 0), 0);
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const movies = JSON.parse(localStorage.getItem('movies') || '[]');
+      const dating = JSON.parse(localStorage.getItem('datingProfiles') || '[]');
+      const ads = JSON.parse(localStorage.getItem('ads') || '[]');
+      const banners = JSON.parse(localStorage.getItem('banners') || '[]');
 
-    setStats({
-      users: users.length,
-      movies: movies.length,
-      dating: dating.length,
-      ads: ads.length,
-      totalViews,
-      banners: banners.length // Yangi
-    });
+      const totalViews = movies.reduce((sum, m) => sum + (m.views || 0), 0) + 
+                        ads.reduce((sum, a) => sum + (a.views || 0), 0);
+      
+      const totalLikes = movies.reduce((sum, m) => sum + (m.likes || 0), 0) + 
+                        dating.reduce((sum, d) => sum + (d.likes || 0), 0);
+      
+      const activeUsers = users.filter(u => {
+        const lastLogin = new Date(u.lastLogin || 0);
+        const now = new Date();
+        const diffDays = Math.floor((now - lastLogin) / (1000 * 60 * 60 * 24));
+        return diffDays < 7;
+      }).length;
 
-    setBanners(banners);
+      setStats({
+        users: users.length,
+        movies: movies.length,
+        dating: dating.length,
+        ads: ads.length,
+        totalViews,
+        banners: banners.length,
+        totalLikes,
+        activeUsers
+      });
 
-    // Oxirgi aktiviteler
-    const activities = [
-      ...movies.slice(0, 3).map(m => ({ type: 'movie', text: `Yangi kino: ${m.title}`, time: m.createdAt })),
-      ...users.slice(0, 3).map(u => ({ type: 'user', text: `Yangi foydalanuvchi: ${u.username}`, time: new Date().toISOString() })),
-      ...banners.slice(0, 2).map(b => ({ type: 'banner', text: `Banner: ${b.title}`, time: new Date().toISOString() }))
-    ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5);
+      setBanners(banners.sort((a, b) => (a.order || 0) - (b.order || 0)));
 
-    setRecentActivities(activities);
+      const activities = [
+        ...movies.slice(0, 3).map(m => ({ 
+          type: 'movie', 
+          text: `Yangi kino: ${m.title}`, 
+          time: m.createdAt || new Date().toISOString(),
+        })),
+        ...users.slice(0, 3).map(u => ({ 
+          type: 'user', 
+          text: `Yangi foydalanuvchi: ${u.username}`, 
+          time: u.createdAt || new Date().toISOString(),
+        })),
+        ...banners.slice(0, 2).map(b => ({ 
+          type: 'banner', 
+          text: `Banner: ${b.title}`, 
+          time: b.createdAt || new Date().toISOString(),
+        }))
+      ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 7);
 
-    // Bildirishnomalar
-    const notifs = [];
-    if (movies.length === 0) {
-      notifs.push({ type: 'warning', text: 'Hali kinolar qo\'shilmagan' });
+      setRecentActivities(activities);
+
+      const notifs = [];
+      if (movies.length === 0) {
+        notifs.push({ type: 'warning', text: 'Hali kinolar qo\'shilmagan' });
+      }
+      if (banners.length === 0) {
+        notifs.push({ type: 'info', text: 'Bannerlar mavjud emas' });
+      }
+      setNotifications(notifs);
+
+    } catch (error) {
+      console.error('Dashboard yuklash xatosi:', error);
+    } finally {
+      setLoading(false);
     }
-    if (banners.length === 0) {
-      notifs.push({ type: 'info', text: 'Bannerlar mavjud emas' });
-    }
-    setNotifications(notifs);
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminUser');
-    navigate('/admin');
-  };
+  const handleLogout = useCallback(() => {
+    if (window.confirm('Chiqishni xohlaysizmi?')) {
+      localStorage.removeItem('admin');
+      localStorage.removeItem('currentUser');
+      navigate('/admin');
+    }
+  }, [navigate]);
 
-  // Banner funksiyalari
-  const handleAddBanner = () => {
+  const handleAddBanner = useCallback(() => {
     setEditingBanner(null);
     setBannerForm({
       id: Date.now().toString(),
@@ -115,37 +176,30 @@ const AdminDashboard = () => {
       title: '',
       description: '',
       link: '',
-      discount: ''
+      discount: '',
+      order: banners.length + 1,
+      active: true,
+      createdAt: new Date().toISOString()
     });
     setShowBannerModal(true);
-  };
+  }, [banners.length]);
 
-  const handleEditBanner = (banner) => {
+  const handleEditBanner = useCallback((banner) => {
     setEditingBanner(banner);
     setBannerForm(banner);
     setShowBannerModal(true);
-  };
+  }, []);
 
-  const handleDeleteBanner = (bannerId) => {
+  const handleDeleteBanner = useCallback((bannerId) => {
     if (window.confirm('Bu bannerni o\'chirishni xohlaysizmi?')) {
       const updatedBanners = banners.filter(b => b.id !== bannerId);
       setBanners(updatedBanners);
       localStorage.setItem('banners', JSON.stringify(updatedBanners));
-      
-      // Statistikani yangilash
       setStats(prev => ({ ...prev, banners: updatedBanners.length }));
-      
-      // Aktivitelarga qo'shish
-      const newActivity = {
-        type: 'banner',
-        text: 'Banner o\'chirildi',
-        time: new Date().toISOString()
-      };
-      setRecentActivities(prev => [newActivity, ...prev.slice(0, 4)]);
     }
-  };
+  }, [banners]);
 
-  const handleSaveBanner = (e) => {
+  const handleSaveBanner = useCallback((e) => {
     e.preventDefault();
     
     if (!bannerForm.imageUrl || !bannerForm.title) {
@@ -155,108 +209,128 @@ const AdminDashboard = () => {
 
     let updatedBanners;
     if (editingBanner) {
-      // Tahrirlash
       updatedBanners = banners.map(b => 
-        b.id === editingBanner.id ? bannerForm : b
+        b.id === editingBanner.id ? { ...bannerForm } : b
       );
     } else {
-      // Yangi qo'shish
-      updatedBanners = [...banners, { ...bannerForm, id: Date.now().toString() }];
+      updatedBanners = [...banners, { ...bannerForm }];
     }
 
+    updatedBanners.sort((a, b) => (a.order || 0) - (b.order || 0));
+    
     setBanners(updatedBanners);
     localStorage.setItem('banners', JSON.stringify(updatedBanners));
-    
-    // Statistikani yangilash
     setStats(prev => ({ ...prev, banners: updatedBanners.length }));
-    
-    // Aktivitelarga qo'shish
-    const newActivity = {
-      type: 'banner',
-      text: editingBanner ? 'Banner tahrirlandi' : 'Yangi banner qo\'shildi',
-      time: new Date().toISOString()
-    };
-    setRecentActivities(prev => [newActivity, ...prev.slice(0, 4)]);
-    
     setShowBannerModal(false);
-  };
+  }, [banners, editingBanner, bannerForm]);
 
-  const formatDate = (dateString) => {
+  const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffTime = Math.abs(now - date);
+    const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 0) return 'Bugun';
+    if (diffMinutes < 60) return `${diffMinutes} daqiqa oldin`;
+    if (diffHours < 24) return `${diffHours} soat oldin`;
     if (diffDays === 1) return 'Kecha';
     if (diffDays < 7) return `${diffDays} kun oldin`;
     return date.toLocaleDateString('uz-UZ');
-  };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="admin-loading">
+        <div className="loading-spinner"></div>
+        <p>Dashboard yuklanmoqda...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="admin-container">
+    <div className="admin-dashboard dark-theme">
       {/* Overlay for mobile */}
-      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}></div>}
+      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
       
       {/* Sidebar */}
-      <div className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo-wrapper">
-            <FiShield className="sidebar-logo" />
-            <h3>Admin Panel</h3>
+          <div className="logo-wrapper">
+            <FiShield className="logo-icon" />
+            <h2>Admin<span>Panel</span></h2>
           </div>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="sidebar-toggle">
+          <button 
+            className="sidebar-toggle" 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
             <FiMenu />
           </button>
         </div>
         
         <div className="sidebar-profile">
           <div className="profile-avatar">
-            <FiUser />
+            {adminUser?.avatar ? (
+              <img src={adminUser.avatar} alt={adminUser.username} />
+            ) : (
+              <FiUser />
+            )}
           </div>
           <div className="profile-info">
-            <span className="profile-name">{adminUser?.username}</span>
-            <span className="profile-email">{adminUser?.email}</span>
+            <span className="profile-name">{adminUser?.username || 'Admin'}</span>
+            <span className="profile-email">{adminUser?.email || 'admin@admin.com'}</span>
+            <span className="profile-role">Super Admin</span>
           </div>
         </div>
         
-        <div className="sidebar-menu">
-          <button onClick={() => navigate('/admin/dashboard')} className="menu-item active">
+        <nav className="sidebar-nav">
+          <button onClick={() => navigate('/admin/dashboard')} className="nav-item active">
             <FiHome /> Dashboard
           </button>
-          <button onClick={() => navigate('/admin/movies')} className="menu-item">
+          <button onClick={() => navigate('/admin/movies')} className="nav-item">
             <FiFilm /> Kinolar
-            {stats.movies > 0 && <span className="menu-badge">{stats.movies}</span>}
+            {stats.movies > 0 && <span className="nav-badge">{stats.movies}</span>}
           </button>
-          <button onClick={() => navigate('/admin/users')} className="menu-item">
+          <button onClick={() => navigate('/admin/users')} className="nav-item">
             <FiUsers /> Foydalanuvchilar
-            {stats.users > 0 && <span className="menu-badge">{stats.users}</span>}
+            {stats.users > 0 && <span className="nav-badge">{stats.users}</span>}
           </button>
-          <button onClick={() => navigate('/admin/dating')} className="menu-item">
-            <FiHeart /> Dating Profillar
-            {stats.dating > 0 && <span className="menu-badge">{stats.dating}</span>}
+          <button onClick={() => navigate('/admin/dating')} className="nav-item">
+            <FiHeart /> Dating
+            {stats.dating > 0 && <span className="nav-badge">{stats.dating}</span>}
           </button>
-          <button onClick={() => navigate('/admin/ads')} className="menu-item">
+          <button onClick={() => navigate('/admin/ads')} className="nav-item">
             <FiShoppingBag /> E'lonlar
-            {stats.ads > 0 && <span className="menu-badge">{stats.ads}</span>}
+            {stats.ads > 0 && <span className="nav-badge">{stats.ads}</span>}
           </button>
-          <button onClick={() => {
-            // Bannerlar bo'limiga o'tish
-            document.getElementById('banners-section').scrollIntoView({ behavior: 'smooth' });
-          }} className="menu-item">
+          <button 
+            onClick={() => {
+              document.getElementById('banners-section')?.scrollIntoView({ behavior: 'smooth' });
+            }} 
+            className="nav-item"
+          >
             <FiImage /> Bannerlar
-            {stats.banners > 0 && <span className="menu-badge">{stats.banners}</span>}
+            {stats.banners > 0 && <span className="nav-badge">{stats.banners}</span>}
           </button>
-        </div>
+        </nav>
 
         <div className="sidebar-notifications">
           <h4>Bildirishnomalar</h4>
-          {notifications.map((notif, index) => (
-            <div key={index} className={`notification-item ${notif.type}`}>
-              <FiBell />
-              <span>{notif.text}</span>
-            </div>
-          ))}
+          <div className="notifications-list">
+            {notifications.length > 0 ? (
+              notifications.map((notif, index) => (
+                <div key={index} className={`notification-item ${notif.type}`}>
+                  <FiBell />
+                  <span>{notif.text}</span>
+                </div>
+              ))
+            ) : (
+              <div className="no-notifications">
+                <FiBell />
+                <span>Bildirishnomalar yo'q</span>
+              </div>
+            )}
+          </div>
         </div>
         
         <div className="sidebar-footer">
@@ -264,89 +338,100 @@ const AdminDashboard = () => {
             <FiLogOut /> Chiqish
           </button>
         </div>
-      </div>
+      </aside>
 
       {/* Main Content */}
-      <div className={`admin-main ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-        <div className="admin-header">
-          <div className="header-title">
+      <main className={`admin-main ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+        {/* Header */}
+        <header className="admin-header">
+          <div className="header-left">
             <h1>Dashboard</h1>
-            <p>Xush kelibsiz, {adminUser?.username}!</p>
+            <p>Xush kelibsiz, <strong>{adminUser?.username || 'Admin'}</strong></p>
           </div>
-          <div className="header-actions">
-            <button className="header-btn">
+          
+          <div className="header-right">
+            <button className="header-btn" title="Yuklab olish">
               <FiDownload />
             </button>
-            <button className="header-btn">
+            <button className="header-btn" title="Sozlamalar">
               <FiSettings />
             </button>
             <div className="header-date">
               <FiCalendar />
-              {new Date().toLocaleDateString('uz-UZ', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
+              <span>
+                {new Date().toLocaleDateString('uz-UZ', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </span>
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Stats Cards */}
         <div className="stats-grid">
           <div className="stat-card users" onClick={() => navigate('/admin/users')}>
             <div className="stat-icon-wrapper">
-              <FiUsers className="stat-icon" />
+              <FiUsers />
             </div>
             <div className="stat-content">
               <span className="stat-label">Foydalanuvchilar</span>
-              <span className="stat-value">{stats.users}</span>
-              <span className="stat-change">+{Math.floor(stats.users * 0.1)}%</span>
+              <span className="stat-value">{stats.users.toLocaleString()}</span>
+              <span className="stat-change positive">
+                +{Math.floor(stats.users * 0.1)}%
+              </span>
             </div>
           </div>
 
           <div className="stat-card movies" onClick={() => navigate('/admin/movies')}>
             <div className="stat-icon-wrapper">
-              <FiFilm className="stat-icon" />
+              <FiFilm />
             </div>
             <div className="stat-content">
               <span className="stat-label">Kinolar</span>
-              <span className="stat-value">{stats.movies}</span>
-              <span className="stat-change">+{stats.movies > 0 ? '2' : '0'} ta yangi</span>
+              <span className="stat-value">{stats.movies.toLocaleString()}</span>
+              <span className="stat-change">
+                {stats.totalViews.toLocaleString()} ko'rish
+              </span>
             </div>
           </div>
 
           <div className="stat-card dating" onClick={() => navigate('/admin/dating')}>
             <div className="stat-icon-wrapper">
-              <FiHeart className="stat-icon" />
+              <FiHeart />
             </div>
             <div className="stat-content">
               <span className="stat-label">Dating Profillar</span>
-              <span className="stat-value">{stats.dating}</span>
-              <span className="stat-change">{stats.dating} ta faol</span>
+              <span className="stat-value">{stats.dating.toLocaleString()}</span>
+              <span className="stat-change positive">
+                {stats.totalLikes.toLocaleString()} like
+              </span>
             </div>
           </div>
 
           <div className="stat-card ads" onClick={() => navigate('/admin/ads')}>
             <div className="stat-icon-wrapper">
-              <FiShoppingBag className="stat-icon" />
+              <FiShoppingBag />
             </div>
             <div className="stat-content">
               <span className="stat-label">E'lonlar</span>
-              <span className="stat-value">{stats.ads}</span>
-              <span className="stat-change">{stats.totalViews} ko'rish</span>
+              <span className="stat-value">{stats.ads.toLocaleString()}</span>
+              <span className="stat-change">
+                {stats.activeUsers} faol
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Banner Section - Yangi qo'shilgan qism */}
-        <div id="banners-section" className="dashboard-card banners-section">
+        {/* Banner Section */}
+        <section id="banners-section" className="dashboard-card banners-section">
           <div className="card-header">
             <div className="header-left">
               <FiImage className="section-icon" />
-              <h3>Bannerlar boshqaruvi</h3>
+              <h2>Bannerlar boshqaruvi</h2>
             </div>
-            <button onClick={handleAddBanner} className="add-banner-btn">
+            <button onClick={handleAddBanner} className="add-button">
               <FiPlus /> Yangi banner
             </button>
           </div>
@@ -354,29 +439,46 @@ const AdminDashboard = () => {
           <div className="banners-grid">
             {banners.length > 0 ? (
               banners.map((banner) => (
-                <div key={banner.id} className="banner-item">
-                  <div className="banner-preview">
-                    <img src={banner.imageUrl} alt={banner.title} />
+                <div key={banner.id} className="banner-card">
+                  <div className="banner-image">
+                    <img 
+                      src={banner.imageUrl} 
+                      alt={banner.title}
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/300x200?text=Rasm+topilmadi';
+                      }}
+                    />
                     {banner.discount && (
-                      <span className="banner-discount-badge">{banner.discount}</span>
+                      <span className="banner-badge">{banner.discount}</span>
                     )}
+                    <div className="banner-order">#{banner.order || 0}</div>
                   </div>
-                  <div className="banner-info">
-                    <h4>{banner.title}</h4>
-                    <p>{banner.description}</p>
+                  
+                  <div className="banner-details">
+                    <h3>{banner.title}</h3>
+                    <p>{banner.description || 'Tavsif mavjud emas'}</p>
+                    
                     <div className="banner-meta">
-                      <span className="banner-link">{banner.link || 'Havola yo\'q'}</span>
+                      {banner.link && (
+                        <a href={banner.link} target="_blank" rel="noopener noreferrer">
+                          <FiGlobe /> {banner.link}
+                        </a>
+                      )}
+                      <span className={`status-badge ${banner.active ? 'active' : 'inactive'}`}>
+                        {banner.active ? 'Faol' : 'Faol emas'}
+                      </span>
                     </div>
+
                     <div className="banner-actions">
                       <button 
                         onClick={() => handleEditBanner(banner)}
-                        className="banner-action edit"
+                        className="action-btn edit"
                       >
                         <FiEdit2 />
                       </button>
                       <button 
                         onClick={() => handleDeleteBanner(banner.id)}
-                        className="banner-action delete"
+                        className="action-btn delete"
                       >
                         <FiTrash2 />
                       </button>
@@ -385,24 +487,27 @@ const AdminDashboard = () => {
                 </div>
               ))
             ) : (
-              <div className="no-banners">
-                <FiImage className="no-banners-icon" />
-                <p>Hali bannerlar mavjud emas</p>
-                <button onClick={handleAddBanner} className="add-first-banner">
-                  <FiPlus /> Birinchi banner qo'shish
+              <div className="empty-state">
+                <FiImage className="empty-icon" />
+                <h3>Bannerlar mavjud emas</h3>
+                <p>Birinchi bannerni qo'shish orqali boshlang</p>
+                <button onClick={handleAddBanner} className="empty-add-btn">
+                  <FiPlus /> Banner qo'shish
                 </button>
               </div>
             )}
           </div>
-        </div>
+        </section>
 
-        {/* Charts and Recent Activity */}
+        {/* Activity and Stats Grid */}
         <div className="dashboard-grid">
-          <div className="dashboard-card recent-activities">
+          {/* Recent Activities */}
+          <div className="dashboard-card activities-card">
             <div className="card-header">
               <h3>Oxirgi aktiviteler</h3>
-              <FiEye className="card-icon" />
+              <FiActivity className="card-icon" />
             </div>
+            
             <div className="activities-list">
               {recentActivities.length > 0 ? (
                 recentActivities.map((activity, index) => (
@@ -410,59 +515,75 @@ const AdminDashboard = () => {
                     <div className="activity-icon">
                       {activity.type === 'movie' ? <FiFilm /> : 
                        activity.type === 'user' ? <FiUsers /> : 
-                       activity.type === 'banner' ? <FiImage /> : <FiBell />}
+                       <FiImage />}
                     </div>
                     <div className="activity-content">
                       <p>{activity.text}</p>
-                      <span>{formatDate(activity.time)}</span>
+                      <span className="activity-time">{formatDate(activity.time)}</span>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="no-activities">
-                  <p>Hozircha aktiviteler yo'q</p>
+                <div className="empty-activities">
+                  <p>Aktiviteler yo'q</p>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="dashboard-card quick-actions">
+          {/* Quick Stats */}
+          <div className="dashboard-card stats-card">
             <div className="card-header">
-              <h3>Tezkor amallar</h3>
-              <FiTrendingUp className="card-icon" />
+              <h3>Tezkor statistika</h3>
+              <FiBarChart2 className="card-icon" />
             </div>
-            <div className="actions-grid">
-              <button onClick={() => navigate('/admin/movies')} className="quick-action">
-                <FiFilm />
-                <span>Kino qo'shish</span>
-              </button>
-              <button onClick={() => navigate('/admin/users')} className="quick-action">
-                <FiUsers />
-                <span>Foydalanuvchilar</span>
-              </button>
-              <button onClick={() => navigate('/admin/dating')} className="quick-action">
-                <FiHeart />
-                <span>Dating</span>
-              </button>
-              <button onClick={() => navigate('/admin/ads')} className="quick-action">
-                <FiShoppingBag />
-                <span>E'lonlar</span>
-              </button>
-              <button onClick={handleAddBanner} className="quick-action banner">
-                <FiImage />
-                <span>Banner qo'shish</span>
-              </button>
+            
+            <div className="quick-stats">
+              <div className="stat-item">
+                <FiEye className="stat-item-icon" />
+                <div className="stat-item-content">
+                  <span className="stat-item-label">Ko'rishlar</span>
+                  <span className="stat-item-value">{stats.totalViews.toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <div className="stat-item">
+                <FiStar className="stat-item-icon" />
+                <div className="stat-item-content">
+                  <span className="stat-item-label">Like'lar</span>
+                  <span className="stat-item-value">{stats.totalLikes.toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <div className="stat-item">
+                <FiUsers className="stat-item-icon" />
+                <div className="stat-item-content">
+                  <span className="stat-item-label">Faol foydalanuvchilar</span>
+                  <span className="stat-item-value">{stats.activeUsers.toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <div className="stat-item">
+                <FiImage className="stat-item-icon" />
+                <div className="stat-item-content">
+                  <span className="stat-item-label">Bannerlar</span>
+                  <span className="stat-item-value">{stats.banners.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="dashboard-card system-info">
+          {/* System Info */}
+          <div className="dashboard-card system-card">
             <div className="card-header">
               <h3>Tizim ma'lumoti</h3>
+              <FiZap className="card-icon" />
             </div>
-            <div className="info-list">
+            
+            <div className="system-info">
               <div className="info-row">
                 <span>Versiya</span>
-                <span className="info-value">1.0.0</span>
+                <span className="info-value">2.0.0</span>
               </div>
               <div className="info-row">
                 <span>Oxirgi yangilanish</span>
@@ -470,25 +591,39 @@ const AdminDashboard = () => {
               </div>
               <div className="info-row">
                 <span>Admin</span>
-                <span className="info-value">{adminUser?.email}</span>
+                <span className="info-value">{adminUser?.email || 'admin@admin.com'}</span>
               </div>
               <div className="info-row">
                 <span>Status</span>
-                <span className="info-value status-active">Aktiv</span>
+                <span className="info-value status-active">● Aktiv</span>
               </div>
-              <div className="info-row">
-                <span>Bannerlar</span>
-                <span className="info-value">{stats.banners}</span>
+            </div>
+
+            <div className="quick-actions">
+              <h4>Tezkor amallar</h4>
+              <div className="actions-grid">
+                <button onClick={() => navigate('/admin/movies')} className="action-item">
+                  <FiFilm /> Kino qo'shish
+                </button>
+                <button onClick={handleAddBanner} className="action-item">
+                  <FiImage /> Banner qo'shish
+                </button>
+                <button onClick={() => navigate('/admin/users')} className="action-item">
+                  <FiUsers /> Foydalanuvchilar
+                </button>
+                <button onClick={() => navigate('/admin/dating')} className="action-item">
+                  <FiHeart /> Dating
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Banner Modal */}
       {showBannerModal && (
         <div className="modal-overlay" onClick={() => setShowBannerModal(false)}>
-          <div className="modal-content banner-modal" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingBanner ? 'Bannerni tahrirlash' : 'Yangi banner qo\'shish'}</h3>
               <button className="close-btn" onClick={() => setShowBannerModal(false)}>
@@ -500,48 +635,34 @@ const AdminDashboard = () => {
               <div className="form-group">
                 <label>Rasm URL *</label>
                 <input
-                  type="text"
+                  type="url"
                   value={bannerForm.imageUrl}
-                  onChange={e => setBannerForm({...bannerForm, imageUrl: e.target.value})}
+                  onChange={(e) => setBannerForm({...bannerForm, imageUrl: e.target.value})}
                   placeholder="https://example.com/image.jpg"
                   required
                 />
                 {bannerForm.imageUrl && (
                   <div className="image-preview">
-                    <img src={bannerForm.imageUrl} alt="Preview" />
+                    <img 
+                      src={bannerForm.imageUrl} 
+                      alt="Preview"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/300x200?text=Preview';
+                      }}
+                    />
                   </div>
                 )}
               </div>
 
-              <div className="form-group">
-                <label>Sarlavha *</label>
-                <input
-                  type="text"
-                  value={bannerForm.title}
-                  onChange={e => setBannerForm({...bannerForm, title: e.target.value})}
-                  placeholder="Banner sarlavhasi"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Tavsif</label>
-                <textarea
-                  value={bannerForm.description}
-                  onChange={e => setBannerForm({...bannerForm, description: e.target.value})}
-                  placeholder="Banner tavsifi"
-                  rows="3"
-                />
-              </div>
-
               <div className="form-row">
                 <div className="form-group">
-                  <label>Havola (Link)</label>
+                  <label>Sarlavha *</label>
                   <input
                     type="text"
-                    value={bannerForm.link}
-                    onChange={e => setBannerForm({...bannerForm, link: e.target.value})}
-                    placeholder="/kino yoki https://..."
+                    value={bannerForm.title}
+                    onChange={(e) => setBannerForm({...bannerForm, title: e.target.value})}
+                    placeholder="Banner sarlavhasi"
+                    required
                   />
                 </div>
 
@@ -550,10 +671,54 @@ const AdminDashboard = () => {
                   <input
                     type="text"
                     value={bannerForm.discount}
-                    onChange={e => setBannerForm({...bannerForm, discount: e.target.value})}
+                    onChange={(e) => setBannerForm({...bannerForm, discount: e.target.value})}
                     placeholder="-20% yoki Bepul"
                   />
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label>Tavsif</label>
+                <textarea
+                  value={bannerForm.description}
+                  onChange={(e) => setBannerForm({...bannerForm, description: e.target.value})}
+                  placeholder="Banner haqida qisqacha"
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Havola</label>
+                  <input
+                    type="text"
+                    value={bannerForm.link}
+                    onChange={(e) => setBannerForm({...bannerForm, link: e.target.value})}
+                    placeholder="/kino yoki https://..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Tartib raqami</label>
+                  <input
+                    type="number"
+                    value={bannerForm.order}
+                    onChange={(e) => setBannerForm({...bannerForm, order: parseInt(e.target.value) || 0})}
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={bannerForm.active}
+                    onChange={(e) => setBannerForm({...bannerForm, active: e.target.checked})}
+                  />
+                  Faol banner
+                </label>
               </div>
 
               <div className="modal-actions">
