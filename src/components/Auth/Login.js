@@ -81,15 +81,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="install-section">
-          <p className="install-text">Ilovani telefon yoki kompyuteringizga o'rnatib oling</p>
-          <button 
-            onClick={handleInstallClick}
-            className="install-app-btn"
-          >
-            <FiDownload /> Telefon yoki kompyuterga o'rnatish
-          </button>
-        </div>
+       
         
         <p className="login-redirect-text">
           Hisobingiz yo'qmi? <Link to="/register" className="login-redirect-link">Ro'yxatdan o'tish</Link>
