@@ -18,7 +18,6 @@ import {
   FiMusic, 
   FiHome, 
   FiHeadphones,
- 
   FiClock,
   FiThumbsUp,
   FiShare2,
@@ -262,37 +261,56 @@ const MainPage = () => {
 
       {/* Main Feature Buttons */}
       <div className="main-buttons">
-        <button onClick={() => navigate('/kino')} className="main-button kino">
+        <button 
+          onClick={() => navigate('/kino')} 
+          className="main-button kino active-button"
+        >
           <div className="button-glow"></div>
           <FiFilm className="button-icon" />
           <span className="button-text">Kino</span>
           <span className="button-badge">Yangi</span>
         </button>
         
-        <button onClick={() => navigate('/dating')} className="main-button dating">
+        <button 
+          className="main-button dating disabled-button"
+          disabled
+        >
           <div className="button-glow"></div>
           <FiHeart className="button-icon" />
           <span className="button-text">Dating</span>
           <span className="button-badge hot">Trend</span>
+          <span className="coming-soon">Tez kunda</span>
         </button>
         
-        <button onClick={() => navigate('/elonlar')} className="main-button elon">
+        <button 
+          className="main-button elon disabled-button"
+          disabled
+        >
           <div className="button-glow"></div>
           <FiShoppingBag className="button-icon" />
           <span className="button-text">E'lonlar</span>
           <span className="button-badge">+5</span>
+          <span className="coming-soon">Tez kunda</span>
         </button>
 
-        <button onClick={() => navigate('/savollar')} className="main-button savollar">
+        <button 
+          className="main-button savollar disabled-button"
+          disabled
+        >
           <div className="button-glow"></div>
           <FiMessageCircle className="button-icon" />
           <span className="button-text">Savollar</span>
+          <span className="coming-soon">Tez kunda</span>
         </button>
 
-        <button onClick={() => navigate('/music')} className="main-button music">
+        <button 
+          className="main-button music disabled-button"
+          disabled
+        >
           <div className="button-glow"></div>
           <FiMusic className="button-icon" />
           <span className="button-text">Musiqa</span>
+          <span className="coming-soon">Tez kunda</span>
         </button>
       </div>
  
@@ -367,13 +385,14 @@ const MainPage = () => {
         </button>
         
         <button 
-          className={`nav-item ${activeTab === 'dating' ? 'active' : ''}`}
-          onClick={() => handleNavigation('dating', '/dating')}
+          className={`nav-item ${activeTab === 'dating' ? 'active' : ''} disabled-nav-item`}
+          disabled
         >
           <FiHeart className="nav-icon" />
           <span className="nav-label">Tanishuv</span>
           {activeTab === 'dating' && <span className="nav-indicator"></span>}
           <span className="nav-badge hot">3</span>
+          <span className="nav-coming-soon">Tez kunda</span>
         </button>
         
         <button 
@@ -387,12 +406,13 @@ const MainPage = () => {
         </button>
         
         <button 
-          className={`nav-item ${activeTab === 'music' ? 'active' : ''}`}
-          onClick={() => handleNavigation('music', '/music')}
+          className={`nav-item ${activeTab === 'music' ? 'active' : ''} disabled-nav-item`}
+          disabled
         >
           <FiHeadphones className="nav-icon" />
           <span className="nav-label">Musiqa</span>
           {activeTab === 'music' && <span className="nav-indicator"></span>}
+          <span className="nav-coming-soon">Tez kunda</span>
         </button>
       </nav>
     </div>
