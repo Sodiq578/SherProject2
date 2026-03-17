@@ -1,5 +1,3 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
   FiFilm, 
   FiUsers, 
@@ -8,7 +6,6 @@ import {
   FiLogOut,
   FiMenu,
   FiHome,
-  FiTrendingUp,
   FiShield,
   FiCalendar,
   FiEye,

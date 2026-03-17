@@ -18,7 +18,7 @@ import {
   FiMusic, 
   FiHome, 
   FiHeadphones,
-  FiMapPin,
+ 
   FiClock,
   FiThumbsUp,
   FiShare2,

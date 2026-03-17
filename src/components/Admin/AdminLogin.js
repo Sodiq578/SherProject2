@@ -159,7 +159,7 @@ const AdminLogin = () => {
             <label className="remember-me">
               <input type="checkbox" /> Eslab qol
             </label>
-            <a href="#" className="forgot-password">Parolni unutdingizmi?</a>
+         <button className="forgot-password">Parolni unutdingizmi?</button>
           </div>
 
           <button 
