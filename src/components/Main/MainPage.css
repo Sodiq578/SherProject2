@@ -1,4 +1,4 @@
-/* MainPage.css - Yangilangan versiya */
+/* src/components/Main/MainPage.css */
 
 * {
   margin: 0;
@@ -599,95 +599,6 @@ body {
   background: linear-gradient(135deg, #ff4757, #ff6b81);
 }
 
-/* Featured Section - KICHRAYTIRILDI */
-.featured-section {
-  background: rgba(20, 30, 45, 0.75);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  width: 100%;
-}
-
-.section-title {
-  color: var(--text-primary);
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.section-icon {
-  color: var(--primary-color);
-  font-size: var(--font-size-lg);
-}
-
-.featured-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-xs);
-  margin-top: var(--spacing-xs);
-}
-
-@media (max-width: 480px) {
-  .featured-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .featured-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.featured-card {
-  background: rgba(0, 102, 255, 0.1);
-  border: 1px solid rgba(0, 150, 255, 0.2);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-xs);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.featured-card:active {
-  transform: translateY(-2px);
-  background: rgba(0, 102, 255, 0.15);
-  border-color: rgba(0, 150, 255, 0.4);
-}
-
-.featured-image {
-  width: 100%;
-  aspect-ratio: 1;
-  background: var(--primary-gradient);
-  border-radius: calc(var(--border-radius-sm) / 1.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: clamp(18px, 5vw, 24px);
-  margin-bottom: 2px;
-}
-
-.featured-title {
-  color: var(--text-secondary);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  line-height: 1.2;
-}
-
 /* Profile Card */
 .profile-card {
   background: rgba(20, 30, 45, 0.75);
@@ -1036,150 +947,6 @@ body {
   font-weight: 700;
 }
 
-/* Responsive Breakpoints */
-
-@media (max-width: 360px) {
-  .main-container {
-    padding: var(--spacing-xs);
-    padding-bottom: calc(var(--nav-height) + 20px);
-  }
-  
-  .stats-row {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .profile-title {
-    text-align: center;
-  }
-  
-  .nav-label {
-    font-size: 10px;
-  }
-  
-  .nav-icon {
-    font-size: 22px;
-  }
-}
-
-@media (min-width: 768px) {
-  .bottom-nav {
-    max-width: 600px;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
-    border-top-left-radius: 40px;
-    border-top-right-radius: 40px;
-    padding: var(--spacing-md) var(--spacing-lg) calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
-  }
-  
-  .nav-icon {
-    font-size: 28px;
-  }
-  
-  .nav-label {
-    font-size: 12px;
-  }
-}
-
-/* iPhone Safe Area Support */
-@supports (padding: max(0px)) {
-  .main-container {
-    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
-    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
-  }
-  
-  .bottom-nav {
-    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
-    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
-    padding-bottom: max(calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px)), env(safe-area-inset-bottom));
-  }
-  
-  .scroll-top-btn {
-    bottom: max(calc(var(--nav-height) + 20px), calc(env(safe-area-inset-bottom) + 80px));
-    right: max(var(--spacing-md), env(safe-area-inset-right));
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #0a0f1a;
-    --bg-secondary: rgba(20, 30, 45, 0.95);
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-  .menu-button:active,
-  .notification-badge:active,
-  .main-button:active,
-  .featured-card:active,
-  .profile-button:active,
-  .nav-item:active {
-    opacity: 0.7;
-    transform: scale(0.95);
-  }
-  
-  .button-glow {
-    display: none;
-  }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 102, 255, 0.1);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary-gradient);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #0077ff, #00bbff);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Disabled button styles */
 .main-button.disabled-button {
   opacity: 0.5;
@@ -1188,7 +955,22 @@ body {
   pointer-events: none;
 }
 
- 
+.coming-soon {
+  position: absolute;
+  top: -10px;
+  right: -5px;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  color: white;
+  font-size: 7px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: pulse 2s infinite;
+  z-index: 3;
+  transform: rotate(-2deg);
+}
 
 /* Active button (Kino) */
 .main-button.active-button {
@@ -1236,13 +1018,58 @@ body {
   transform: rotate(-2deg);
 }
 
-/* Badge styles for disabled buttons */
-.main-button.disabled-button .button-badge {
-  top: -8px; /* Badgeni ham yuqoriga ko'taramiz */
-  right: -5px;
+/* Flags */
+.flags img {
+  width: 14px;
+  height: auto;
+  margin: 0 3px;
+  vertical-align: middle;
 }
 
-/* Responsive */
+/* Language Selector */
+.language-selector {
+  position: fixed;
+  top: 70px;
+  right: 15px;
+  z-index: 1001;
+}
+
+/* Responsive Breakpoints */
+
+@media (max-width: 360px) {
+  .main-container {
+    padding: var(--spacing-xs);
+    padding-bottom: calc(var(--nav-height) + 20px);
+  }
+  
+  .stats-row {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-title {
+    text-align: center;
+  }
+  
+  .nav-label {
+    font-size: 10px;
+  }
+  
+  .nav-icon {
+    font-size: 22px;
+  }
+
+  .main-button.disabled-button .coming-soon {
+    font-size: 6px;
+    padding: 2px 5px;
+    top: -6px;
+  }
+}
+
 @media (max-width: 480px) {
   .main-button.disabled-button .coming-soon {
     font-size: 7px;
@@ -1252,10 +1079,126 @@ body {
   }
 }
 
-@media (max-width: 360px) {
-  .main-button.disabled-button .coming-soon {
-    font-size: 6px;
-    padding: 2px 5px;
-    top: -6px;
+@media (min-width: 768px) {
+  .bottom-nav {
+    max-width: 600px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    padding: var(--spacing-md) var(--spacing-lg) calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
   }
+  
+  .nav-icon {
+    font-size: 28px;
+  }
+  
+  .nav-label {
+    font-size: 12px;
+  }
+
+  .language-selector {
+    top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .language-selector {
+    top: auto;
+    bottom: 80px;
+    right: 15px;
+  }
+}
+
+/* iPhone Safe Area Support */
+@supports (padding: max(0px)) {
+  .main-container {
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+  }
+  
+  .bottom-nav {
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    padding-bottom: max(calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px)), env(safe-area-inset-bottom));
+  }
+  
+  .scroll-top-btn {
+    bottom: max(calc(var(--nav-height) + 20px), calc(env(safe-area-inset-bottom) + 80px));
+    right: max(var(--spacing-md), env(safe-area-inset-right));
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0a0f1a;
+    --bg-secondary: rgba(20, 30, 45, 0.95);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .menu-button:active,
+  .notification-badge:active,
+  .main-button:active,
+  .profile-button:active,
+  .nav-item:active {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  
+  .button-glow {
+    display: none;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 102, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #0077ff, #00bbff);
+}
+
+/* Til o'zgarishi animatsiyasi */
+.main-container {
+  transition: all 0.3s ease;
+}
+
+[dir="rtl"] .main-container {
+  direction: rtl;
+}
+
+/* Flag icons */
+.flag-icon {
+  width: 20px;
+  height: 15px;
+  border-radius: 3px;
+  object-fit: cover;
 }

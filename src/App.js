@@ -2,6 +2,7 @@
 import React, { useEffect, useState, lazy, Suspense, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
+import './i18n'; 
 
 // Lazy loading
 const Gallery = lazy(() => import('./components/gallery/gallery'));

@@ -1,5 +1,7 @@
+// src/components/Kino/KinoWatch.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   FiArrowLeft, 
   FiDownload, 
@@ -60,6 +62,7 @@ const videoUrls = {
 };
 
 const KinoWatch = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -171,7 +174,7 @@ const KinoWatch = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Link nusxalandi!');
+      alert(t('linkCopied'));
     }
   };
 
@@ -289,7 +292,7 @@ const KinoWatch = () => {
       <div className="watch-container">
         <div className="loading-container">
           <div className="loader"></div>
-          <p>Kino yuklanmoqda...</p>
+          <p>{t('loadingMovie')}</p>
         </div>
       </div>
     );
@@ -300,10 +303,10 @@ const KinoWatch = () => {
       <div className="watch-container">
         <div className="error-container">
           <FiFilm size={64} className="error-icon" />
-          <h2>Kino topilmadi</h2>
-          <p>Kechirasiz, siz qidirayotgan kino mavjud emas.</p>
+          <h2>{t('movieNotFound')}</h2>
+          <p>{t('movieNotFoundDesc')}</p>
           <button onClick={handleGoBack} className="back-btn-large">
-            <FiArrowLeft /> Kinolarga qaytish
+            <FiArrowLeft /> {t('backToMovies')}
           </button>
         </div>
       </div>
@@ -322,21 +325,21 @@ const KinoWatch = () => {
           <button 
             onClick={() => setShowInfo(!showInfo)} 
             className={`action-btn ${showInfo ? 'active' : ''}`}
-            title="Ma'lumot"
+            title={t('info')}
           >
             <FiInfo size={20} />
           </button>
           <button 
             onClick={handleLike} 
             className={`action-btn ${isLiked ? 'liked' : ''}`}
-            title={isLiked ? "Sevimlilardan olib tashlash" : "Sevimlilarga qo'shish"}
+            title={isLiked ? t('removeFromFavorites') : t('addToFavorites')}
           >
             <FiHeart size={20} />
           </button>
-          <button onClick={handleShare} className="action-btn" title="Ulashish">
+          <button onClick={handleShare} className="action-btn" title={t('share')}>
             <FiShare2 size={20} />
           </button>
-          <button onClick={handleDownload} className="action-btn" title="Yuklab olish">
+          <button onClick={handleDownload} className="action-btn" title={t('download')}>
             <FiDownload size={20} />
           </button>
         </div>
@@ -360,7 +363,7 @@ const KinoWatch = () => {
             ></iframe>
             
             <div className="trailer-badge">
-              <FiFilm /> TREYLER
+              <FiFilm /> {t('trailer')}
             </div>
           </>
         ) : movie.videoUrl && !videoError ? (
@@ -374,7 +377,7 @@ const KinoWatch = () => {
               onError={handleVideoError}
             >
               <source src={movie.videoUrl} type="video/mp4" />
-              Sizning brauzeringiz video formatini qo'llab-quvvatlamaydi.
+              {t('videoNotSupported')}
             </video>
 
             {!isPlaying && (
@@ -439,7 +442,7 @@ const KinoWatch = () => {
                     {showSettings && (
                       <div className="settings-menu">
                         <div className="settings-section">
-                          <h4>Tezlik</h4>
+                          <h4>{t('playbackSpeed')}</h4>
                           {[0.5, 1, 1.25, 1.5, 2].map(speed => (
                             <button
                               key={speed}
@@ -464,11 +467,11 @@ const KinoWatch = () => {
         ) : (
           <div className="no-video-placeholder">
             <FiFilm size={64} />
-            <h3>Video tayyorlanmoqda</h3>
-            <p>Bu kino uchun video hozircha mavjud emas</p>
-            <p className="coming-soon">Tez kunda!</p>
+            <h3>{t('videoPreparing')}</h3>
+            <p>{t('videoNotAvailable')}</p>
+            <p className="coming-soon">{t('comingSoon')}</p>
             <button onClick={handleGoBack} className="retry-btn">
-              Kinolarga qaytish
+              {t('backToMovies')}
             </button>
           </div>
         )}
@@ -477,7 +480,7 @@ const KinoWatch = () => {
       {/* Movie Info Panel */}
       <div className={`movie-info-panel ${showInfo ? 'visible' : ''}`}>
         <div className="movie-info-header">
-          <h3>Film haqida</h3>
+          <h3>{t('aboutMovie')}</h3>
           <button onClick={() => setShowInfo(false)} className="close-info">
             <FiX size={20} />
           </button>
@@ -488,7 +491,7 @@ const KinoWatch = () => {
             <div className="stat-card">
               <FiStar className="stat-icon" />
               <div className="stat-content">
-                <span className="stat-label">Reyting</span>
+                <span className="stat-label">{t('rating')}</span>
                 <span className="stat-value">{movie.rating?.toFixed(1)}</span>
               </div>
             </div>
@@ -496,7 +499,7 @@ const KinoWatch = () => {
             <div className="stat-card">
               <FiCalendar className="stat-icon" />
               <div className="stat-content">
-                <span className="stat-label">Yil</span>
+                <span className="stat-label">{t('year')}</span>
                 <span className="stat-value">{movie.year}</span>
               </div>
             </div>
@@ -504,7 +507,7 @@ const KinoWatch = () => {
             <div className="stat-card">
               <FiClock className="stat-icon" />
               <div className="stat-content">
-                <span className="stat-label">Davomiylik</span>
+                <span className="stat-label">{t('duration')}</span>
                 <span className="stat-value">{movie.duration}</span>
               </div>
             </div>
@@ -512,27 +515,27 @@ const KinoWatch = () => {
             <div className="stat-card">
               <FiFilm className="stat-icon" />
               <div className="stat-content">
-                <span className="stat-label">Janr</span>
+                <span className="stat-label">{t('genre')}</span>
                 <span className="stat-value">{movie.genre?.[0]}</span>
               </div>
             </div>
           </div>
 
           <div className="movie-description">
-            <h4>Syujet</h4>
+            <h4>{t('plot')}</h4>
             <p>{movie.description}</p>
           </div>
 
           {movie.director && (
             <div className="movie-director">
-              <h4>Rejissyor</h4>
+              <h4>{t('director')}</h4>
               <p>{movie.director}</p>
             </div>
           )}
 
           {movie.cast && movie.cast.length > 0 && (
             <div className="movie-cast">
-              <h4>Aktyorlar</h4>
+              <h4>{t('cast')}</h4>
               <div className="cast-list">
                 {movie.cast.map((actor, index) => (
                   <span key={index} className="cast-item">{actor}</span>
@@ -543,7 +546,7 @@ const KinoWatch = () => {
 
           {movie.awards && (
             <div className="movie-awards">
-              <h4>Mukofotlar</h4>
+              <h4>{t('awards')}</h4>
               <p>{movie.awards}</p>
             </div>
           )}
@@ -551,7 +554,7 @@ const KinoWatch = () => {
           {isTrailer && (
             <div className="trailer-notice">
               <FiInfo />
-              <span>Bu kino uchun treyler ko'rsatilmoqda. To'liq film tez kunda!</span>
+              <span>{t('trailerNotice')}</span>
             </div>
           )}
         </div>
@@ -560,7 +563,7 @@ const KinoWatch = () => {
       {/* Recommended Movies */}
       {recommendedMovies.length > 0 && (
         <div className="recommended-section">
-          <h3>Sizga ham yoqishi mumkin</h3>
+          <h3>{t('youMayAlsoLike')}</h3>
           <div className="recommended-grid">
             {recommendedMovies.map(recMovie => (
               <div 
@@ -571,7 +574,7 @@ const KinoWatch = () => {
                 <div className="recommended-poster">
                   <img src={recMovie.posterUrl} alt={recMovie.title} />
                   {recMovie.trailerUrl && !recMovie.videoUrl && (
-                    <div className="recommended-trailer-badge">TREYLER</div>
+                    <div className="recommended-trailer-badge">{t('trailer')}</div>
                   )}
                 </div>
                 <div className="recommended-info">
